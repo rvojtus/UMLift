@@ -9,9 +9,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>XSLT</module>
-        <module>Ecore</module>
-        <module>UMLet</module>
     </modules>
 
     <properties>
