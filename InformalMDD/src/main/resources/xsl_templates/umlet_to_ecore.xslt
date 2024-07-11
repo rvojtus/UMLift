@@ -15,9 +15,17 @@
 
     <!-- Template to match each element -->
     <xsl:template match="element">
-        <eClassifiers xsi:type="ecore:EClass" name="ClassNAME">
-            <xsl:apply-templates select="panel_attributes"/>
-        </eClassifiers>
+        <xsl:choose>
+            <xsl:when test="id='UMLClass'">
+                <eClassifiers xsi:type="ecore:EClass" >
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="id"/>
+                    </xsl:attribute>
+
+                    <xsl:apply-templates select="panel_attributes"/>
+                </eClassifiers>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
     <!-- Template to match Attribute -->
