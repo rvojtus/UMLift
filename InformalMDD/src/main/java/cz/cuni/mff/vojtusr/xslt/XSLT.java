@@ -1,5 +1,7 @@
 package cz.cuni.mff.vojtusr.xslt;
 
+import net.sf.saxon.TransformerFactoryImpl;
+
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -13,7 +15,7 @@ public class XSLT {
     public void transform(String input, String output) throws TransformerException, FileNotFoundException {
         Source xsltSource = new StreamSource(xsltFile);
 
-        TransformerFactory factory = TransformerFactory.newInstance();
+        TransformerFactory factory = new TransformerFactoryImpl();
 
         Transformer transformer = factory.newTransformer(xsltSource);
 
