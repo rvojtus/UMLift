@@ -19,7 +19,7 @@
             <xsl:when test="id='UMLClass'">
                 <eClassifiers xsi:type="ecore:EClass" >
                     <xsl:attribute name="name">
-                        <xsl:value-of select="id"/>
+                        <xsl:value-of select="normalize-space( tokenize(normalize-space(panel_attributes), '--')[1] )"/>
                     </xsl:attribute>
 
                     <xsl:apply-templates select="panel_attributes"/>
@@ -30,6 +30,7 @@
 
     <!-- Template to match Attribute -->
     <xsl:template match="panel_attributes">
+
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="AttribName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </xsl:template>
 
