@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xmi="http://www.omg.org/XMI"
                 xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <xsl:output method="xml" indent="yes"/>
 
     <!-- Template to match the root element of the diagram file -->
     <xsl:template match="/">
-        <ecore:EPackage xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ConvertedPackage">
+        <ecore:EPackage xmi:version="2.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ConvertedPackage">
             <xsl:apply-templates select="diagram/element"/>
         </ecore:EPackage>
 
@@ -30,8 +31,16 @@
 
     <!-- Template to match Attribute -->
     <xsl:template match="panel_attributes">
+        <xsl:for-each select="tokenize( tokenize(., '--')[2], '\n')">
+            <xsl:variable name="value" select="."/>
+            <xsl:choose>
+                <xsl:when test="$value != ''">
+                    <eStructuralFeatures xsi:type="ecore:EAttribute" name="AttribName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </xsl:when>
+            </xsl:choose>
 
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="AttribName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </xsl:for-each>
     </xsl:template>
 
 
