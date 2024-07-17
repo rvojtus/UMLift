@@ -1,4 +1,4 @@
-package cz.cuni.mff.vojtusr.ecore;
+package cz.cuni.mff.vojtusr.emf;
 
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenBaseGeneratorAdapter;
