@@ -16,7 +16,7 @@ import java.util.Collections;
 
 
 public class GenModelGenerate {
-    public void generate() throws IOException {
+    public GenModel generate() throws IOException {
         // Initialize resource set
         ResourceSet resourceSet = new ResourceSetImpl();
 
@@ -24,24 +24,25 @@ public class GenModelGenerate {
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 
         // Load the Ecore model
-        URI ecoreURI = URI.createFileURI("InformalMDD/src/main/resources/test.ecore");
+        URI ecoreURI = URI.createFileURI("InformalMDD/src/main/resources/testProject.ecore");// todo
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
 
         // Create a GenModel
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
-        genModel.setModelName("ModelName");
-        genModel.setModelDirectory("src/main/java");
-        genModel.setModelPluginID("plugin.id");
+        genModel.setModelName("ModelName");// todo
+        //genModel.setModelDirectory("src/main/java");
+        genModel.setModelDirectory("testProject/src-gen");// todo
         genModel.initialize(Collections.singleton(ecorePackage));
 
         // Save the GenModel
-        URI genmodelURI = URI.createFileURI("InformalMDD/src/main/resources/test.genmodel");
+        URI genmodelURI = URI.createFileURI("InformalMDD/src/main/resources/testProject.genmodel");// todo
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMLResource.OPTION_ENCODING, "UTF-8");
         genModelResource.getContents().add(genModel);
         genModelResource.save(Collections.EMPTY_MAP);
 
         System.out.println("Genmodel created successfully.");
+        return genModel;
     }
 }
