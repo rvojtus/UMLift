@@ -24,7 +24,7 @@ public class GenModelGenerate {
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
 
         // Load the Ecore model
-        URI ecoreURI = URI.createFileURI("InformalMDD/src/main/resources/testProject.ecore");// todo
+        URI ecoreURI = URI.createFileURI("InformalMDD-core/src/main/resources/testProject.ecore");// todo
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
 
@@ -36,7 +36,7 @@ public class GenModelGenerate {
         genModel.initialize(Collections.singleton(ecorePackage));
 
         // Save the GenModel
-        URI genmodelURI = URI.createFileURI("InformalMDD/src/main/resources/testProject.genmodel");// todo
+        URI genmodelURI = URI.createFileURI("InformalMDD-core/src/main/resources/testProject.genmodel");// todo
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMLResource.OPTION_ENCODING, "UTF-8");
         genModelResource.getContents().add(genModel);

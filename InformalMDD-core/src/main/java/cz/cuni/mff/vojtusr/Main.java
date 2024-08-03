@@ -14,11 +14,11 @@ import java.nio.file.Path;
 
 public class Main {
     public static void main(String[] args) {
-        String inputFile = "InformalMDD/src/main/resources/examples/simpleClass.uxf";
-        String outputFile = "InformalMDD/src/main/resources/output.xml";
-        String xsltFile = "InformalMDD/src/main/resources/xsl_templates/umlet_to_ecore.xslt";
+        String inputFile = "InformalMDD-core/src/main/resources/examples/simpleClass.uxf";
+        String outputFile = "InformalMDD-core/src/main/resources/output.xml";
+        String xsltFile = "InformalMDD-core/src/main/resources/xsl_templates/umlet_to_ecore.xslt";
 
-        String genmodelFile = "InformalMDD/src/main/resources/testProject.genmodel";
+        String genmodelFile = "InformalMDD-core/src/main/resources/testProject.genmodel";
 
         try {
             XSLT xslt = new XSLT(xsltFile);

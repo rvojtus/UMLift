@@ -37,7 +37,7 @@ public class JavaGenerator {
         genModel.setValidateModel(true);
         genModel.setForceOverwrite(true);
         final String rootContainer = "testProject";// todo
-        final String rootPath = "/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/InformalMDD/src/main/resources";// todo
+        final String rootPath = "/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/InformalMDD-core/src/main/resources";// todo
         EcorePlugin.getPlatformResourceMap().put(rootContainer, URI.createFileURI(rootPath));
 
 
