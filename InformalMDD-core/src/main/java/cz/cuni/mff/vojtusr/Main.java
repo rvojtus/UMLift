@@ -36,6 +36,8 @@ public class Main {
             GenModelGenerate genModelGenerate = new GenModelGenerate();
             GenModel genModel = genModelGenerate.generate();
 
+
+
             JavaGenerator javaGenerator = new JavaGenerator();
             javaGenerator.generate(genModel);
 
