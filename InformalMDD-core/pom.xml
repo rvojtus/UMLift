@@ -69,7 +69,7 @@
         <dependency>
             <groupId>com.umlet</groupId>
             <artifactId>umlet-standalone</artifactId>
-            <version>15.2.0-SNAPSHOT</version>
+            <version>15.1</version>
             <scope>compile</scope>
         </dependency>
 
