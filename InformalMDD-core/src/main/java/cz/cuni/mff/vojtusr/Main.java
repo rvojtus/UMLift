@@ -1,5 +1,7 @@
 package cz.cuni.mff.vojtusr;
 
+import com.baselet.gui.CurrentGui;
+import com.baselet.standalone.gui.StandaloneGUI;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 import cz.cuni.mff.vojtusr.emf.GenModelGenerate;
 import cz.cuni.mff.vojtusr.xslt.XSLT;
@@ -9,11 +11,14 @@ import com.baselet.standalone.MainStandalone;
 
 import javax.swing.*;
 import javax.xml.transform.*;
+import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static com.baselet.standalone.MainStandalone.tmpFile;
 
 public class Main {
     public static void main(String[] args) {
@@ -44,7 +49,24 @@ public class Main {
 
             //javax.swing.SwingUtilities.invokeLater(Main::createAndShowGUI);
 
-            //MainStandalone.main(args);
+            String[] umlet_args = new String[0];
+
+            //MainStandalone.main(umlet_args);
+            com.baselet.control.Main umlet_main = MainStandalone.initInstance();
+            //umlet_main.init(new StandaloneGUI(com.baselet.control.Main.getInstance(), tmpFile()));
+            CurrentGui.getInstance().setGui(new StandaloneGUI(com.baselet.control.Main.getInstance(), tmpFile()));
+            ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE); // Tooltips should not hide after some time
+            CurrentGui.getInstance().getGui().initGUI(); // show gui
+            umlet_main.doNew();
+
+            CurrentGui currentGui = CurrentGui.getInstance();
+
+            JFrame umlet_frame = (JFrame) currentGui.getGui().getMainFrame();
+            JMenuBar menu = umlet_frame.getJMenuBar();
+
+            addCodeGenerationButton(menu, umlet_frame);
+
+            //javax.swing.SwingUtilities.invokeLater(() -> {MainStandalone.main(umlet_args);});
 
         } catch (FileNotFoundException e) {
             System.err.println("FileNotFoundException: " + e.getMessage());
@@ -66,5 +88,28 @@ public class Main {
         frame.getContentPane().add(label);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private static void addCodeGenerationButton(JMenuBar menu, JFrame mainUMLetFrame) {
+        JButton codeGenerationButton = new JButton(new AbstractAction("Code Generation") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog generationOptionsFrame = new JDialog(mainUMLetFrame, "Code Generation Options", true);
+                generationOptionsFrame.setSize(300, 200);
+                generationOptionsFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+                // Center the new frame relative to the main frame
+                generationOptionsFrame.setLocationRelativeTo(mainUMLetFrame);
+
+                // Disable resizing, which prevents full-screen mode
+                generationOptionsFrame.setResizable(false);
+
+                generationOptionsFrame.setVisible(true);
+            }
+        });
+
+        menu.add(codeGenerationButton);
+
+        SwingUtilities.updateComponentTreeUI(mainUMLetFrame);
     }
 }
