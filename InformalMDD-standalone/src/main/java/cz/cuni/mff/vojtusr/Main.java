@@ -2,9 +2,9 @@ package cz.cuni.mff.vojtusr;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 public class Main {
     private static final int fontSize = 14;
     private static final String xsltDir = "InformalMDD-core/src/main/resources/xsl_templates";
+    private static final String UMLetFileExtension = ".uxf";
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(Main::createAndShowGUI);
     }
@@ -93,23 +94,43 @@ public class Main {
         JButton chooseXSLTTemplateButton = getXSLTChooseButton(xsltTemplateComboBox);
         configFormPanel.add(chooseXSLTTemplateButton);
 
+        JLabel openProjectLabel = new JLabel("No file selected");
+
         JRadioButton newProjectRadioButton = new JRadioButton("New UMLet Project");
         newProjectRadioButton.setSelected(true);
+
         configFormPanel.add(newProjectRadioButton);
 
-        JLabel openProjectLabel = new JLabel("No file selected");
+
+        openProjectLabel.setVisible(false);
         openProjectLabel.setHorizontalAlignment(JLabel.CENTER);
         configFormPanel.add(openProjectLabel);
 
         JRadioButton openProjectRadioButton = new JRadioButton("Open UMLet Project");
+
         configFormPanel.add(openProjectRadioButton);
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(newProjectRadioButton);
         buttonGroup.add(openProjectRadioButton);
 
-        JButton openProjectButton = new JButton("Choose UMLet File");
-        configFormPanel.add(openProjectButton);
+        JButton openProjectFileButton = getProjectFileChooseButton(openProjectLabel, openProjectRadioButton);
+
+        newProjectRadioButton.addActionListener(e -> {
+            openProjectLabel.setVisible(false);
+            openProjectFileButton.setEnabled(false);
+        });
+        openProjectRadioButton.addActionListener(e -> {
+            openProjectLabel.setVisible(true);
+            openProjectFileButton.setEnabled(true);
+        });
+        configFormPanel.add(openProjectFileButton);
+
+        JButton openUMLetButton = new JButton("Start UMLet Tool");
+        configFormPanel.add(openUMLetButton);
+
+        JButton generateCodeButton = new JButton("Generate Code");
+        configFormPanel.add(generateCodeButton);
 
         return topPanel;
     }
@@ -127,6 +148,36 @@ public class Main {
             System.err.println("Failed to list XSLT templates: " + e);
             return new String[]{"Error"};
         }
+    }
+
+    private static JButton getProjectFileChooseButton(JLabel fileSelectedLabel, JRadioButton openProjectRadioButton) {
+        JButton openProjectButton = new JButton("Choose UMLet File");
+        openProjectButton.setEnabled(false);
+        openProjectButton.addActionListener(e -> {
+            if (!openProjectRadioButton.isSelected()) return;
+            openProjectButton.setEnabled(true);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith(UMLetFileExtension);
+                }
+
+                @Override
+                public String getDescription() {
+                    return "UMLet Files (*"+UMLetFileExtension+")";
+                }
+            });
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setDialogTitle("Choose UMLet File");
+
+            int returnVal = fileChooser.showOpenDialog(null);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                fileSelectedLabel.setText(fileChooser.getSelectedFile().getName());
+            }
+        });
+        return openProjectButton;
     }
 
     private static JButton getXSLTChooseButton(JComboBox<String> xsltTextField) {
