@@ -24,6 +24,7 @@ public class Main {
         UIManager.put("Label.font", new Font("Monospaced", Font.PLAIN, fontSize));
         UIManager.put("Button.font", new Font("Monospaced", Font.PLAIN, fontSize));
         UIManager.put("TextField.font", new Font("Monospaced", Font.PLAIN, fontSize));
+        UIManager.put("RadioButton.font", new Font("Monospaced", Font.PLAIN, fontSize));
         JFrame mainFrame = new JFrame("InformalMDD-CodeGenerator");
         mainFrame.setSize(500, 600);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +58,7 @@ public class Main {
         topPanel.add(Box.createRigidArea(new Dimension(10, 0)));//pseudo empty line
 
         JPanel configFormPanel = new JPanel();
-        configFormPanel.setLayout(new GridLayout(6, 2, 10, 10));
+        configFormPanel.setLayout(new GridLayout(8, 2, 10, 10));
         configFormPanel.setBorder(new EmptyBorder(20, 20, 10, 20));
         topPanel.add(configFormPanel);
 
@@ -72,6 +73,7 @@ public class Main {
 
         JTextField projectDirTextField = new JTextField(30);
         projectDirTextField.setText("No directory selected");
+        projectDirTextField.setHorizontalAlignment(JTextField.CENTER);
         projectDirTextField.setEditable(false);
         configFormPanel.add(projectDirTextField);
 
@@ -90,6 +92,24 @@ public class Main {
 
         JButton chooseXSLTTemplateButton = getXSLTChooseButton(xsltTemplateComboBox);
         configFormPanel.add(chooseXSLTTemplateButton);
+
+        JRadioButton newProjectRadioButton = new JRadioButton("New UMLet Project");
+        newProjectRadioButton.setSelected(true);
+        configFormPanel.add(newProjectRadioButton);
+
+        JLabel openProjectLabel = new JLabel("No file selected");
+        openProjectLabel.setHorizontalAlignment(JLabel.CENTER);
+        configFormPanel.add(openProjectLabel);
+
+        JRadioButton openProjectRadioButton = new JRadioButton("Open UMLet Project");
+        configFormPanel.add(openProjectRadioButton);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(newProjectRadioButton);
+        buttonGroup.add(openProjectRadioButton);
+
+        JButton openProjectButton = new JButton("Choose UMLet File");
+        configFormPanel.add(openProjectButton);
 
         return topPanel;
     }
