@@ -5,9 +5,16 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Main {
     private static final int fontSize = 14;
+    private static final String xsltDir = "InformalMDD-core/src/main/resources/xsl_templates";
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(Main::createAndShowGUI);
     }
@@ -49,33 +56,76 @@ public class Main {
 
         topPanel.add(Box.createRigidArea(new Dimension(10, 0)));//pseudo empty line
 
-        JPanel projectNamePanel = new JPanel();
-        projectNamePanel.setLayout(new GridLayout(4, 2, 10, 10));
-        projectNamePanel.setBorder(new EmptyBorder(20, 20, 10, 20));
-        topPanel.add(projectNamePanel);
+        JPanel configFormPanel = new JPanel();
+        configFormPanel.setLayout(new GridLayout(6, 2, 10, 10));
+        configFormPanel.setBorder(new EmptyBorder(20, 20, 10, 20));
+        topPanel.add(configFormPanel);
 
         JLabel projectNameLabel = new JLabel("Project Name");
-        projectNamePanel.add(projectNameLabel);
+        configFormPanel.add(projectNameLabel);
 
         JTextField projectNameTextField = new JTextField(20);
-        projectNamePanel.add(projectNameTextField);
+        configFormPanel.add(projectNameTextField);
 
         JLabel projectDirLabel = new JLabel("Project Directory");
-        projectNamePanel.add(projectDirLabel);
+        configFormPanel.add(projectDirLabel);
 
         JTextField projectDirTextField = new JTextField(30);
         projectDirTextField.setText("No directory selected");
         projectDirTextField.setEditable(false);
-        projectNamePanel.add(projectDirTextField);
+        configFormPanel.add(projectDirTextField);
 
-        projectNamePanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        configFormPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
         JButton projectDirChooseButton = getProjectDirChooseButton(projectDirTextField);
-        projectNamePanel.add(projectDirChooseButton);
+        configFormPanel.add(projectDirChooseButton);
 
-        JLabel xsltLabel = new JLabel("XSLT");
+        JLabel xsltLabel = new JLabel("XSLT Template");
+        configFormPanel.add(xsltLabel);
+
+        JComboBox<String> xsltTemplateComboBox = new JComboBox<>(getXSLTTemplates(Path.of(xsltDir)));
+        configFormPanel.add(xsltTemplateComboBox);
+
+        configFormPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+        JButton chooseXSLTTemplateButton = getXSLTChooseButton(xsltTemplateComboBox);
+        configFormPanel.add(chooseXSLTTemplateButton);
 
         return topPanel;
+    }
+
+    private static String[] getXSLTTemplates(Path dir) {
+        try (Stream<Path> pathStream = Files.list(dir)) {
+            List<String> fileNames = new ArrayList<>();
+            pathStream.forEach(path -> {
+               if (Files.isRegularFile(path)) {
+                   fileNames.add(path.getFileName().toString());
+               }
+            });
+            return fileNames.toArray(new String[0]);
+        } catch (IOException e) {
+            System.err.println("Failed to list XSLT templates: " + e);
+            return new String[]{"Error"};
+        }
+    }
+
+    private static JButton getXSLTChooseButton(JComboBox<String> xsltTextField) {
+        JButton projectDirChooseButton = new JButton("Choose Template");
+        projectDirChooseButton.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            chooser.setDialogTitle("Choose Template");
+
+            int returnVal = chooser.showOpenDialog(null);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                xsltTextField.addItem(chooser.getSelectedFile().getName());
+                xsltTextField.setSelectedItem(chooser.getSelectedFile().getName());
+            } else {
+                xsltTextField.setSelectedIndex(0);
+            }
+        });
+        return projectDirChooseButton;
     }
 
     private static JButton getProjectDirChooseButton(JTextField projectDirTextField) {
