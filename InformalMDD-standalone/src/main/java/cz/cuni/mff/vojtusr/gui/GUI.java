@@ -17,13 +17,13 @@ public class GUI {
     private static final String xsltDir = "InformalMDD-core/src/main/resources/xsl_templates";
     private static final String UMLetFileExtension = ".uxf";
 
+    private static final JFrame mainFrame = new JFrame("InformalMDD-CodeGenerator");
+    private static final JPanel topPanel = getTopPanel();
+
+
     public static void createAndShowGUI() {
         JFrame.setDefaultLookAndFeelDecorated(true);
-        UIManager.put("Label.font", new Font("Monospaced", Font.PLAIN, fontSize));
-        UIManager.put("Button.font", new Font("Monospaced", Font.PLAIN, fontSize));
-        UIManager.put("TextField.font", new Font("Monospaced", Font.PLAIN, fontSize));
-        UIManager.put("RadioButton.font", new Font("Monospaced", Font.PLAIN, fontSize));
-        JFrame mainFrame = new JFrame("InformalMDD-CodeGenerator");
+        setFonts();
         mainFrame.setSize(500, 600);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -32,10 +32,15 @@ public class GUI {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
 
-        JPanel topPanel = getTopPanel();
-
         mainFrame.add(topPanel, BorderLayout.NORTH);
         mainFrame.setVisible(true);
+    }
+
+    private static void setFonts() {
+        UIManager.put("Label.font", new Font("Monospaced", Font.PLAIN, fontSize));
+        UIManager.put("Button.font", new Font("Monospaced", Font.PLAIN, fontSize));
+        UIManager.put("TextField.font", new Font("Monospaced", Font.PLAIN, fontSize));
+        UIManager.put("RadioButton.font", new Font("Monospaced", Font.PLAIN, fontSize));
     }
 
     private static JPanel getTopPanel() {
@@ -43,14 +48,10 @@ public class GUI {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        JLabel mddLabel = new JLabel("Informal MDD");
-        mddLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mddLabel.setFont(new Font("Monospaced", Font.PLAIN, 28));
+        JLabel mddLabel = getCenteredMainLabel("Informal MDD");
         topPanel.add(mddLabel);
 
-        JLabel codeGenLabel = new JLabel("Java Code Generator");
-        codeGenLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        codeGenLabel.setFont(new Font("Monospaced", Font.PLAIN, 28));
+        JLabel codeGenLabel = getCenteredMainLabel("Java Code Generator");
         topPanel.add(codeGenLabel);
 
         topPanel.add(Box.createRigidArea(new Dimension(10, 0)));//pseudo empty line
@@ -130,6 +131,13 @@ public class GUI {
         configFormPanel.add(generateCodeButton);
 
         return topPanel;
+    }
+
+    private static JLabel getCenteredMainLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setFont(new Font("Monospaced", Font.PLAIN, 28));
+        return label;
     }
 
     private static String[] getXSLTTemplates(Path dir) {
