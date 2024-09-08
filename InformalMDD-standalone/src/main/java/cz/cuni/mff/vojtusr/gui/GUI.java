@@ -20,6 +20,12 @@ public class GUI {
     private static final JFrame mainFrame = new JFrame("InformalMDD-CodeGenerator");
     private static final JPanel topPanel = getTopPanel();
 
+    private static JTextField projectNameTextField;
+    private static JTextField projectDirTextField;
+    private static JComboBox<String> xsltTemplateComboBox;
+    private static JLabel openProjectLabel;
+
+    private static boolean isNewProject = true;
 
     public static void createAndShowGUI() {
         JFrame.setDefaultLookAndFeelDecorated(true);
@@ -81,13 +87,13 @@ public class GUI {
         JLabel projectNameLabel = new JLabel("Project Name");
         configFormPanel.add(projectNameLabel);
 
-        JTextField projectNameTextField = new JTextField(20);
+        projectNameTextField = new JTextField(20);
         configFormPanel.add(projectNameTextField);
 
         JLabel projectDirLabel = new JLabel("Project Directory");
         configFormPanel.add(projectDirLabel);
 
-        JTextField projectDirTextField = new JTextField(30);
+        projectDirTextField = new JTextField(30);
         projectDirTextField.setText("No directory selected");
         projectDirTextField.setHorizontalAlignment(JTextField.CENTER);
         projectDirTextField.setEditable(false);
@@ -101,7 +107,7 @@ public class GUI {
         JLabel xsltLabel = new JLabel("XSLT Template");
         configFormPanel.add(xsltLabel);
 
-        JComboBox<String> xsltTemplateComboBox = new JComboBox<>(getXSLTTemplates(Path.of(xsltDir)));
+        xsltTemplateComboBox = new JComboBox<>(getXSLTTemplates(Path.of(xsltDir)));
         configFormPanel.add(xsltTemplateComboBox);
 
         configFormPanel.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -109,7 +115,7 @@ public class GUI {
         JButton chooseXSLTTemplateButton = getXSLTChooseButton(xsltTemplateComboBox);
         configFormPanel.add(chooseXSLTTemplateButton);
 
-        JLabel openProjectLabel = new JLabel("No file selected");
+        openProjectLabel = new JLabel("No file selected");//
 
         JRadioButton newProjectRadioButton = new JRadioButton("New UMLet Project");
         newProjectRadioButton.setSelected(true);
@@ -134,10 +140,12 @@ public class GUI {
         newProjectRadioButton.addActionListener(e -> {
             openProjectLabel.setVisible(false);
             openProjectFileButton.setEnabled(false);
+            isNewProject = true;
         });
         openProjectRadioButton.addActionListener(e -> {
             openProjectLabel.setVisible(true);
             openProjectFileButton.setEnabled(true);
+            isNewProject = false;
         });
         configFormPanel.add(openProjectFileButton);
 
@@ -149,6 +157,9 @@ public class GUI {
         programButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 0));
 
         JButton openUMLetButton = new JButton("Start UMLet Tool");
+        openUMLetButton.addActionListener(e -> {
+
+        });
         programButtonPanel.add(openUMLetButton);
 
         JButton generateCodeButton = new JButton("Generate Code");
