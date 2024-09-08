@@ -59,6 +59,9 @@ public class GUI {
         JPanel configFormPanel = getConfigFormPanel();
         topPanel.add(configFormPanel);
 
+        JPanel startProgramButtonsPanel = getStartProgramButtonPanel(configFormPanel);
+        topPanel.add(startProgramButtonsPanel);
+
         return topPanel;
     }
 
@@ -71,8 +74,8 @@ public class GUI {
 
     private static JPanel getConfigFormPanel() {
         JPanel configFormPanel = new JPanel();
-        configFormPanel.setLayout(new GridLayout(8, 2, 10, 10));
-        configFormPanel.setBorder(new EmptyBorder(20, 20, 10, 20));
+        configFormPanel.setLayout(new GridLayout(7, 2, 10, 10));
+        configFormPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
 
         JLabel projectNameLabel = new JLabel("Project Name");
@@ -138,12 +141,24 @@ public class GUI {
         });
         configFormPanel.add(openProjectFileButton);
 
+        return configFormPanel;
+    }
+
+    private static JPanel getStartProgramButtonPanel(JPanel configPanel) {
+        JPanel programButtonPanel = new JPanel();
+        programButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 25, 0));
+
         JButton openUMLetButton = new JButton("Start UMLet Tool");
-        configFormPanel.add(openUMLetButton);
+        programButtonPanel.add(openUMLetButton);
 
         JButton generateCodeButton = new JButton("Generate Code");
-        configFormPanel.add(generateCodeButton);
-        return configFormPanel;
+        programButtonPanel.add(generateCodeButton);
+
+        Dimension buttonSize = new Dimension(200, 50);
+        openUMLetButton.setPreferredSize(buttonSize);
+        generateCodeButton.setPreferredSize(buttonSize);
+
+        return programButtonPanel;
     }
 
     private static String[] getXSLTTemplates(Path dir) {
