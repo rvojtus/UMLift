@@ -56,10 +56,24 @@ public class GUI {
 
         topPanel.add(Box.createRigidArea(new Dimension(10, 0)));//pseudo empty line
 
+        JPanel configFormPanel = getConfigFormPanel();
+        topPanel.add(configFormPanel);
+
+        return topPanel;
+    }
+
+    private static JLabel getCenteredMainLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setFont(new Font("Monospaced", Font.PLAIN, 28));
+        return label;
+    }
+
+    private static JPanel getConfigFormPanel() {
         JPanel configFormPanel = new JPanel();
         configFormPanel.setLayout(new GridLayout(8, 2, 10, 10));
         configFormPanel.setBorder(new EmptyBorder(20, 20, 10, 20));
-        topPanel.add(configFormPanel);
+
 
         JLabel projectNameLabel = new JLabel("Project Name");
         configFormPanel.add(projectNameLabel);
@@ -129,15 +143,7 @@ public class GUI {
 
         JButton generateCodeButton = new JButton("Generate Code");
         configFormPanel.add(generateCodeButton);
-
-        return topPanel;
-    }
-
-    private static JLabel getCenteredMainLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setFont(new Font("Monospaced", Font.PLAIN, 28));
-        return label;
+        return configFormPanel;
     }
 
     private static String[] getXSLTTemplates(Path dir) {
