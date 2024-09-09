@@ -2,6 +2,7 @@ package cz.cuni.mff.vojtusr.gui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
@@ -158,11 +159,17 @@ public class GUI {
 
         JButton openUMLetButton = new JButton("Start UMLet Tool");
         openUMLetButton.addActionListener(e -> {
+            if (!validateStartUMLet()) {
+                return;
+            }
 
         });
         programButtonPanel.add(openUMLetButton);
 
         JButton generateCodeButton = new JButton("Generate Code");
+        generateCodeButton.addActionListener(e -> {
+
+        });
         programButtonPanel.add(generateCodeButton);
 
         Dimension buttonSize = new Dimension(200, 50);
@@ -170,6 +177,22 @@ public class GUI {
         generateCodeButton.setPreferredSize(buttonSize);
 
         return programButtonPanel;
+    }
+
+    private static boolean validateStartUMLet() {
+
+        return validateProjectName();
+    }
+
+    private static boolean validateProjectName() {
+        if (projectNameTextField.getText().trim().isEmpty()) {
+            projectNameTextField.setBorder(new LineBorder(Color.RED, 2));
+            JOptionPane.showMessageDialog(mainFrame, "Please enter a project name.");
+            projectNameTextField.requestFocus();
+            return false;
+        }
+        projectNameTextField.setBorder(UIManager.getBorder("TextField.border"));
+        return true;
     }
 
     private static String[] getXSLTTemplates(Path dir) {
