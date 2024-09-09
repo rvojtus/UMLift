@@ -24,7 +24,7 @@ public class GUI {
     private static JTextField projectNameTextField;
     private static JTextField projectDirTextField;
     private static JComboBox<String> xsltTemplateComboBox;
-    private static JLabel openProjectLabel;
+    private static JTextField openUMLetTextField;
 
     private static boolean isNewProject = true;
 
@@ -116,7 +116,8 @@ public class GUI {
         JButton chooseXSLTTemplateButton = getXSLTChooseButton(xsltTemplateComboBox);
         configFormPanel.add(chooseXSLTTemplateButton);
 
-        openProjectLabel = new JLabel("No file selected");//
+        openUMLetTextField = new JTextField("No file selected");
+        openUMLetTextField.setEditable(false);
 
         JRadioButton newProjectRadioButton = new JRadioButton("New UMLet Project");
         newProjectRadioButton.setSelected(true);
@@ -124,9 +125,9 @@ public class GUI {
         configFormPanel.add(newProjectRadioButton);
 
 
-        openProjectLabel.setVisible(false);
-        openProjectLabel.setHorizontalAlignment(JLabel.CENTER);
-        configFormPanel.add(openProjectLabel);
+        openUMLetTextField.setVisible(false);
+        openUMLetTextField.setHorizontalAlignment(JLabel.CENTER);
+        configFormPanel.add(openUMLetTextField);
 
         JRadioButton openProjectRadioButton = new JRadioButton("Open UMLet Project");
 
@@ -136,15 +137,15 @@ public class GUI {
         buttonGroup.add(newProjectRadioButton);
         buttonGroup.add(openProjectRadioButton);
 
-        JButton openProjectFileButton = getProjectFileChooseButton(openProjectLabel, openProjectRadioButton);
+        JButton openProjectFileButton = getProjectFileChooseButton(openUMLetTextField, openProjectRadioButton);
 
         newProjectRadioButton.addActionListener(e -> {
-            openProjectLabel.setVisible(false);
+            openUMLetTextField.setVisible(false);
             openProjectFileButton.setEnabled(false);
             isNewProject = true;
         });
         openProjectRadioButton.addActionListener(e -> {
-            openProjectLabel.setVisible(true);
+            openUMLetTextField.setVisible(true);
             openProjectFileButton.setEnabled(true);
             isNewProject = false;
         });
@@ -160,6 +161,7 @@ public class GUI {
         JButton openUMLetButton = new JButton("Start UMLet Tool");
         openUMLetButton.addActionListener(e -> {
             if (!validateStartUMLet()) {
+                JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
                 return;
             }
 
@@ -180,7 +182,7 @@ public class GUI {
     }
 
     private static boolean validateStartUMLet() {
-        return validateProjectName() && validateProjectDir();
+        return validateProjectName() && validateProjectDir() && validateUMLetFile();
     }
 
     private static boolean validateProjectName() {
@@ -195,6 +197,7 @@ public class GUI {
     }
 
     private static boolean validateProjectDir() {
+        // initial check if the user selected any directory
         if (projectDirTextField.getText().trim().isEmpty() || projectDirTextField.getText().trim().equals("No directory selected")) {
             projectDirTextField.setBorder(new LineBorder(Color.RED, 2));
             JOptionPane.showMessageDialog(mainFrame, "Please enter a project directory.");
@@ -202,6 +205,7 @@ public class GUI {
             return false;
         }
         Path projectDir = Path.of(projectDirTextField.getText().trim());
+        // checks if the selected directory is valid
         if (!Files.isDirectory(projectDir)) {
             projectDirTextField.setBorder(new LineBorder(Color.RED, 2));
             JOptionPane.showMessageDialog(mainFrame, "Invalid project directory.");
@@ -217,7 +221,18 @@ public class GUI {
     }
 
     private static boolean validateUMLetFile() {
-        return true;//TODO
+        if (!isNewProject) {
+            if (openUMLetTextField.getText().trim().isEmpty() || openUMLetTextField.getText().trim().equals("No file selected")) {
+                openUMLetTextField.setBorder(new LineBorder(Color.RED, 2));
+                JOptionPane.showMessageDialog(mainFrame, "Please enter a valid UMLet file.");
+                openUMLetTextField.requestFocus();
+                return false;
+            }
+            openUMLetTextField.setBorder(UIManager.getBorder("TextField.border"));
+            Path UMLetFilePath = Path.of(openUMLetTextField.getText().trim());
+            return Files.isRegularFile(UMLetFilePath);
+        }
+        return true;
     }
 
     private static String[] getXSLTTemplates(Path dir) {
@@ -235,7 +250,7 @@ public class GUI {
         }
     }
 
-    private static JButton getProjectFileChooseButton(JLabel fileSelectedLabel, JRadioButton openProjectRadioButton) {
+    private static JButton getProjectFileChooseButton(JTextField fileSelectedLabel, JRadioButton openProjectRadioButton) {
         JButton openProjectButton = new JButton("Choose UMLet File");
         openProjectButton.setEnabled(false);
         openProjectButton.addActionListener(e -> {
