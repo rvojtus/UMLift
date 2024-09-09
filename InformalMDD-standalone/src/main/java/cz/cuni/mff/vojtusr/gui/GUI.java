@@ -180,8 +180,7 @@ public class GUI {
     }
 
     private static boolean validateStartUMLet() {
-
-        return validateProjectName();
+        return validateProjectName() && validateProjectDir();
     }
 
     private static boolean validateProjectName() {
@@ -193,6 +192,32 @@ public class GUI {
         }
         projectNameTextField.setBorder(UIManager.getBorder("TextField.border"));
         return true;
+    }
+
+    private static boolean validateProjectDir() {
+        if (projectDirTextField.getText().trim().isEmpty() || projectDirTextField.getText().trim().equals("No directory selected")) {
+            projectDirTextField.setBorder(new LineBorder(Color.RED, 2));
+            JOptionPane.showMessageDialog(mainFrame, "Please enter a project directory.");
+            projectDirTextField.requestFocus();
+            return false;
+        }
+        Path projectDir = Path.of(projectDirTextField.getText().trim());
+        if (!Files.isDirectory(projectDir)) {
+            projectDirTextField.setBorder(new LineBorder(Color.RED, 2));
+            JOptionPane.showMessageDialog(mainFrame, "Invalid project directory.");
+            projectDirTextField.requestFocus();
+            return false;
+        }
+        projectDirTextField.setBorder(UIManager.getBorder("TextField.border"));
+        return true;
+    }
+
+    private static boolean validateXSLTTemplate() {
+        return true;//TODO
+    }
+
+    private static boolean validateUMLetFile() {
+        return true;//TODO
     }
 
     private static String[] getXSLTTemplates(Path dir) {
