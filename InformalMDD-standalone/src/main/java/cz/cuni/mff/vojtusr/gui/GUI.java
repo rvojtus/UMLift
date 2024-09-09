@@ -170,7 +170,10 @@ public class GUI {
 
         JButton generateCodeButton = new JButton("Generate Code");
         generateCodeButton.addActionListener(e -> {
-
+            if (!validateStartCodeGeneration()) {
+                JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
+                return;
+            }
         });
         programButtonPanel.add(generateCodeButton);
 
@@ -183,6 +186,10 @@ public class GUI {
 
     private static boolean validateStartUMLet() {
         return validateProjectName() && validateProjectDir() && validateUMLetFile();
+    }
+
+    private static boolean validateStartCodeGeneration() {
+        return validateProjectName() && validateProjectDir() && validateUMLetFile() && !isNewProject;
     }
 
     private static boolean validateProjectName() {
