@@ -19,17 +19,6 @@
     </properties>
 
     <dependencies>
-        <!-- UMLet Parent Module -->
-        <!-- <dependency>
-            <groupId>com.umlet</groupId>
-            <artifactId>umlet-parent</artifactId>
-            <version>15.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.umlet</groupId>
-            <artifactId>umlet-standalone</artifactId>
-            <version>15.1</version>
-        </dependency> -->
 
         <!-- EMF Core -->
         <dependency>
@@ -65,6 +54,8 @@
             <artifactId>Saxon-HE</artifactId>
             <version>12.5</version>
         </dependency>
+
+        <!-- UMLet Standalone module -->
         <dependency>
             <groupId>com.umlet</groupId>
             <artifactId>umlet-standalone</artifactId>
