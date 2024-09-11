@@ -1,5 +1,7 @@
 package cz.cuni.mff.vojtusr.gui;
 
+import cz.cuni.mff.vojtusr.emf.JavaGenerator;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -29,6 +31,7 @@ public class GUI {
     private static boolean isNewProject = true;
 
     public static void createAndShowGUI() {
+        JavaGenerator javaGenerator = new JavaGenerator();
         JFrame.setDefaultLookAndFeelDecorated(true);
         setFonts();
         mainFrame.setSize(500, 600);
@@ -182,6 +185,14 @@ public class GUI {
         generateCodeButton.setPreferredSize(buttonSize);
 
         return programButtonPanel;
+    }
+
+    private static void startUMLet() {
+
+    }
+
+    private static void startCodeGeneration() {
+
     }
 
     private static boolean validateStartUMLet() {
