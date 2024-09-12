@@ -1,5 +1,8 @@
 package cz.cuni.mff.vojtusr.gui;
 
+import com.baselet.gui.CurrentGui;
+import com.baselet.standalone.MainStandalone;
+import com.baselet.standalone.gui.StandaloneGUI;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 
 import javax.swing.*;
@@ -7,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +18,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static com.baselet.standalone.MainStandalone.tmpFile;
 
 public class GUI {
     private static final int fontSize = 14;
@@ -30,8 +36,9 @@ public class GUI {
 
     private static boolean isNewProject = true;
 
+    private static String umletFilePath = "";
+
     public static void createAndShowGUI() {
-        JavaGenerator javaGenerator = new JavaGenerator();
         JFrame.setDefaultLookAndFeelDecorated(true);
         setFonts();
         mainFrame.setSize(500, 600);
@@ -163,11 +170,17 @@ public class GUI {
 
         JButton openUMLetButton = new JButton("Start UMLet Tool");
         openUMLetButton.addActionListener(e -> {
-            if (!validateStartUMLet()) {
-                JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
-                return;
+//            if (!validateStartUMLet()) {
+//                JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
+//                return;
+//            }
+            if (isNewProject) {
+                startUMLet();
             }
-
+            else {
+                startUMLet(umletFilePath);
+            }
+            mainFrame.setVisible(false);
         });
         programButtonPanel.add(openUMLetButton);
 
@@ -188,15 +201,26 @@ public class GUI {
     }
 
     private static void startUMLet() {
+        MainStandalone.main(new String[]{});
+        addCodeGenerationButton();
+    }
 
+    private static void startUMLet(String filePath) {
+        System.out.println("Starting UMLet: " + filePath);
+        MainStandalone.main(new String[]{filePath});
+        addCodeGenerationButton();
     }
 
     private static void startCodeGeneration() {
-
+        //todo
     }
 
     private static boolean validateStartUMLet() {
-        return validateProjectName() && validateProjectDir() && validateUMLetFile();
+        boolean validProjectName = validateProjectName();
+        boolean validProjectDir = validateProjectDir();
+        boolean validUMLetFile = validateUMLetFile();
+        //System.err.println(validProjectName + " " + validProjectDir + " " + validUMLetFile);
+        return validProjectName && validProjectDir && validUMLetFile;
     }
 
     private static boolean validateStartCodeGeneration() {
@@ -248,7 +272,7 @@ public class GUI {
             }
             openUMLetTextField.setBorder(UIManager.getBorder("TextField.border"));
             Path UMLetFilePath = Path.of(openUMLetTextField.getText().trim());
-            return Files.isRegularFile(UMLetFilePath);
+            //return Files.isRegularFile(UMLetFilePath);
         }
         return true;
     }
@@ -293,6 +317,7 @@ public class GUI {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 fileSelectedLabel.setText(fileChooser.getSelectedFile().getName());
+                umletFilePath = fileChooser.getSelectedFile().getAbsolutePath();
             }
         });
         return openProjectButton;
@@ -333,5 +358,31 @@ public class GUI {
             }
         });
         return projectDirChooseButton;
+    }
+
+    private static void addCodeGenerationButton() {
+        CurrentGui currentGui = CurrentGui.getInstance();
+        JFrame mainUMLetFrame = (JFrame) currentGui.getGui().getMainFrame();
+        JMenuBar menu = mainUMLetFrame.getJMenuBar();
+        JButton codeGenerationButton = new JButton(new AbstractAction("Code Generation") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog generationOptionsFrame = new JDialog(mainUMLetFrame, "Code Generation Options", true);
+                generationOptionsFrame.setSize(300, 200);
+                generationOptionsFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+                // Center the new frame relative to the main frame
+                generationOptionsFrame.setLocationRelativeTo(mainUMLetFrame);
+
+                // Disable resizing, which prevents full-screen mode
+                generationOptionsFrame.setResizable(false);
+
+                generationOptionsFrame.setVisible(true);
+            }
+        });
+
+        menu.add(codeGenerationButton);
+
+        SwingUtilities.updateComponentTreeUI(mainUMLetFrame);
     }
 }
