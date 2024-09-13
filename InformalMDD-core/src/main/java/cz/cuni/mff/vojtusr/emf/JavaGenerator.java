@@ -36,7 +36,9 @@ public class JavaGenerator {
         this.xsltFile = templatesPath + "/" + xsltFile;
     }
 
-    public void generate(String inputFileUML, String outputFileEcore, String projectDir, String projectName) throws IOException, TransformerException {
+    public void generate(String inputFileUML, String projectDir, String projectName) throws IOException, TransformerException {
+        final String resourcesPath = projectDir + "/" + projectName + "/src/main/resources";
+        final String outputFileEcore = resourcesPath + "/ecore.ecore";
         XSLT xslt = new XSLT(xsltFile);
         Path outputPath = Path.of(outputFileEcore);
         if (!Files.exists(outputPath)) {
