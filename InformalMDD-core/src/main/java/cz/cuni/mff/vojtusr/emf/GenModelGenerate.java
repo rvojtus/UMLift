@@ -16,27 +16,30 @@ import java.util.Collections;
 
 
 public class GenModelGenerate {
-    public GenModel generate() throws IOException {
+    public GenModel generate(String projectDir, String projectName) throws IOException {
+        final String resourcesPath = projectDir + "/" + projectName + "/src/main/resources";
         // Initialize resource set
         ResourceSet resourceSet = new ResourceSetImpl();
 
         // Register resource set
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
+        //"InformalMDD-core/src/main/resources/testProject.ecore"
 
         // Load the Ecore model
-        URI ecoreURI = URI.createFileURI("InformalMDD-core/src/main/resources/testProject.ecore");// todo
+        URI ecoreURI = URI.createFileURI(resourcesPath + "/ecore.ecore");// todo maybe change file name
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
 
         // Create a GenModel
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
-        genModel.setModelName("ModelName");// todo
-        //genModel.setModelDirectory("src/main/java");
-        genModel.setModelDirectory("testProject/src-gen");// todo
+        genModel.setModelName(projectName);
+        //genModel.setModelDirectory("testProject/src-gen");
+        genModel.setModelDirectory(projectDir);
         genModel.initialize(Collections.singleton(ecorePackage));
 
+        //"InformalMDD-core/src/main/resources/testProject.genmodel"
         // Save the GenModel
-        URI genmodelURI = URI.createFileURI("InformalMDD-core/src/main/resources/testProject.genmodel");// todo
+        URI genmodelURI = URI.createFileURI(resourcesPath + "/genmodel.genmodel");// todo maybe change file name
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMLResource.OPTION_ENCODING, "UTF-8");
         genModelResource.getContents().add(genModel);
