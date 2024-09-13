@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.baselet.standalone.MainStandalone.tmpFile;
@@ -190,6 +192,9 @@ public class GUI {
                 JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
                 return;
             }
+            else {
+                startCodeGeneration();
+            }
         });
         programButtonPanel.add(generateCodeButton);
 
@@ -212,7 +217,25 @@ public class GUI {
     }
 
     private static void startCodeGeneration() {
-        //todo
+        String inputUML = getUMLInputFilePath();
+        String xsltFile = Objects.requireNonNull(xsltTemplateComboBox.getSelectedItem()).toString();
+        JavaGenerator javaGenerator = new JavaGenerator(xsltFile);
+        try {
+            javaGenerator.generate(inputUML, projectDirTextField.getText(), projectNameTextField.getText());
+        } catch (IOException e) {// todo better error display
+            System.err.println("IOException occurred: " + e);
+        } catch (TransformerException e) {
+            System.err.println("TransformerException occurred: " + e);
+        }
+    }
+
+    private static String getUMLInputFilePath() {
+        if (!isNewProject) {
+            return umletFilePath;
+        }
+        else {
+            return "";// todo get file from umlet API
+        }
     }
 
     private static boolean validateStartUMLet() {
