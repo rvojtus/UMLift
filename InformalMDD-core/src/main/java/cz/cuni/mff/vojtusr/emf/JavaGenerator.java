@@ -1,5 +1,6 @@
 package cz.cuni.mff.vojtusr.emf;
 
+import cz.cuni.mff.vojtusr.xslt.XSLT;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
@@ -14,17 +15,41 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenModelGeneratorAdapterFactory;
 
+import javax.xml.transform.TransformerException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * Generates Java code from provided Ecore and GenModel files, using EMF libraries
  */
 public class JavaGenerator {
+
+    public void generate(String xsltFile, String inputFile, String outputFile) throws IOException, TransformerException {
+        XSLT xslt = new XSLT(xsltFile);
+        Path outputPath = Path.of(outputFile);
+        if (!Files.exists(outputPath)) {
+            Files.createFile(outputPath);
+        }
+        else {
+            new FileOutputStream(outputFile).close();
+        }
+        xslt.transform(inputFile, outputFile);
+
+        GenModelGenerate genModelGenerate = new GenModelGenerate();
+        GenModel genModel = genModelGenerate.generate();
+
+        JavaGenerator.generateCode(genModel);
+
+    }
 
     /**
      * Generates Java code from provided GenModel
      * @param genModel
      * @throws java.io.IOException
      */
-    public void generate(GenModel genModel) throws java.io.IOException {
+    public static void generateCode(GenModel genModel) throws java.io.IOException {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
         EPackage.Registry.INSTANCE.put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE);
 
