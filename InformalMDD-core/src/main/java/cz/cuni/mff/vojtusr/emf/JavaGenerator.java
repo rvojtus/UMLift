@@ -26,13 +26,14 @@ import java.nio.file.Path;
  */
 public class JavaGenerator {
     private final String xsltFile;
+    private final String templatesPath = "InformalMDD-core/src/main/resources/xsl_templates";
 
-    JavaGenerator() {
-        xsltFile = "InformalMDD-core/src/main/resources/xsl_templates/umlet_to_ecore.xslt";// default XSLT template
+    public JavaGenerator() {
+        xsltFile = templatesPath + "/umlet_to_ecore.xslt";// default XSLT template
     }
 
-    JavaGenerator(String xsltFile) {
-        this.xsltFile = xsltFile;
+    public JavaGenerator(String xsltFile) {
+        this.xsltFile = templatesPath + "/" + xsltFile;
     }
 
     public void generate(String inputFileUML, String outputFileEcore, String projectDir, String projectName) throws IOException, TransformerException {
