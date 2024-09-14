@@ -2,7 +2,6 @@ package cz.cuni.mff.vojtusr.gui;
 
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
-import com.baselet.standalone.gui.StandaloneGUI;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 
 import javax.swing.*;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import static com.baselet.standalone.MainStandalone.tmpFile;
 
 public class GUI {
     private static final int fontSize = 14;
@@ -172,10 +169,10 @@ public class GUI {
 
         JButton openUMLetButton = new JButton("Start UMLet Tool");
         openUMLetButton.addActionListener(e -> {
-//            if (!validateStartUMLet()) {
-//                JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
-//                return;
-//            }
+            if (!validateStartUMLet()) {
+                JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
+                return;
+            }
             if (isNewProject) {
                 startUMLet();
             }
@@ -193,7 +190,7 @@ public class GUI {
                 return;
             }
             else {
-                startCodeGeneration();
+                startStandaloneCodeGeneration();
             }
         });
         programButtonPanel.add(generateCodeButton);
@@ -216,7 +213,7 @@ public class GUI {
         addCodeGenerationButton();
     }
 
-    private static void startCodeGeneration() {
+    private static void startStandaloneCodeGeneration() {
         String inputUML = getUMLInputFilePath();
         String xsltFile = Objects.requireNonNull(xsltTemplateComboBox.getSelectedItem()).toString();
         JavaGenerator javaGenerator = new JavaGenerator(xsltFile);
