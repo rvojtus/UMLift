@@ -41,8 +41,11 @@ public class JavaGenerator {
         final String outputFileEcore = resourcesPath + "/ecore.ecore";
         XSLT xslt = new XSLT(xsltFile);
         Path outputPath = Path.of(outputFileEcore);
+
+        Files.createDirectories(outputPath.getParent());
         if (!Files.exists(outputPath)) {
             Files.createFile(outputPath);
+            System.out.println("Ecore File created: " + outputPath);
         }
         else {
             new FileOutputStream(outputFileEcore).close();
