@@ -23,7 +23,6 @@ public class GenModelGenerate {
 
         // Register resource set
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("ecore", new EcoreResourceFactoryImpl());
-        //"InformalMDD-core/src/main/resources/testProject.ecore"
 
         // Load the Ecore model
         URI ecoreURI = URI.createFileURI(resourcesPath + "/ecore.ecore");// todo maybe change file name
@@ -33,11 +32,9 @@ public class GenModelGenerate {
         // Create a GenModel
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
         genModel.setModelName(projectName);
-        //genModel.setModelDirectory("testProject/src-gen");
-        genModel.setModelDirectory(projectDir);
+        genModel.setModelDirectory(projectName + "/java");
         genModel.initialize(Collections.singleton(ecorePackage));
 
-        //"InformalMDD-core/src/main/resources/testProject.genmodel"
         // Save the GenModel
         URI genmodelURI = URI.createFileURI(resourcesPath + "/genmodel.genmodel");// todo maybe change file name
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
