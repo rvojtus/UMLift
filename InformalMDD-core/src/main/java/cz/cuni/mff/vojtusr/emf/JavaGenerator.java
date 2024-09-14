@@ -37,7 +37,8 @@ public class JavaGenerator {
     }
 
     public void generate(String inputFileUML, String projectDir, String projectName) throws IOException, TransformerException {
-        final String resourcesPath = projectDir + "/" + projectName + "/src/main/resources";
+        final String rootPath = projectDir + "/" + projectName;
+        final String resourcesPath = rootPath + "/src/main/resources";
         final String outputFileEcore = resourcesPath + "/ecore.ecore";
         XSLT xslt = new XSLT(xsltFile);
         Path outputPath = Path.of(outputFileEcore);
@@ -55,7 +56,7 @@ public class JavaGenerator {
         GenModelGenerate genModelGenerate = new GenModelGenerate();
         GenModel genModel = genModelGenerate.generate(projectDir, projectName);
 
-        JavaGenerator.generateCode(genModel);
+        JavaGenerator.generateCode(genModel, rootPath + "/src/main/");
 
     }
 
@@ -64,7 +65,7 @@ public class JavaGenerator {
      * @param genModel
      * @throws java.io.IOException
      */
-    public static void generateCode(GenModel genModel) throws java.io.IOException {
+    public static void generateCode(GenModel genModel, String rootPath) throws java.io.IOException {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
         EPackage.Registry.INSTANCE.put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE);
 
@@ -76,10 +77,8 @@ public class JavaGenerator {
         genModel.setCanGenerate(true);
         genModel.setValidateModel(true);
         genModel.setForceOverwrite(true);
-        final String rootContainer = "testProject";// todo
-        final String rootPath = "/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/InformalMDD-core/src/main/resources";// todo
+        final String rootContainer = genModel.getModelName();;
         EcorePlugin.getPlatformResourceMap().put(rootContainer, URI.createFileURI(rootPath));
-
 
         // Create the generator
         Generator generator = new Generator();
