@@ -216,11 +216,22 @@ public class GUI {
     }
 
     private static void startCodeGeneration(String inputUML) {
-        //String inputUML = getUMLInputFilePath();
         String xsltFile = Objects.requireNonNull(xsltTemplateComboBox.getSelectedItem()).toString();
         JavaGenerator javaGenerator = new JavaGenerator(xsltFile);
         try {
             javaGenerator.generate(inputUML, projectDirTextField.getText(), projectNameTextField.getText());
+            File projectDir = new File(projectDirTextField.getText());
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.open(projectDir);
+                } catch (IOException e) {
+                    System.out.println("Error opening project dir: " + projectDir.getAbsolutePath());
+                }
+            }
+            else {
+                System.out.println("Desktop is not supported.");
+            }
         } catch (IOException e) {// todo better error display
             System.err.println("IOException occurred: " + e);
         } catch (TransformerException e) {
@@ -383,6 +394,7 @@ public class GUI {
         CurrentGui currentGui = CurrentGui.getInstance();
         JFrame mainUMLetFrame = (JFrame) currentGui.getGui().getMainFrame();
         JMenuBar menu = mainUMLetFrame.getJMenuBar();
+        // todo Add JMenuItem - Code Generation Options Panel
         JButton codeGenerationButton = new JButton(new AbstractAction("Code Generation") {
             @Override
             public void actionPerformed(ActionEvent e) {
