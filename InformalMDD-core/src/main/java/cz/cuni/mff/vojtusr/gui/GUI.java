@@ -1,5 +1,7 @@
 package cz.cuni.mff.vojtusr.gui;
 
+import com.baselet.control.Main;
+import com.baselet.control.config.Config;
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
@@ -190,7 +192,7 @@ public class GUI {
                 return;
             }
             else {
-                startStandaloneCodeGeneration();
+                startCodeGeneration(umletFilePath);
             }
         });
         programButtonPanel.add(generateCodeButton);
@@ -213,8 +215,8 @@ public class GUI {
         addCodeGenerationButton();
     }
 
-    private static void startStandaloneCodeGeneration() {
-        String inputUML = getUMLInputFilePath();
+    private static void startCodeGeneration(String inputUML) {
+        //String inputUML = getUMLInputFilePath();
         String xsltFile = Objects.requireNonNull(xsltTemplateComboBox.getSelectedItem()).toString();
         JavaGenerator javaGenerator = new JavaGenerator(xsltFile);
         try {
@@ -227,12 +229,9 @@ public class GUI {
     }
 
     private static String getUMLInputFilePath() {
-        if (!isNewProject) {
-            return umletFilePath;
-        }
-        else {
-            return "";// todo get file from umlet API
-        }
+        String openFileUMLet = CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
+        System.out.println("Open File: " + openFileUMLet);
+        return openFileUMLet;
     }
 
     private static boolean validateStartUMLet() {
@@ -387,17 +386,19 @@ public class GUI {
         JButton codeGenerationButton = new JButton(new AbstractAction("Code Generation") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog generationOptionsFrame = new JDialog(mainUMLetFrame, "Code Generation Options", true);
-                generationOptionsFrame.setSize(300, 200);
-                generationOptionsFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-                // Center the new frame relative to the main frame
-                generationOptionsFrame.setLocationRelativeTo(mainUMLetFrame);
-
-                // Disable resizing, which prevents full-screen mode
-                generationOptionsFrame.setResizable(false);
-
-                generationOptionsFrame.setVisible(true);
+//                JDialog generationOptionsFrame = new JDialog(mainUMLetFrame, "Code Generation Options", true);
+//                generationOptionsFrame.setSize(300, 200);
+//                generationOptionsFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//
+//                // Center the new frame relative to the main frame
+//                generationOptionsFrame.setLocationRelativeTo(mainUMLetFrame);
+//
+//                // Disable resizing, which prevents full-screen mode
+//                generationOptionsFrame.setResizable(false);
+//
+//                generationOptionsFrame.setVisible(true);
+                String inputFile = getUMLInputFilePath();
+                startCodeGeneration(inputFile);
             }
         });
 
