@@ -15,7 +15,7 @@
     </properties>
 
     <modules>
-        <module>EclipseIDE</module>
+        <module>Eclipse-plugin</module>
         <module>IntelliJ</module>
         <module>umlet-15.1</module>
         <module>InformalMDD-core</module>
