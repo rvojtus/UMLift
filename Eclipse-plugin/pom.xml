@@ -6,12 +6,139 @@
 
     <groupId>cz.cuni.mff.vojtusr</groupId>
     <artifactId>Eclipse-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>eclipse-plugin</packaging>
 
     <properties>
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.tycho</groupId>
+                    <artifactId>tycho-p2-director-plugin</artifactId>
+                    <version>4.0.9</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>4.0.9</version>
+                <extensions>true</extensions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-packaging-plugin</artifactId>
+                <version>4.0.9</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>package-feature</id>
+                        <configuration>
+                            <finalName>MDDPlugin</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!--
+        <dependency>
+            <groupId>cz.cuni.mff.vojtusr</groupId>
+            <artifactId>InformalMDD-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        -->
+        <!-- Dependency on Eclipse Core Runtime  -->
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.core.runtime</artifactId>
+            <version>3.31.100</version>
+        </dependency>
+
+        <!-- Eclipse UI Dependency -->
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.ui</artifactId>
+            <version>3.206.0</version> <!-- Use the appropriate version range -->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt -->
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt</artifactId>
+            <version>3.127.0</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.win32.win32.x86_64
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+            <version>3.127.0</version>
+        </dependency> -->
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.x86_64
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+            <version>3.127.0</version>
+        </dependency> -->
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.aarch64
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.gtk.linux.aarch64</artifactId>
+            <version>3.127.0</version>
+        </dependency> -->
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.x86_64
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+            <version>3.127.0</version>
+        </dependency> -->
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.aarch64 -->
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.cocoa.macosx.aarch64</artifactId>
+            <version>3.127.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.jface -->
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.jface</artifactId>
+            <version>3.35.0</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>eclipse-p2-repo</id>
+            <layout>p2</layout>
+            <url>https://download.eclipse.org/eclipse/updates/4.24/</url>
+        </repository>
+        <repository>
+            <id>eclipse-releases</id>
+            <url>https://repo.eclipse.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>eclipse-snapshots</id>
+            <url>https://repo.eclipse.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
 </project>
