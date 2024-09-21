@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: My Plugin
+Bundle-SymbolicName: Eclipse-plugin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.31.100",
+                 org.eclipse.ui;bundle-version="3.206.0"
+Automatic-Module-Name: Eclipse-plugin
+Bundle-RequiredExecutionEnviroment: JavaSE-22
