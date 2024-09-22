@@ -7,11 +7,16 @@
     <groupId>cz.cuni.mff.vojtusr</groupId>
     <artifactId>Eclipse-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>eclipse-plugin</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>InformalMDD-plugin</module>
+        <module>InformalMDD-feature</module>
+        <module>InformalMDD-update-site</module>
+    </modules>
 
     <properties>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -31,6 +36,19 @@
                 <artifactId>tycho-maven-plugin</artifactId>
                 <version>4.0.9</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <qualifier>timestamp</qualifier>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-compiler-plugin</artifactId>
+                <version>4.0.9</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -42,10 +60,36 @@
                         <phase>package</phase>
                         <id>package-feature</id>
                         <configuration>
-                            <finalName>MDDPlugin</finalName>
+                            <finalName>${project.artifactId}_${unqualifiedVersion}.${buildQualifier}</finalName>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>4.0.9</version>
+                <configuration>
+                    <executionEnvironment>JavaSE-21</executionEnvironment>
+                    <environments>
+                        <environment>
+                            <os>linux</os>
+                            <ws>gtk</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                        <environment>
+                            <os>win32</os>
+                            <ws>win32</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                        <environment>
+                            <os>macosx</os>
+                            <ws>cocoa</ws>
+                            <arch>x86_64</arch>
+                        </environment>
+                    </environments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -80,33 +124,33 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.win32.win32.x86_64
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.win32.win32.x86_64 -->
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
             <version>3.127.0</version>
-        </dependency> -->
+        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.x86_64
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.x86_64 -->
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
             <version>3.127.0</version>
-        </dependency> -->
+        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.aarch64
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.aarch64 -->
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.swt.gtk.linux.aarch64</artifactId>
             <version>3.127.0</version>
-        </dependency> -->
+        </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.x86_64
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.x86_64 -->
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
             <version>3.127.0</version>
-        </dependency> -->
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.aarch64 -->
         <dependency>
