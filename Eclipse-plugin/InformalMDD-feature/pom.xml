@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cz.cuni.mff.vojtusr</groupId>
+        <artifactId>Eclipse-plugin</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>InformalMDD-feature</artifactId>
+    <version>1.0.1</version>
+    <packaging>eclipse-feature</packaging>
+
+    <repositories>
+        <repository>
+            <id>eclipse-mars</id>
+            <url>http://download.eclipse.org/releases/mars</url> <!-- update to e.g. photon works but only with tyco v2.3.0 (which requires java11) otherwise animal-sniffer-plugin fails -->
+            <layout>p2</layout>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>4.0.9</version>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.cuni.mff.vojtusr</groupId>
+            <artifactId>InformalMDD-plugin</artifactId>
+            <version>1.0.1</version>
+            <type>eclipse-plugin</type>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+</project>

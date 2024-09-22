@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<feature
+        id="InformalMDD-feature"
+        label="InformalMDD Feature"
+        version="1.0.1"
+        provider-name="Rastislav Vojtuš">
+    <plugin
+        id="InformalMDD-plugin"
+        download-size="0"
+        install-size="0"
+        version="1.0.1"
+        unpack="false"/>
+</feature>
