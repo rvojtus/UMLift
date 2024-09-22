@@ -2,12 +2,12 @@
 <feature
         id="InformalMDD-feature"
         label="InformalMDD Feature"
-        version="1.0.3"
+        version="1.0.4"
         provider-name="Rastislav Vojtuš">
     <plugin
         id="InformalMDD-plugin"
         download-size="0"
         install-size="0"
-        version="1.0.3"
+        version="1.0.4"
         unpack="false"/>
 </feature>

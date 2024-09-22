@@ -1,6 +1,7 @@
 package cz.cuni.mff.vojtusr;
 
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -11,6 +12,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -22,10 +24,9 @@ public class SwingViewPart extends ViewPart {
     public static final String ID = "cz.cuni.mff.vojtusr.swingview";
 
     private static String projectTitle = "Project title";
-    private static String projectDir = "";
+    private static String projectDir;
 
     public SwingViewPart() {
-
     }
 
     @Override
@@ -57,13 +58,34 @@ public class SwingViewPart extends ViewPart {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 projectTitle = projectTitleText.getText();
+                projectDir = getCurrentDirectory();
 
                 String xsltFilePath = xsltFilePathText.getText();
+                String UMLFile = getUMLInputFilePath();
 
-                //startCodeGeneration(xsltFilePath);
+                String testingMessage = "XSLT: " + xsltFilePath +
+                        "\nUML: " + UMLFile +
+                        "\nProject title: " + projectTitle +
+                        "\nProject dir: " + projectDir;
+
+                MessageDialog.openInformation(parent.getShell(), "Code Generation", testingMessage);
+
+                if (UMLFile != null) {
+                    startCodeGeneration(xsltFilePath, UMLFile);
+                }
             }
-
         });
+    }
+
+    private static String getUMLInputFilePath() {
+        IWorkbenchPage iWorkbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorPart editor = iWorkbenchPage.getActiveEditor();
+
+        IFile file = editor.getEditorInput().getAdapter(IFile.class);
+        if (file != null && file.getFileExtension().equalsIgnoreCase("uxf")) {
+            return file.getLocation().toOSString();
+        }
+        return null;
     }
 
     private static Text getXsltFilePathText(Composite parent) {
@@ -78,8 +100,8 @@ public class SwingViewPart extends ViewPart {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog fileDialog = new FileDialog(parent.getShell(), SWT.OPEN);
                 fileDialog.setText("Select a file");
-                fileDialog.setFilterExtensions(new String[]{"*.xsl", "*.xml"});
-                fileDialog.setFilterNames(new String[]{"XSL File", "XML File"});
+                fileDialog.setFilterExtensions(new String[]{"*.xslt", "*.xsl", "*.xml"});
+                fileDialog.setFilterNames(new String[]{"XSLT File", "XSL File", "XML File"});
                 String filePath = fileDialog.open();
                 if (filePath != null) {
                     xsltFilePathText.setText(filePath);
