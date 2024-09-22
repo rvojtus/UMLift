@@ -6,11 +6,11 @@
     <parent>
         <groupId>cz.cuni.mff.vojtusr</groupId>
         <artifactId>Eclipse-plugin</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.3</version>
     </parent>
 
     <artifactId>InformalMDD-plugin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <packaging>eclipse-plugin</packaging>
 
     <properties>

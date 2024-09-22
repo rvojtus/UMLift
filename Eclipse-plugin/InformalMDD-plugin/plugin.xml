@@ -3,7 +3,7 @@
     <extension point="org.eclipse.ui.views">
         <view
             id="cz.cuni.mff.vojtusr.SwingView"
-            name="My View"
+            name="InformalMDD - UMLet to Java Code"
             category="InformalMDD-plugin-category"
             class="cz.cuni.mff.vojtusr.SwingViewPart">
         </view>
