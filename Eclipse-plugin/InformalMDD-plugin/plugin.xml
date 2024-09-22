@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin>
-    <extension
-        point="org.eclipse.ui.views">
+    <extension point="org.eclipse.ui.views">
         <view
             id="cz.cuni.mff.vojtusr.SwingView"
             name="My View"
+            category="InformalMDD-plugin-category"
             class="cz.cuni.mff.vojtusr.SwingViewPart">
         </view>
     </extension>
