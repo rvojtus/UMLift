@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-    <feature id="InformalMDD-feature" version="1.0.4">
+    <feature id="InformalMDD-feature" version="1.0.5">
         <category name="InformalMDD-plugin-category"/>
     </feature>
     <category-def name="InformalMDD-plugin-category" label="Example update site"/>

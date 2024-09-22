@@ -3,6 +3,8 @@ package cz.cuni.mff.vojtusr;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -14,11 +16,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.util.Objects;
 
 public class SwingViewPart extends ViewPart {
     public static final String ID = "cz.cuni.mff.vojtusr.swingview";
@@ -70,7 +74,7 @@ public class SwingViewPart extends ViewPart {
 
                 MessageDialog.openInformation(parent.getShell(), "Code Generation", testingMessage);
 
-                if (UMLFile != null) {
+                if (!Objects.equals(UMLFile, "") && !Objects.equals(UMLFile, "Err")) {
                     startCodeGeneration(xsltFilePath, UMLFile);
                 }
             }
@@ -78,14 +82,15 @@ public class SwingViewPart extends ViewPart {
     }
 
     private static String getUMLInputFilePath() {
-        IWorkbenchPage iWorkbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart editor = iWorkbenchPage.getActiveEditor();
-
-        IFile file = editor.getEditorInput().getAdapter(IFile.class);
-        if (file != null && file.getFileExtension().equalsIgnoreCase("uxf")) {
-            return file.getLocation().toOSString();
+        try {
+            // Get the currently selected file from the editor
+            IWorkbenchPart workbenchPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+            IFile file = workbenchPart.getSite().getPage().getActiveEditor().getEditorInput().getAdapter(IFile.class);
+            if (file == null) return "Err";
+            return file.getRawLocation().toOSString();
+        } catch (Exception e) {
+            return "Err";
         }
-        return null;
     }
 
     private static Text getXsltFilePathText(Composite parent) {

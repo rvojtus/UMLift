@@ -6,7 +6,7 @@
 
     <groupId>cz.cuni.mff.vojtusr</groupId>
     <artifactId>Eclipse-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
     <modules>
         <module>InformalMDD-plugin</module>
@@ -95,13 +95,14 @@
     </build>
 
     <dependencies>
-        <!--
+        <!-- InformalMDD-core -->
         <dependency>
             <groupId>cz.cuni.mff.vojtusr</groupId>
             <artifactId>InformalMDD-core</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
-        -->
+
         <!-- Dependency on Eclipse Core Runtime  -->
         <dependency>
             <groupId>org.eclipse.platform</groupId>
