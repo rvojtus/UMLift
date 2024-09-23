@@ -157,7 +157,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- generate sources (e.g. needed by GWT for shared code) -->
+			<!-- generate sources (e.g. needed by GWT for shared code)
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -172,6 +172,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			 -->
 		</plugins>
 		<pluginManagement>
 			<plugins>
