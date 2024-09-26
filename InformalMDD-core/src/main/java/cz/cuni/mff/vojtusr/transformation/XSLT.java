@@ -1,4 +1,4 @@
-package cz.cuni.mff.vojtusr.xslt;
+package cz.cuni.mff.vojtusr.transformation;
 
 import net.sf.saxon.TransformerFactoryImpl;
 
