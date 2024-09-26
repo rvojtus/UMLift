@@ -5,6 +5,7 @@ import com.baselet.control.config.Config;
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
+import cz.cuni.mff.vojtusr.transformation.UMLetTransformer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -100,13 +101,15 @@ public class GUI {
         configFormPanel.add(projectNameLabel);
 
         projectNameTextField = new JTextField(20);
+        projectNameTextField.setText("projectTest");// temp
         configFormPanel.add(projectNameTextField);
 
         JLabel projectDirLabel = new JLabel("Project Directory");
         configFormPanel.add(projectDirLabel);
 
         projectDirTextField = new JTextField(30);
-        projectDirTextField.setText("No directory selected");
+        //projectDirTextField.setText("No directory selected");
+        projectDirTextField.setText("/Users/rastislav.vojtus/Documents/Bakalarka/testing/");//temp
         projectDirTextField.setHorizontalAlignment(JTextField.CENTER);
         projectDirTextField.setEditable(false);
         configFormPanel.add(projectDirTextField);
@@ -128,6 +131,7 @@ public class GUI {
         configFormPanel.add(chooseXSLTTemplateButton);
 
         openUMLetTextField = new JTextField("No file selected");
+        openUMLetTextField.setText("/Users/rastislav.vojtus/Documents/Bakalarka/Umlet/testHello.uxf");//temp
         openUMLetTextField.setEditable(false);
 
         JRadioButton newProjectRadioButton = new JRadioButton("New UMLet Project");
@@ -192,7 +196,7 @@ public class GUI {
                 return;
             }
             else {
-                startCodeGeneration(umletFilePath);
+                startCodeGeneration();
             }
         });
         programButtonPanel.add(generateCodeButton);
@@ -215,11 +219,10 @@ public class GUI {
         addCodeGenerationButton();
     }
 
-    private static void startCodeGeneration(String inputUML) {
-        String xsltFile = Objects.requireNonNull(xsltTemplateComboBox.getSelectedItem()).toString();
-        JavaGenerator javaGenerator = new JavaGenerator(xsltFile);
+    private static void startCodeGeneration() {
         try {
-            javaGenerator.generate(inputUML, projectDirTextField.getText(), projectNameTextField.getText());
+            JavaGenerator javaGenerator = new JavaGenerator();
+            javaGenerator.generate(projectDirTextField.getText(), projectNameTextField.getText());
             File projectDir = new File(projectDirTextField.getText());
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
@@ -409,8 +412,7 @@ public class GUI {
 //                generationOptionsFrame.setResizable(false);
 //
 //                generationOptionsFrame.setVisible(true);
-                String inputFile = getUMLInputFilePath();
-                startCodeGeneration(inputFile);
+                startCodeGeneration();
             }
         });
 

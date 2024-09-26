@@ -1,6 +1,7 @@
 package cz.cuni.mff.vojtusr.emf;
 
-import cz.cuni.mff.vojtusr.xslt.XSLT;
+import cz.cuni.mff.vojtusr.transformation.UMLetTransformer;
+import cz.cuni.mff.vojtusr.transformation.XSLT;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
@@ -32,26 +33,29 @@ public class JavaGenerator {
         xsltFile = templatesPath + "/umlet_to_ecore.xslt";// default XSLT template
     }
 
-    public JavaGenerator(String xsltFile) {
-        this.xsltFile = templatesPath + "/" + xsltFile;
-    }
+//    public JavaGenerator(String xsltFile) {
+//        this.xsltFile = templatesPath + "/" + xsltFile;
+//    }
 
-    public void generate(String inputFileUML, String projectDir, String projectName) throws IOException, TransformerException {
+    public void generate(String projectDir, String projectName) throws IOException, TransformerException {
         final String rootPath = projectDir + "/" + projectName;
         final String resourcesPath = rootPath + "/src/main/resources";
         final String outputFileEcore = resourcesPath + "/ecore.ecore";
-        XSLT xslt = new XSLT(xsltFile);
+        //XSLT xslt = new XSLT(xsltFile);
         Path outputPath = Path.of(outputFileEcore);
 
+        UMLetTransformer transformer = new UMLetTransformer();
+        transformer.transform(projectName, outputFileEcore);
+
         Files.createDirectories(outputPath.getParent());
-        if (!Files.exists(outputPath)) {
-            Files.createFile(outputPath);
-            System.out.println("Ecore File created: " + outputPath);
-        }
-        else {
-            new FileOutputStream(outputFileEcore).close();
-        }
-        xslt.transform(inputFileUML, outputFileEcore);
+//        if (!Files.exists(outputPath)) {
+//            Files.createFile(outputPath);
+//            System.out.println("Ecore File created: " + outputPath);
+//        }
+//        else {
+//            new FileOutputStream(outputFileEcore).close();
+//        }
+        //xslt.transform(inputFileUML, outputFileEcore);
 
         GenModelGenerate genModelGenerate = new GenModelGenerate();
         GenModel genModel = genModelGenerate.generate(projectDir, projectName);
