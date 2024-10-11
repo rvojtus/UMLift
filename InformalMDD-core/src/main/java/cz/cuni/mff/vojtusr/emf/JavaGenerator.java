@@ -26,36 +26,18 @@ import java.nio.file.Path;
  * Generates Java code from provided Ecore and GenModel files, using EMF libraries
  */
 public class JavaGenerator {
-    private final String xsltFile;
-    private final String templatesPath = "InformalMDD-core/src/main/resources/xsl_templates";
-
-    public JavaGenerator() {
-        xsltFile = templatesPath + "/umlet_to_ecore.xslt";// default XSLT template
-    }
-
-//    public JavaGenerator(String xsltFile) {
-//        this.xsltFile = templatesPath + "/" + xsltFile;
-//    }
+    public JavaGenerator() {}
 
     public void generate(String projectDir, String projectName) throws IOException, TransformerException {
         final String rootPath = projectDir + "/" + projectName;
         final String resourcesPath = rootPath + "/src/main/resources";
         final String outputFileEcore = resourcesPath + "/ecore.ecore";
-        //XSLT xslt = new XSLT(xsltFile);
         Path outputPath = Path.of(outputFileEcore);
 
         UMLetTransformer transformer = new UMLetTransformer(projectName);
         transformer.transform(outputFileEcore);
 
         Files.createDirectories(outputPath.getParent());
-//        if (!Files.exists(outputPath)) {
-//            Files.createFile(outputPath);
-//            System.out.println("Ecore File created: " + outputPath);
-//        }
-//        else {
-//            new FileOutputStream(outputFileEcore).close();
-//        }
-        //xslt.transform(inputFileUML, outputFileEcore);
 
         GenModelGenerate genModelGenerate = new GenModelGenerate();
         GenModel genModel = genModelGenerate.generate(projectDir, projectName);

@@ -18,6 +18,7 @@ import java.util.*;
 
 public class UMLetTransformer {
     private EPackage ePackage;
+    private final int baseAttributeValue = 10;
     public UMLetTransformer(String projectName) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
@@ -69,54 +70,15 @@ public class UMLetTransformer {
                 int left = secondCoordPoint.getX().intValue();
                 int up = secondCoordPoint.getY().intValue();
 
-                final int baseAttributeValue = 10;
+                int[] directions = new int[]{up, down, left, right};
 
                 int originX = relation.getRectangle().getX() + baseAttributeValue;
                 int originY = relation.getRectangle().getY() + baseAttributeValue;
 
-                Point pointStart;
-                Point pointEnd;
+                List<Point> startEndPoints = getStartEndPoints(directions, originX, originY);
+                Point pointStart = startEndPoints.get(0);
+                Point pointEnd = startEndPoints.get(1);
 
-                if (up == baseAttributeValue && down == baseAttributeValue) {
-                    if (left == baseAttributeValue) {
-                        pointStart = new Point(originX, originY);
-                        pointEnd = new Point(originX + right, originY);
-                    }
-                    else {
-                        pointStart = new Point(originX + right, originY);
-                        pointEnd = new Point(originX, originY);
-                    }
-                }
-                else if (up == baseAttributeValue && left == baseAttributeValue) {
-                    pointStart = new Point(originX, originY);
-                    pointEnd = new Point(originX + right, originY + down);
-                    //System.out.println("UP LEFT");
-                }
-                else if (up == baseAttributeValue && right == baseAttributeValue) {
-                    pointStart = new Point(originX + left, originY);
-                    pointEnd = new Point(originX, originY + down);
-                    //System.out.println("UP RIGHT");
-                }
-                else if (down == baseAttributeValue && left == baseAttributeValue) {
-                    pointStart = new Point(originX, originY + up);
-                    pointEnd = new Point(originX + right, originY);
-                    //System.out.println("DOWN LEFT");
-                }
-                else if (down == baseAttributeValue && right == baseAttributeValue) {
-                    pointStart = new Point(originX + left, originY + up);
-                    pointEnd = new Point(originX, originY);
-                    //System.out.println("DOWN RIGHT");
-                }
-                else {
-                    if (up == baseAttributeValue) {
-                        pointStart = new Point(originX, originY);
-                        pointEnd = new Point(originX, originY + down);
-                    }
-                    else {
-                        pointStart = new Point(originX, originY + up);
-                        pointEnd = new Point(originX, originY);
-                    }
-                }
                 //System.out.println(pointStart + " -> " + pointEnd);
                 Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
                 Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
@@ -127,6 +89,57 @@ public class UMLetTransformer {
             }
         }
 
+    }
+
+    private List<Point> getStartEndPoints(int[] directions, int originX, int originY) {
+        int up = directions[0];
+        int down = directions[1];
+        int left = directions[2];
+        int right = directions[3];
+        Point pointStart;
+        Point pointEnd;
+
+        if (up == baseAttributeValue && down == baseAttributeValue) {
+            if (left == baseAttributeValue) {
+                pointStart = new Point(originX, originY);
+                pointEnd = new Point(originX + right, originY);
+            }
+            else {
+                pointStart = new Point(originX + right, originY);
+                pointEnd = new Point(originX, originY);
+            }
+        }
+        else if (up == baseAttributeValue && left == baseAttributeValue) {
+            pointStart = new Point(originX, originY);
+            pointEnd = new Point(originX + right, originY + down);
+            //System.out.println("UP LEFT");
+        }
+        else if (up == baseAttributeValue && right == baseAttributeValue) {
+            pointStart = new Point(originX + left, originY);
+            pointEnd = new Point(originX, originY + down);
+            //System.out.println("UP RIGHT");
+        }
+        else if (down == baseAttributeValue && left == baseAttributeValue) {
+            pointStart = new Point(originX, originY + up);
+            pointEnd = new Point(originX + right, originY);
+            //System.out.println("DOWN LEFT");
+        }
+        else if (down == baseAttributeValue && right == baseAttributeValue) {
+            pointStart = new Point(originX + left, originY + up);
+            pointEnd = new Point(originX, originY);
+            //System.out.println("DOWN RIGHT");
+        }
+        else {
+            if (up == baseAttributeValue) {
+                pointStart = new Point(originX, originY);
+                pointEnd = new Point(originX, originY + down);
+            }
+            else {
+                pointStart = new Point(originX, originY + up);
+                pointEnd = new Point(originX, originY);
+            }
+        }
+        return new ArrayList<>(Arrays.asList(pointStart, pointEnd));
     }
 
     private void addClassRelation(Class startRelationClass, Class endRelationClass) {
