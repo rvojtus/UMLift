@@ -17,21 +17,20 @@ import java.io.IOException;
 import java.util.*;
 
 public class UMLetTransformer {
-    public UMLetTransformer() {}
-
-    public void transform(String projectName, String EcoreFilePath) {
-        EcoreFactory eFactory = EcoreFactory.eINSTANCE;
-        EPackage ePackage = eFactory.eINSTANCE.createEPackage();
+    private EPackage ePackage;
+    public UMLetTransformer(String projectName) {
+        ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
+    }
 
-
+    public void transform(String EcoreFilePath) {
         List<GridElement> elements = CurrentGui.getInstance().getGui().getCurrentDiagram().getGridElements();
         List<Relation> relations = new ArrayList<>();
         List<Class> classes = new ArrayList<>();
         for (GridElement element : elements) {
             if (element instanceof Class UMLClass) {
                 classes.add(UMLClass);
-                EClass umlClass = eFactory.eINSTANCE.createEClass();
+                EClass umlClass = EcoreFactory.eINSTANCE.createEClass();
                 String name = UMLClass.getPanelAttributes().trim().split("--")[0].trim();
                 umlClass.setName(name);
                 ePackage.getEClassifiers().add(umlClass);
@@ -41,13 +40,13 @@ public class UMLetTransformer {
             }
         }
 
-        processRelations(relations, classes, ePackage);
+        processRelations(relations, classes);
 
         saveEcoreModel(ePackage, EcoreFilePath);
 
     }
 
-    private void processRelations(List<Relation> relations, List<Class> classes, EPackage ePackage) {
+    private void processRelations(List<Relation> relations, List<Class> classes) {
         for (Relation relation : relations) {
             Collection<PointDoubleIndexed> points = relation.getStickablePoints();
             if (points != null) {
@@ -118,30 +117,32 @@ public class UMLetTransformer {
                         pointEnd = new Point(originX, originY);
                     }
                 }
-
-
                 //System.out.println(pointStart + " -> " + pointEnd);
                 Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
                 Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
 
                 if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
-                    String startClassName = startRelationClass.get().getPanelAttributes().trim().split("--")[0].trim();
-                    String endClassName = endRelationClass.get().getPanelAttributes().trim().split("--")[0].trim();
-
-                    EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
-                    EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
-
-                    EReference endClassReference = EcoreFactory.eINSTANCE.createEReference();
-                    endClassReference.setName(endClassName);
-                    endClassReference.setEType(eClassEnd);
-                    endClassReference.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
-                    endClassReference.setContainment(true);
-
-                    eClassStart.getEStructuralFeatures().add(endClassReference);
+                    addClassRelation(startRelationClass.get(), endRelationClass.get());
                 }
             }
         }
 
+    }
+
+    private void addClassRelation(Class startRelationClass, Class endRelationClass) {
+        String startClassName = startRelationClass.getPanelAttributes().trim().split("--")[0].trim();
+        String endClassName = endRelationClass.getPanelAttributes().trim().split("--")[0].trim();
+
+        EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
+        EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
+
+        EReference endClassReference = EcoreFactory.eINSTANCE.createEReference();
+        endClassReference.setName(endClassName);
+        endClassReference.setEType(eClassEnd);
+        endClassReference.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+        endClassReference.setContainment(true);
+
+        eClassStart.getEStructuralFeatures().add(endClassReference);
     }
 
     private static void saveEcoreModel(EPackage ePackage, String fileName) {

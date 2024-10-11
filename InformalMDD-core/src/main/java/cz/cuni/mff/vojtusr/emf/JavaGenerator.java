@@ -44,8 +44,8 @@ public class JavaGenerator {
         //XSLT xslt = new XSLT(xsltFile);
         Path outputPath = Path.of(outputFileEcore);
 
-        UMLetTransformer transformer = new UMLetTransformer();
-        transformer.transform(projectName, outputFileEcore);
+        UMLetTransformer transformer = new UMLetTransformer(projectName);
+        transformer.transform(outputFileEcore);
 
         Files.createDirectories(outputPath.getParent());
 //        if (!Files.exists(outputPath)) {
