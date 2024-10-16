@@ -86,11 +86,11 @@ public class UMLetTransformer {
 
                 Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
                 Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
-
-                if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
-                    addClassRelation(startRelationClass.get(), endRelationClass.get());
-                }
                 UMLClassRelations classRelation = getClassRelationType(relation);
+                if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
+                    addClassRelation(startRelationClass.get(), endRelationClass.get(), classRelation);
+                }
+
                 System.out.println(classRelation);
             }
         }
@@ -121,20 +121,42 @@ public class UMLetTransformer {
         };
     }
 
-    private void addClassRelation(Class startRelationClass, Class endRelationClass) {
+    private void addClassRelation(Class startRelationClass, Class endRelationClass, UMLClassRelations classRelation) {
         String startClassName = startRelationClass.getPanelAttributes().trim().split("--")[0].trim();
         String endClassName = endRelationClass.getPanelAttributes().trim().split("--")[0].trim();
 
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
-        EReference endClassReference = EcoreFactory.eINSTANCE.createEReference();
-        endClassReference.setName(endClassName);
-        endClassReference.setEType(eClassEnd);
-        endClassReference.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
-        endClassReference.setContainment(true);
+        switch (classRelation) {
+            case INHERITANCE:
+                addInheritanceRelation(eClassStart, eClassEnd);
+                return;
+            case ASSOCIATION:
+                break;
+            case REALIZATION:
+                break;
+            case DEPENDENCY:
+                break;
+            case AGGREGATION:
+                break;
+            case COMPOSITION:
+                break;
+            case null, default:
+                break;
+        }
 
-        eClassStart.getEStructuralFeatures().add(endClassReference);
+//        EReference endClassReference = EcoreFactory.eINSTANCE.createEReference();
+//        endClassReference.setName(endClassName);
+//        endClassReference.setEType(eClassEnd);
+//        endClassReference.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+//        endClassReference.setContainment(true);
+//
+//        eClassStart.getEStructuralFeatures().add(endClassReference);
+    }
+
+    private void addInheritanceRelation(EClass parentClass, EClass subClass) {
+        subClass.getESuperTypes().add(parentClass);
     }
 
     private static void saveEcoreModel(EPackage ePackage, String fileName) {
