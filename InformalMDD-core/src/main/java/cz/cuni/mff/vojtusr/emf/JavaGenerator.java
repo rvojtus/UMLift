@@ -1,7 +1,6 @@
 package cz.cuni.mff.vojtusr.emf;
 
 import cz.cuni.mff.vojtusr.transformation.UMLetTransformer;
-import cz.cuni.mff.vojtusr.transformation.XSLT;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
@@ -17,7 +16,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenModelGeneratorAdapterFactory;
 
 import javax.xml.transform.TransformerException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
