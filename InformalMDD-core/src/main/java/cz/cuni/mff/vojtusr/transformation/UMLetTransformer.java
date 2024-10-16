@@ -47,99 +47,78 @@ public class UMLetTransformer {
 
     }
 
+    private PointDoubleIndexed getEndCoordinationPoint(final Iterator<PointDoubleIndexed> iter) {
+        PointDoubleIndexed lastPoint = iter.next();
+        while (iter.hasNext()) {
+            lastPoint = iter.next();
+        }
+        return lastPoint;
+    }
+
     private void processRelations(List<Relation> relations, List<Class> classes) {
         for (Relation relation : relations) {
             Collection<PointDoubleIndexed> points = relation.getStickablePoints();
             if (points != null) {
-                PointDoubleIndexed firstCoordPoit = null;
-                PointDoubleIndexed secondCoordPoint = null;
+                PointDoubleIndexed startCoordPoit = null;
+                PointDoubleIndexed endCoordPoint = null;
                 Iterator<PointDoubleIndexed> iterator = points.iterator();
                 if (iterator.hasNext()) {
-                    firstCoordPoit = iterator.next();
+                    startCoordPoit = iterator.next();
                 }
                 if (iterator.hasNext()) {
-                    secondCoordPoint = iterator.next();
+                    endCoordPoint = getEndCoordinationPoint(iterator);
                 }
 
-                if (firstCoordPoit == null || secondCoordPoint == null) {
+                if (startCoordPoit == null || endCoordPoint == null) {
                     return;
                 }
 
-                int right = firstCoordPoit.getX().intValue();
-                int down = firstCoordPoit.getY().intValue();
-                int left = secondCoordPoint.getX().intValue();
-                int up = secondCoordPoint.getY().intValue();
+                int startOffsetX = startCoordPoit.getX().intValue();
+                int startOffsetY = startCoordPoit.getY().intValue();
+                int endOffsetX = endCoordPoint.getX().intValue();
+                int endOffsetY = endCoordPoint.getY().intValue();
 
-                int[] directions = new int[]{up, down, left, right};
+                int originX = relation.getRectangle().getX();
+                int originY = relation.getRectangle().getY();
 
-                int originX = relation.getRectangle().getX() + baseAttributeValue;
-                int originY = relation.getRectangle().getY() + baseAttributeValue;
+                Point pointStart = new Point(originX + startOffsetX, originY + startOffsetY);
+                Point pointEnd = new Point(originX + endOffsetX, originY + endOffsetY);
 
-                List<Point> startEndPoints = getStartEndPoints(directions, originX, originY);
-                Point pointStart = startEndPoints.get(0);
-                Point pointEnd = startEndPoints.get(1);
-
-                //System.out.println(pointStart + " -> " + pointEnd);
                 Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
                 Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
 
                 if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
                     addClassRelation(startRelationClass.get(), endRelationClass.get());
                 }
+                UMLClassRelations classRelation = getClassRelationType(relation);
+                System.out.println(classRelation);
             }
         }
 
     }
 
-    private List<Point> getStartEndPoints(int[] directions, int originX, int originY) {
-        int up = directions[0];
-        int down = directions[1];
-        int left = directions[2];
-        int right = directions[3];
-        Point pointStart;
-        Point pointEnd;
-
-        if (up == baseAttributeValue && down == baseAttributeValue) {
-            if (left == baseAttributeValue) {
-                pointStart = new Point(originX, originY);
-                pointEnd = new Point(originX + right, originY);
-            }
-            else {
-                pointStart = new Point(originX + right, originY);
-                pointEnd = new Point(originX, originY);
-            }
+    private UMLClassRelations getClassRelationType(Relation relation) {
+        List<String> attributes = relation.getPanelAttributesAsList();
+        if (attributes.isEmpty()) {
+            return null;
         }
-        else if (up == baseAttributeValue && left == baseAttributeValue) {
-            pointStart = new Point(originX, originY);
-            pointEnd = new Point(originX + right, originY + down);
-            //System.out.println("UP LEFT");
-        }
-        else if (up == baseAttributeValue && right == baseAttributeValue) {
-            pointStart = new Point(originX + left, originY);
-            pointEnd = new Point(originX, originY + down);
-            //System.out.println("UP RIGHT");
-        }
-        else if (down == baseAttributeValue && left == baseAttributeValue) {
-            pointStart = new Point(originX, originY + up);
-            pointEnd = new Point(originX + right, originY);
-            //System.out.println("DOWN LEFT");
-        }
-        else if (down == baseAttributeValue && right == baseAttributeValue) {
-            pointStart = new Point(originX + left, originY + up);
-            pointEnd = new Point(originX, originY);
-            //System.out.println("DOWN RIGHT");
-        }
-        else {
-            if (up == baseAttributeValue) {
-                pointStart = new Point(originX, originY);
-                pointEnd = new Point(originX, originY + down);
-            }
-            else {
-                pointStart = new Point(originX, originY + up);
-                pointEnd = new Point(originX, originY);
-            }
-        }
-        return new ArrayList<>(Arrays.asList(pointStart, pointEnd));
+        String relationType = attributes.getFirst();
+        final String typePrefix = "lt=";
+        return switch (relationType.trim()) {
+            case typePrefix + "<<-" -> // inheritance
+                    UMLClassRelations.INHERITANCE;
+            case typePrefix + "-" -> // association
+                    UMLClassRelations.ASSOCIATION;
+            case typePrefix + "<<." -> // realization
+                    UMLClassRelations.REALIZATION;
+            case typePrefix + "<." -> // dependency
+                    UMLClassRelations.DEPENDENCY;
+            case typePrefix + "<<<<-" -> // aggregation
+                    UMLClassRelations.AGGREGATION;
+            case typePrefix + "<<<<<-" -> // composition
+                    UMLClassRelations.COMPOSITION;
+            default -> null;
+        };
     }
 
     private void addClassRelation(Class startRelationClass, Class endRelationClass) {
