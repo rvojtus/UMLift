@@ -9,6 +9,7 @@ import com.baselet.element.sticking.PointDoubleIndexed;
 import com.baselet.gui.CurrentGui;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.impl.EReferenceImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -151,25 +152,45 @@ public class UMLetTransformer {
     }
 
     private void addAssociationRelation(EClass firstClass, EClass secondClass, final List<String> attributes) {
-        if (attributes.size() < 3) {
+        if (attributes.size() < 3) { // default implicit relation without specified cardinalities
+            EReference eRef = EcoreFactory.eINSTANCE.createEReference();
+            eRef.setEType(secondClass);
+            eRef.setLowerBound(0);
+            eRef.setUpperBound(1);
+            //eRef.setContainment(true);
+            firstClass.getEStructuralFeatures().add(eRef);
             return;
         }
         String name = "";
-        final String m1 = attributes.get(1).trim().split("m1=")[1];
-        final String m2 = attributes.get(2).trim().split("m2=")[1];
+        final String cardinality1 = attributes.get(1).trim().split("m1=")[1];
+        final String cardinality2 = attributes.get(2).trim().split("m2=")[1];
         if (attributes.size() > 3) {
             name = attributes.get(3).trim();
         }
-        //System.out.println("m1 = " + m1 + "; m2 = " + m2);
+        //System.out.println("cardinality1 = " + cardinality1 + "; cardinality2 = " + cardinality2);
     }
 
     private void addRealizationRelation(EClass parentClass, EClass subClass) {}
 
     private void addDependencyRelation(EClass parentClass, EClass subClass) {}
 
-    private void addAggregationRelation(EClass parentClass, EClass subClass) {}
+    private void addAggregationRelation(EClass parentClass, EClass subClass) {
+        EReference eRef = EcoreFactory.eINSTANCE.createEReference();
+        eRef.setEType(subClass);
+        eRef.setLowerBound(0);
+        eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+        eRef.setContainment(false);
+        parentClass.getEStructuralFeatures().add(eRef);
+    }
 
-    private void addCompositeRelation(EClass parentClass, EClass subClass) {}
+    private void addCompositeRelation(EClass parentClass, EClass subClass) {
+        EReference eRef = EcoreFactory.eINSTANCE.createEReference();
+        eRef.setEType(subClass);
+        eRef.setLowerBound(0);
+        eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+        eRef.setContainment(true);
+        parentClass.getEStructuralFeatures().add(eRef);
+    }
 
     private static void saveEcoreModel(EPackage ePackage, String fileName) {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
