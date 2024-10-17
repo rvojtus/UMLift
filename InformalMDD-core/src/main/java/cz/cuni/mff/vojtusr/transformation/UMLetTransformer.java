@@ -34,6 +34,10 @@ public class UMLetTransformer {
                 EClass umlClass = EcoreFactory.eINSTANCE.createEClass();
                 String name = UMLClass.getPanelAttributes().trim().split("--")[0].trim();
                 umlClass.setName(name);
+                String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
+                if (classNameAttribute.matches("/.+/")) {
+                    umlClass.setAbstract(true);
+                }
                 ePackage.getEClassifiers().add(umlClass);
             }
             else if (element instanceof Relation relation) {
@@ -146,14 +150,15 @@ public class UMLetTransformer {
         subClass.getESuperTypes().add(parentClass);
     }
 
-    private void addAssociationRelation(EClass parentClass, EClass subClass, List<String> attributes) {
+    private void addAssociationRelation(EClass firstClass, EClass secondClass, final List<String> attributes) {
         if (attributes.size() < 3) {
             return;
         }
-        String m1 = attributes.get(1).trim().split("m1=")[1];
-        String m2 = attributes.get(2).trim().split("m2=")[1];
+        String name = "";
+        final String m1 = attributes.get(1).trim().split("m1=")[1];
+        final String m2 = attributes.get(2).trim().split("m2=")[1];
         if (attributes.size() > 3) {
-            String name = attributes.get(3).trim();
+            name = attributes.get(3).trim();
         }
         //System.out.println("m1 = " + m1 + "; m2 = " + m2);
     }
