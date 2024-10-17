@@ -2,6 +2,7 @@ package cz.cuni.mff.vojtusr.transformation;
 
 import com.baselet.control.basics.geom.Point;
 import com.baselet.element.elementnew.uml.Class;
+import com.baselet.element.elementnew.uml.Interface;
 import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
 import com.baselet.element.sticking.PointDoubleIndexed;
@@ -17,8 +18,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class UMLetTransformer {
-    private EPackage ePackage;
-    private final int baseAttributeValue = 10;
+    private final EPackage ePackage;
     public UMLetTransformer(String projectName) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
@@ -38,6 +38,9 @@ public class UMLetTransformer {
             }
             else if (element instanceof Relation relation) {
                 relations.add(relation);
+            }
+            else if (element instanceof Interface interfaceUML) {
+
             }
         }
 
@@ -86,12 +89,10 @@ public class UMLetTransformer {
 
                 Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
                 Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
-                UMLClassRelations classRelation = getClassRelationType(relation);
-                if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
-                    addClassRelation(startRelationClass.get(), endRelationClass.get(), classRelation);
-                }
 
-                System.out.println(classRelation);
+                if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
+                    addClassRelation(startRelationClass.get(), endRelationClass.get(), relation);
+                }
             }
         }
 
@@ -121,7 +122,8 @@ public class UMLetTransformer {
         };
     }
 
-    private void addClassRelation(Class startRelationClass, Class endRelationClass, UMLClassRelations classRelation) {
+    private void addClassRelation(Class startRelationClass, Class endRelationClass, Relation relation) {
+        UMLClassRelations classRelation = getClassRelationType(relation);
         String startClassName = startRelationClass.getPanelAttributes().trim().split("--")[0].trim();
         String endClassName = endRelationClass.getPanelAttributes().trim().split("--")[0].trim();
 
@@ -129,35 +131,40 @@ public class UMLetTransformer {
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
         switch (classRelation) {
-            case INHERITANCE:
-                addInheritanceRelation(eClassStart, eClassEnd);
-                return;
-            case ASSOCIATION:
-                break;
-            case REALIZATION:
-                break;
-            case DEPENDENCY:
-                break;
-            case AGGREGATION:
-                break;
-            case COMPOSITION:
-                break;
-            case null, default:
-                break;
+            case INHERITANCE -> addInheritanceRelation(eClassStart, eClassEnd);
+            case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, relation.getPanelAttributesAsList());
+            case REALIZATION -> addRealizationRelation(eClassStart, eClassEnd);
+            case DEPENDENCY -> addDependencyRelation(eClassStart, eClassEnd);
+            case AGGREGATION -> addAggregationRelation(eClassStart, eClassEnd);
+            case COMPOSITION -> addCompositeRelation(eClassStart, eClassEnd);
+            case null, default -> {
+            }
         }
-
-//        EReference endClassReference = EcoreFactory.eINSTANCE.createEReference();
-//        endClassReference.setName(endClassName);
-//        endClassReference.setEType(eClassEnd);
-//        endClassReference.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
-//        endClassReference.setContainment(true);
-//
-//        eClassStart.getEStructuralFeatures().add(endClassReference);
     }
 
     private void addInheritanceRelation(EClass parentClass, EClass subClass) {
         subClass.getESuperTypes().add(parentClass);
     }
+
+    private void addAssociationRelation(EClass parentClass, EClass subClass, List<String> attributes) {
+        if (attributes.size() < 3) {
+            return;
+        }
+        String m1 = attributes.get(1).trim().split("m1=")[1];
+        String m2 = attributes.get(2).trim().split("m2=")[1];
+        if (attributes.size() > 3) {
+            String name = attributes.get(3).trim();
+        }
+        //System.out.println("m1 = " + m1 + "; m2 = " + m2);
+    }
+
+    private void addRealizationRelation(EClass parentClass, EClass subClass) {}
+
+    private void addDependencyRelation(EClass parentClass, EClass subClass) {}
+
+    private void addAggregationRelation(EClass parentClass, EClass subClass) {}
+
+    private void addCompositeRelation(EClass parentClass, EClass subClass) {}
 
     private static void saveEcoreModel(EPackage ePackage, String fileName) {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
