@@ -96,7 +96,7 @@ public class UMLetTransformer {
                 Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
 
                 if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
-                    addClassRelation(startRelationClass.get(), endRelationClass.get(), relation);
+                    addClassRelation(endRelationClass.get(), startRelationClass.get(), relation);
                 }
             }
         }
@@ -138,15 +138,18 @@ public class UMLetTransformer {
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
+        System.out.println("Start Class: " + startClassName + " End Class: "+ endClassName);
+
         final List<String> attributes = relation.getPanelAttributesAsList();
 
         switch (classRelation) {
-            case INHERITANCE -> addInheritanceRelation(eClassStart, eClassEnd);
+            case INHERITANCE -> addInheritanceRelation(eClassEnd, eClassStart);
             case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, attributes);
+            case DIRECTED_ASSOCIATION -> addDirectedAssociationRelation(eClassStart, eClassEnd, attributes);
             case REALIZATION -> addRealizationRelation(eClassStart, eClassEnd);
             case DEPENDENCY -> addDependencyRelation(eClassStart, eClassEnd);
             case AGGREGATION -> addAggregationRelation(eClassStart, eClassEnd);
-            case COMPOSITION -> addCompositeRelation(eClassStart, eClassEnd, attributes);
+            case COMPOSITION -> addCompositeRelation(eClassEnd, eClassStart, attributes);
             case null, default -> {
             }
         }
@@ -162,22 +165,38 @@ public class UMLetTransformer {
             eRef.setEType(childClass);
             eRef.setLowerBound(0);
             eRef.setUpperBound(1);
-            //eRef.setContainment(true);
             parentClass.getEStructuralFeatures().add(eRef);
             return;
         }
-        String name = "";
         final String cardinalityParent = attributes.get(1).trim().split("m1=")[1];
         final String cardinalityChild = attributes.get(2).trim().split("m2=")[1];
-        if (attributes.size() > 3) {
-            name = attributes.get(3).trim();
-        }
+
         final int cardinalityParent_0 = Integer.parseInt(cardinalityParent.split("..")[0]);
         final String cardinalityParent_1 = cardinalityParent.split("..")[1];
         final int cardinalityChild_0 = Integer.parseInt(cardinalityChild.split("..")[0]);
         final String cardinalityChild_1 = cardinalityChild.split("..")[1];
         // todo needs to be both ways and check if it is both ways
         //System.out.println("cardinalityParent = " + cardinalityParent + "; cardinalityChild = " + cardinalityChild);
+    }
+
+    private void addDirectedAssociationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
+        EReference eRef = EcoreFactory.eINSTANCE.createEReference();
+        eRef.setEType(childClass);
+        eRef.setName(childClass.getName());
+        if (attributes.size() <= 1) {
+            eRef.setEType(childClass);
+            eRef.setLowerBound(0);
+            eRef.setUpperBound(1);
+            parentClass.getEStructuralFeatures().add(eRef);
+            return;
+        }
+        final String cardinalityAttribute = attributes.get(1).trim();
+        if (cardinalityAttribute.matches("^m2=[0-9]+\\.\\.[*n0-9]")) {
+            processCardinality(eRef, cardinalityAttribute, "m2=", 1);
+        }
+        else {
+            processCardinality(eRef, cardinalityAttribute, " ", 0);
+        }
     }
 
     private void addRealizationRelation(EClass parentClass, EClass subClass) {}
