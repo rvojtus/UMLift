@@ -135,60 +135,71 @@ public class UMLetTransformer {
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
+        final List<String> attributes = relation.getPanelAttributesAsList();
+
         switch (classRelation) {
             case INHERITANCE -> addInheritanceRelation(eClassStart, eClassEnd);
-            case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, relation.getPanelAttributesAsList());
+            case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, attributes);
             case REALIZATION -> addRealizationRelation(eClassStart, eClassEnd);
             case DEPENDENCY -> addDependencyRelation(eClassStart, eClassEnd);
             case AGGREGATION -> addAggregationRelation(eClassStart, eClassEnd);
-            case COMPOSITION -> addCompositeRelation(eClassStart, eClassEnd);
+            case COMPOSITION -> addCompositeRelation(eClassStart, eClassEnd, attributes);
             case null, default -> {
             }
         }
     }
 
-    private void addInheritanceRelation(EClass parentClass, EClass subClass) {
-        subClass.getESuperTypes().add(parentClass);
+    private void addInheritanceRelation(EClass parentClass, EClass childClass) {
+        childClass.getESuperTypes().add(parentClass);
     }
 
-    private void addAssociationRelation(EClass firstClass, EClass secondClass, final List<String> attributes) {
+    private void addAssociationRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
+        EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         if (attributes.size() < 3) { // default implicit relation without specified cardinalities
-            EReference eRef = EcoreFactory.eINSTANCE.createEReference();
-            eRef.setEType(secondClass);
+            eRef.setEType(childClass);
             eRef.setLowerBound(0);
             eRef.setUpperBound(1);
             //eRef.setContainment(true);
-            firstClass.getEStructuralFeatures().add(eRef);
+            parentClass.getEStructuralFeatures().add(eRef);
             return;
         }
         String name = "";
-        final String cardinality1 = attributes.get(1).trim().split("m1=")[1];
-        final String cardinality2 = attributes.get(2).trim().split("m2=")[1];
+        final String cardinalityParent = attributes.get(1).trim().split("m1=")[1];
+        final String cardinalityChild = attributes.get(2).trim().split("m2=")[1];
         if (attributes.size() > 3) {
             name = attributes.get(3).trim();
         }
-        //System.out.println("cardinality1 = " + cardinality1 + "; cardinality2 = " + cardinality2);
+        final int cardinalityParent_0 = Integer.parseInt(cardinalityParent.split("..")[0]);
+        final int cardinalityParent_1 = Integer.parseInt(cardinalityParent.split("..")[1]);
+        final int cardinalityChild_0 = Integer.parseInt(cardinalityChild.split("..")[0]);
+        final int cardinalityChild_1 = Integer.parseInt(cardinalityChild.split("..")[1]);
+        // todo needs to be both ways and check if it is both ways
+        //System.out.println("cardinalityParent = " + cardinalityParent + "; cardinalityChild = " + cardinalityChild);
     }
 
     private void addRealizationRelation(EClass parentClass, EClass subClass) {}
 
     private void addDependencyRelation(EClass parentClass, EClass subClass) {}
 
-    private void addAggregationRelation(EClass parentClass, EClass subClass) {
+    private void addAggregationRelation(EClass parentClass, EClass childClass) {
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
-        eRef.setEType(subClass);
+        eRef.setEType(childClass);
         eRef.setLowerBound(0);
         eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
         eRef.setContainment(false);
         parentClass.getEStructuralFeatures().add(eRef);
     }
 
-    private void addCompositeRelation(EClass parentClass, EClass subClass) {
+    private void addCompositeRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
-        eRef.setEType(subClass);
-        eRef.setLowerBound(0);
-        eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+        eRef.setEType(childClass);
+        eRef.setName(childClass.getName());
         eRef.setContainment(true);
+        if (attributes.size() < 3) { // default implicit relation without specified cardinalities
+            eRef.setLowerBound(0);
+            eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+        }
+
         parentClass.getEStructuralFeatures().add(eRef);
     }
 
