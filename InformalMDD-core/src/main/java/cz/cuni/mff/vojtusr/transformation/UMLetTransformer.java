@@ -170,9 +170,9 @@ public class UMLetTransformer {
             name = attributes.get(3).trim();
         }
         final int cardinalityParent_0 = Integer.parseInt(cardinalityParent.split("..")[0]);
-        final int cardinalityParent_1 = Integer.parseInt(cardinalityParent.split("..")[1]);
+        final String cardinalityParent_1 = cardinalityParent.split("..")[1];
         final int cardinalityChild_0 = Integer.parseInt(cardinalityChild.split("..")[0]);
-        final int cardinalityChild_1 = Integer.parseInt(cardinalityChild.split("..")[1]);
+        final String cardinalityChild_1 = cardinalityChild.split("..")[1];
         // todo needs to be both ways and check if it is both ways
         //System.out.println("cardinalityParent = " + cardinalityParent + "; cardinalityChild = " + cardinalityChild);
     }
@@ -195,12 +195,40 @@ public class UMLetTransformer {
         eRef.setEType(childClass);
         eRef.setName(childClass.getName());
         eRef.setContainment(true);
-        if (attributes.size() < 3) { // default implicit relation without specified cardinalities
+        if (attributes.size() <= 1) { // default implicit relation without specified cardinalities
             eRef.setLowerBound(0);
             eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
         }
+        else {
+            final String cardinalityAttribute = attributes.get(1).trim();
+            if (cardinalityAttribute.matches("^m2=[0-9]+\\.\\.[*n0-9]")) {
+                processCardinality(eRef, cardinalityAttribute, "m2=", 1);
+            }
+            else {
+                processCardinality(eRef, cardinalityAttribute, " ", 0);
+            }
+        }
 
         parentClass.getEStructuralFeatures().add(eRef);
+    }
+
+    private void processCardinality(EReference eRef, final String cardinalityAttribute, final String UMLetCardinalityIdentifier, final int valuePos) {
+        final String cardinalityChild = cardinalityAttribute.split(UMLetCardinalityIdentifier)[valuePos];
+        final int cardinalityChild_0 = Integer.parseInt(cardinalityChild.split("\\.\\.")[0]);
+        final String cardinalityChild_1 = cardinalityChild.split("\\.\\.")[1];
+        eRef.setLowerBound(cardinalityChild_0);
+        if (cardinalityChild_1.matches("[*nN]")) {
+            eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+        }
+        else {
+            try {
+                final int cardChild1 = Integer.parseInt(cardinalityChild_1);
+                eRef.setUpperBound(cardChild1);
+            } catch (NumberFormatException e) {
+                eRef.setLowerBound(0);
+                eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
+            }
+        }
     }
 
     private static void saveEcoreModel(EPackage ePackage, String fileName) {
