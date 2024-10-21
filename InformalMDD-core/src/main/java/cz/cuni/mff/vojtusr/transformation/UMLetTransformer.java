@@ -111,17 +111,19 @@ public class UMLetTransformer {
         String relationType = attributes.getFirst();
         final String typePrefix = "lt=";
         return switch (relationType.trim()) {
-            case typePrefix + "<<-" -> // inheritance
+            case typePrefix + "<<-" -> // inheritance, EMF equivalent - SuperType
                     UMLClassRelations.INHERITANCE;
-            case typePrefix + "-" -> // association
+            case typePrefix + "-" -> // association, EMF equivalent - Bi-directional Reference
                     UMLClassRelations.ASSOCIATION;
+            case typePrefix + "<-" -> // EMF equivalent - Reference
+                    UMLClassRelations.DIRECTED_ASSOCIATION;
             case typePrefix + "<<." -> // realization
                     UMLClassRelations.REALIZATION;
             case typePrefix + "<." -> // dependency
                     UMLClassRelations.DEPENDENCY;
             case typePrefix + "<<<<-" -> // aggregation
                     UMLClassRelations.AGGREGATION;
-            case typePrefix + "<<<<<-" -> // composition
+            case typePrefix + "<<<<<-" -> // composition, EMF equivalent - Composition
                     UMLClassRelations.COMPOSITION;
             default -> null;
         };
@@ -129,6 +131,7 @@ public class UMLetTransformer {
 
     private void addClassRelation(Class startRelationClass, Class endRelationClass, Relation relation) {
         UMLClassRelations classRelation = getClassRelationType(relation);
+        System.out.println("Relation Type: " + classRelation);
         String startClassName = startRelationClass.getPanelAttributes().trim().split("--")[0].trim();
         String endClassName = endRelationClass.getPanelAttributes().trim().split("--")[0].trim();
 
