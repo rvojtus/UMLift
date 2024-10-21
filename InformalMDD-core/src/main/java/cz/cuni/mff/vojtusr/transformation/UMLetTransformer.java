@@ -138,7 +138,7 @@ public class UMLetTransformer {
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
-        System.out.println("Start Class: " + startClassName + " End Class: "+ endClassName);
+        //System.out.println("Start Class: " + startClassName + " End Class: "+ endClassName);
 
         final List<String> attributes = relation.getPanelAttributesAsList();
 
@@ -183,7 +183,7 @@ public class UMLetTransformer {
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
         eRef.setName(childClass.getName());
-        if (attributes.size() <= 1) {
+        if (attributes.size() == 1) {
             eRef.setEType(childClass);
             eRef.setLowerBound(0);
             eRef.setUpperBound(1);
@@ -191,12 +191,13 @@ public class UMLetTransformer {
             return;
         }
         final String cardinalityAttribute = attributes.get(1).trim();
-        if (cardinalityAttribute.matches("^m2=[0-9]+\\.\\.[*n0-9]")) {
-            processCardinality(eRef, cardinalityAttribute, "m2=", 1);
+        if (cardinalityAttribute.matches("^m1=[0-9]+\\.\\.[*n0-9]")) {
+            processCardinality(eRef, cardinalityAttribute, "m1=", 1);
         }
         else {
             processCardinality(eRef, cardinalityAttribute, " ", 0);
         }
+        parentClass.getEStructuralFeatures().add(eRef);
     }
 
     private void addRealizationRelation(EClass parentClass, EClass subClass) {}
@@ -230,7 +231,6 @@ public class UMLetTransformer {
                 processCardinality(eRef, cardinalityAttribute, " ", 0);
             }
         }
-
         parentClass.getEStructuralFeatures().add(eRef);
     }
 
@@ -263,7 +263,7 @@ public class UMLetTransformer {
             resource.save(new HashMap<>());
             System.out.println("Ecore model saved to " + fileName);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error saving Ecore model to " + fileName);
         }
     }
 
