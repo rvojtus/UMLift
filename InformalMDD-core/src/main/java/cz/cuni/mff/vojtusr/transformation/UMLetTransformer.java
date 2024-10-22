@@ -160,43 +160,34 @@ public class UMLetTransformer {
     }
 
     private void addAssociationRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
-        EReference eRef = EcoreFactory.eINSTANCE.createEReference();
-        if (attributes.size() < 3) { // default implicit relation without specified cardinalities
-            eRef.setEType(childClass);
-            eRef.setLowerBound(0);
-            eRef.setUpperBound(1);
-            parentClass.getEStructuralFeatures().add(eRef);
-            return;
-        }
-        final String cardinalityParent = attributes.get(1).trim().split("m1=")[1];
-        final String cardinalityChild = attributes.get(2).trim().split("m2=")[1];
-
-        final int cardinalityParent_0 = Integer.parseInt(cardinalityParent.split("..")[0]);
-        final String cardinalityParent_1 = cardinalityParent.split("..")[1];
-        final int cardinalityChild_0 = Integer.parseInt(cardinalityChild.split("..")[0]);
-        final String cardinalityChild_1 = cardinalityChild.split("..")[1];
-        // todo needs to be both ways and check if it is both ways
-        //System.out.println("cardinalityParent = " + cardinalityParent + "; cardinalityChild = " + cardinalityChild);
+        EReference parentToChild = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=", 1);
+        parentClass.getEStructuralFeatures().add(parentToChild);
+        EReference childToParent = directedAssociationRelationHelper(childClass, parentClass, attributes, "m2=", 2);
+        childClass.getEStructuralFeatures().add(childToParent);
     }
 
-    private void addDirectedAssociationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
+    private EReference directedAssociationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes, final String delimiter, final int attributeIndex) {
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
         eRef.setName(childClass.getName());
-        if (attributes.size() == 1) {
+        if (attributes.size() == 1) { // no cardinality specified
             eRef.setEType(childClass);
             eRef.setLowerBound(0);
             eRef.setUpperBound(1);
-            parentClass.getEStructuralFeatures().add(eRef);
-            return;
+            return eRef;
         }
-        final String cardinalityAttribute = attributes.get(1).trim();
-        if (cardinalityAttribute.matches("^m1=[0-9]+\\.\\.[*n0-9]")) {
-            processCardinality(eRef, cardinalityAttribute, "m1=", 1);
+        final String cardinalityAttribute = attributes.get(attributeIndex).trim();
+        if (cardinalityAttribute.matches("^"+delimiter+"[0-9]+\\.\\.[*n0-9]")) {
+            processCardinality(eRef, cardinalityAttribute, delimiter, 1);
         }
         else {
             processCardinality(eRef, cardinalityAttribute, " ", 0);
         }
+        return eRef;
+    }
+
+    private void addDirectedAssociationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
+        EReference eRef = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=", 1);
         parentClass.getEStructuralFeatures().add(eRef);
     }
 
