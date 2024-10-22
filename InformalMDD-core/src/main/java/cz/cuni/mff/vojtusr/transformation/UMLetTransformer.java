@@ -44,9 +44,7 @@ public class UMLetTransformer {
             else if (element instanceof Relation relation) {
                 relations.add(relation);
             }
-            else if (element instanceof Interface interfaceUML) {
 
-            }
         }
 
         processRelations(relations, classes);
@@ -146,9 +144,7 @@ public class UMLetTransformer {
             case INHERITANCE -> addInheritanceRelation(eClassEnd, eClassStart);
             case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, attributes);
             case DIRECTED_ASSOCIATION -> addDirectedAssociationRelation(eClassStart, eClassEnd, attributes);
-            case REALIZATION -> addRealizationRelation(eClassStart, eClassEnd);
-            case DEPENDENCY -> addDependencyRelation(eClassStart, eClassEnd);
-            case AGGREGATION -> addAggregationRelation(eClassStart, eClassEnd);
+            case AGGREGATION -> addAggregationRelation(eClassEnd, eClassStart, attributes);
             case COMPOSITION -> addCompositeRelation(eClassEnd, eClassStart, attributes);
             case null, default -> {
             }
@@ -195,25 +191,12 @@ public class UMLetTransformer {
         parentClass.getEStructuralFeatures().add(eRef);
     }
 
-    private void addRealizationRelation(EClass parentClass, EClass subClass) {}
-
-    private void addDependencyRelation(EClass parentClass, EClass subClass) {}
-
-    private void addAggregationRelation(EClass parentClass, EClass childClass) {
-        EReference eRef = EcoreFactory.eINSTANCE.createEReference();
-        eRef.setEType(childClass);
-        eRef.setLowerBound(0);
-        eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
-        eRef.setContainment(false);
-        parentClass.getEStructuralFeatures().add(eRef);
-    }
-
-    private void addCompositeRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
+    private void aggregationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes, final boolean containment) {
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
         eRef.setName(childClass.getName());
-        eRef.setContainment(true);
-        if (attributes.size() <= 1) { // default implicit relation without specified cardinalities
+        eRef.setContainment(containment);
+        if (attributes.size() == 1) { // default implicit relation without specified cardinalities
             eRef.setLowerBound(0);
             eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
         }
@@ -227,6 +210,14 @@ public class UMLetTransformer {
             }
         }
         parentClass.getEStructuralFeatures().add(eRef);
+    }
+
+    private void addAggregationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
+        aggregationRelationHelper(parentClass, childClass, attributes, false);
+    }
+
+    private void addCompositeRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
+        aggregationRelationHelper(parentClass, childClass, attributes, true);
     }
 
     private void processCardinality(EReference eRef, final String cardinalityAttribute, final String UMLetCardinalityIdentifier, final int valuePos) {
