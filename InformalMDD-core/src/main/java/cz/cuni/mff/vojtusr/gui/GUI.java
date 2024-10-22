@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 public class GUI {
     private static final int fontSize = 14;
-    private static final String xsltDir = "InformalMDD-core/src/main/resources/xsl_templates";
     private static final String UMLetFileExtension = ".uxf";
 
     private static final JFrame mainFrame = new JFrame("InformalMDD-CodeGenerator");
@@ -33,7 +32,6 @@ public class GUI {
 
     private static JTextField projectNameTextField;
     private static JTextField projectDirTextField;
-    private static JComboBox<String> xsltTemplateComboBox;
     private static JTextField openUMLetTextField;
 
     private static boolean isNewProject = true;
@@ -93,7 +91,7 @@ public class GUI {
 
     private static JPanel getConfigFormPanel() {
         JPanel configFormPanel = new JPanel();
-        configFormPanel.setLayout(new GridLayout(7, 2, 10, 10));
+        configFormPanel.setLayout(new GridLayout(6, 2, 10, 10));
         configFormPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
 
@@ -119,16 +117,7 @@ public class GUI {
         JButton projectDirChooseButton = getProjectDirChooseButton(projectDirTextField);
         configFormPanel.add(projectDirChooseButton);
 
-        JLabel xsltLabel = new JLabel("XSLT Template");
-        configFormPanel.add(xsltLabel);
-
-        xsltTemplateComboBox = new JComboBox<>(getXSLTTemplates(Path.of(xsltDir)));
-        configFormPanel.add(xsltTemplateComboBox);
-
-        configFormPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
-        JButton chooseXSLTTemplateButton = getXSLTChooseButton(xsltTemplateComboBox);
-        configFormPanel.add(chooseXSLTTemplateButton);
+        //configFormPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
         openUMLetTextField = new JTextField("No file selected");
         openUMLetTextField.setText("/Users/rastislav.vojtus/Documents/Bakalarka/Umlet/testHello.uxf");//temp
@@ -291,10 +280,6 @@ public class GUI {
         return true;
     }
 
-    private static boolean validateXSLTTemplate() {
-        return true;//TODO
-    }
-
     private static boolean validateUMLetFile() {
         if (!isNewProject) {
             if (openUMLetTextField.getText().trim().isEmpty() || openUMLetTextField.getText().trim().equals("No file selected")) {
@@ -308,21 +293,6 @@ public class GUI {
             //return Files.isRegularFile(UMLetFilePath);
         }
         return true;
-    }
-
-    private static String[] getXSLTTemplates(Path dir) {
-        try (Stream<Path> pathStream = Files.list(dir)) {
-            List<String> fileNames = new ArrayList<>();
-            pathStream.forEach(path -> {
-                if (Files.isRegularFile(path)) {
-                    fileNames.add(path.getFileName().toString());
-                }
-            });
-            return fileNames.toArray(new String[0]);
-        } catch (IOException e) {
-            System.err.println("Failed to list XSLT templates: " + e);
-            return new String[]{"Error"};
-        }
     }
 
     private static JButton getProjectFileChooseButton(JTextField fileSelectedLabel, JRadioButton openProjectRadioButton) {
@@ -354,25 +324,6 @@ public class GUI {
             }
         });
         return openProjectButton;
-    }
-
-    private static JButton getXSLTChooseButton(JComboBox<String> xsltTextField) {
-        JButton projectDirChooseButton = new JButton("Choose Template");
-        projectDirChooseButton.addActionListener(e -> {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            chooser.setDialogTitle("Choose Template");
-
-            int returnVal = chooser.showOpenDialog(null);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                xsltTextField.addItem(chooser.getSelectedFile().getName());
-                xsltTextField.setSelectedItem(chooser.getSelectedFile().getName());
-            } else {
-                xsltTextField.setSelectedIndex(0);
-            }
-        });
-        return projectDirChooseButton;
     }
 
     private static JButton getProjectDirChooseButton(JTextField projectDirTextField) {
