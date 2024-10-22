@@ -161,8 +161,12 @@ public class UMLetTransformer {
 
     private void addAssociationRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
         EReference parentToChild = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=", 1);
-        parentClass.getEStructuralFeatures().add(parentToChild);
         EReference childToParent = directedAssociationRelationHelper(childClass, parentClass, attributes, "m2=", 2);
+
+        parentToChild.setEOpposite(childToParent);
+        childToParent.setEOpposite(parentToChild);
+
+        parentClass.getEStructuralFeatures().add(parentToChild);
         childClass.getEStructuralFeatures().add(childToParent);
     }
 
