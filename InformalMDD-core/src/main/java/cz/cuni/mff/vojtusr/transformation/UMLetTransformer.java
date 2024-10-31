@@ -2,14 +2,13 @@ package cz.cuni.mff.vojtusr.transformation;
 
 import com.baselet.control.basics.geom.Point;
 import com.baselet.element.elementnew.uml.Class;
-import com.baselet.element.elementnew.uml.Interface;
 import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
 import com.baselet.element.sticking.PointDoubleIndexed;
 import com.baselet.gui.CurrentGui;
+import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.impl.EReferenceImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -23,6 +22,8 @@ public class UMLetTransformer {
     public UMLetTransformer(String projectName) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
+        ePackage.setNsPrefix(projectName);
+        ePackage.setNsURI("https://wwww." +projectName);
     }
 
     public void transform(String EcoreFilePath) {
@@ -129,14 +130,11 @@ public class UMLetTransformer {
 
     private void addClassRelation(Class startRelationClass, Class endRelationClass, Relation relation) {
         UMLClassRelations classRelation = getClassRelationType(relation);
-        System.out.println("Relation Type: " + classRelation);
         String startClassName = startRelationClass.getPanelAttributes().trim().split("--")[0].trim();
         String endClassName = endRelationClass.getPanelAttributes().trim().split("--")[0].trim();
 
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
-
-        //System.out.println("Start Class: " + startClassName + " End Class: "+ endClassName);
 
         final List<String> attributes = relation.getPanelAttributesAsList();
 
@@ -240,13 +238,14 @@ public class UMLetTransformer {
     }
 
     private static void saveEcoreModel(EPackage ePackage, String fileName) {
+        Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
         ResourceSet resourceSet = new ResourceSetImpl();
         Resource resource = resourceSet.createResource(URI.createURI(fileName));
 
         resource.getContents().add(ePackage);
         try {
-            resource.save(new HashMap<>());
+            resource.save(Collections.EMPTY_MAP);
             System.out.println("Ecore model saved to " + fileName);
         } catch (IOException e) {
             System.out.println("Error saving Ecore model to " + fileName);
