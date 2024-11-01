@@ -58,6 +58,7 @@ public class UMLetTransformer {
             ePackage.getEClassifiers().add(umlClass);
         } else if (UMLClass.getPanelAttributesAsList().getFirst().matches(enumRegex)) {
             EEnum eEnum = EcoreFactory.eINSTANCE.createEEnum();
+            eEnum.setName(name);
             ePackage.getEClassifiers().add(eEnum);
         } else { // Standard Class
             String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
@@ -148,6 +149,9 @@ public class UMLetTransformer {
         String startClassName = getUMLetClassName(startRelationClass);
         String endClassName = getUMLetClassName(endRelationClass);
 
+        if (processUMLetEnum(startRelationClass, classRelation, startClassName, endClassName)) return;
+        if (processUMLetEnum(endRelationClass, classRelation, endClassName, startClassName)) return;
+
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
@@ -165,6 +169,25 @@ public class UMLetTransformer {
         addEMFClassRelation(classRelation, eClassStart, eClassEnd, attributes);
     }
 
+    private boolean processUMLetEnum(Class startRelationClass, UMLClassRelations classRelation, String startClassName, String endClassName) {
+        if (isUMLetClassEnum(startRelationClass)) {
+            EEnum eEnum = (EEnum) ePackage.getEClassifier(startClassName);
+            if (classRelation != UMLClassRelations.DIRECTED_ASSOCIATION) {
+                System.err.println("Wrong type of relation between a Class " + endClassName + " and Enumeration" + startClassName + "!");
+                return false;
+            }
+            EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
+
+            EAttribute eAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+            eAttribute.setEType(eEnum);
+            eAttribute.setName(startClassName);
+
+            eClassEnd.getEStructuralFeatures().add(eAttribute);
+            return true;
+        }
+        return false;
+    }
+
     private boolean isUMLetClassInterface(Class clazz) {
         return clazz.getPanelAttributesAsList().getFirst().matches(interfaceRegex);
     }
@@ -177,8 +200,8 @@ public class UMLetTransformer {
         List<String> panelAttributes = clazz.getPanelAttributesAsList();
         if (panelAttributes.isEmpty())
             return "";
-        if (panelAttributes.getFirst().trim().matches(interfaceRegex) ||
-            panelAttributes.getFirst().trim().matches(enumRegex)) {
+        if (isUMLetClassEnum(clazz) ||
+            isUMLetClassInterface(clazz)) {
             if (panelAttributes.size() == 1)
                 return "DefaultName";
             return panelAttributes.get(1).trim();
