@@ -165,6 +165,14 @@ public class UMLetTransformer {
         addEMFClassRelation(classRelation, eClassStart, eClassEnd, attributes);
     }
 
+    private boolean isUMLetClassInterface(Class clazz) {
+        return clazz.getPanelAttributesAsList().getFirst().matches(interfaceRegex);
+    }
+
+    private boolean isUMLetClassEnum(Class clazz) {
+        return clazz.getPanelAttributesAsList().getFirst().matches(enumRegex);
+    }
+
     private String getUMLetClassName(Class clazz) {
         List<String> panelAttributes = clazz.getPanelAttributesAsList();
         if (panelAttributes.isEmpty())
