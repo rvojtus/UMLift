@@ -32,26 +32,38 @@ public class UMLetTransformer {
         List<Class> classes = new ArrayList<>();
         for (GridElement element : elements) {
             if (element instanceof Class UMLClass) {
-                classes.add(UMLClass);
-                EClass umlClass = EcoreFactory.eINSTANCE.createEClass();
-                String name = UMLClass.getPanelAttributes().trim().split("--")[0].trim();
-                umlClass.setName(name);
-                String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
-                if (classNameAttribute.matches("/.+/")) {
-                    umlClass.setAbstract(true);
-                }
-                ePackage.getEClassifiers().add(umlClass);
+                processUMLClassElement(UMLClass, classes);
             }
             else if (element instanceof Relation relation) {
                 relations.add(relation);
             }
-
         }
 
         processRelations(relations, classes);
 
         saveEcoreModel(ePackage, EcoreFilePath);
+    }
 
+    private void processUMLClassElement(Class UMLClass, List<Class> classes) {
+        classes.add(UMLClass);
+        EClass umlClass = EcoreFactory.eINSTANCE.createEClass();
+        String name = UMLClass.getPanelAttributes().trim().split("--")[0].trim();
+        if (UMLClass.getPanelAttributesAsList().getFirst().matches("^<<\\s*[Ii]+nterface\\s*>>$")) { // Interface matching
+            String interfaceName = "InterfaceName";
+            if (UMLClass.getPanelAttributesAsList().size() > 1)
+                interfaceName = UMLClass.getPanelAttributesAsList().get(1).trim();
+            umlClass.setInterface(true);
+            umlClass.setAbstract(true);
+            umlClass.setName(interfaceName);
+        }
+        else { // Standard Class
+            umlClass.setName(name);
+            String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
+            if (classNameAttribute.matches("/.+/")) {
+                umlClass.setAbstract(true);
+            }
+        }
+        ePackage.getEClassifiers().add(umlClass);
     }
 
     private PointDoubleIndexed getEndCoordinationPoint(final Iterator<PointDoubleIndexed> iter) {
@@ -65,38 +77,39 @@ public class UMLetTransformer {
     private void processRelations(List<Relation> relations, List<Class> classes) {
         for (Relation relation : relations) {
             Collection<PointDoubleIndexed> points = relation.getStickablePoints();
-            if (points != null) {
-                PointDoubleIndexed startCoordPoit = null;
-                PointDoubleIndexed endCoordPoint = null;
-                Iterator<PointDoubleIndexed> iterator = points.iterator();
-                if (iterator.hasNext()) {
-                    startCoordPoit = iterator.next();
-                }
-                if (iterator.hasNext()) {
-                    endCoordPoint = getEndCoordinationPoint(iterator);
-                }
+            if (points == null)
+                continue;
 
-                if (startCoordPoit == null || endCoordPoint == null) {
-                    return;
-                }
+            PointDoubleIndexed startCoordPoit = null;
+            PointDoubleIndexed endCoordPoint = null;
+            Iterator<PointDoubleIndexed> iterator = points.iterator();
+            if (iterator.hasNext()) {
+                startCoordPoit = iterator.next();
+            }
+            if (iterator.hasNext()) {
+                endCoordPoint = getEndCoordinationPoint(iterator);
+            }
 
-                int startOffsetX = startCoordPoit.getX().intValue();
-                int startOffsetY = startCoordPoit.getY().intValue();
-                int endOffsetX = endCoordPoint.getX().intValue();
-                int endOffsetY = endCoordPoint.getY().intValue();
+            if (startCoordPoit == null || endCoordPoint == null) {
+                continue;
+            }
 
-                int originX = relation.getRectangle().getX();
-                int originY = relation.getRectangle().getY();
+            int startOffsetX = startCoordPoit.getX().intValue();
+            int startOffsetY = startCoordPoit.getY().intValue();
+            int endOffsetX = endCoordPoint.getX().intValue();
+            int endOffsetY = endCoordPoint.getY().intValue();
 
-                Point pointStart = new Point(originX + startOffsetX, originY + startOffsetY);
-                Point pointEnd = new Point(originX + endOffsetX, originY + endOffsetY);
+            int originX = relation.getRectangle().getX();
+            int originY = relation.getRectangle().getY();
 
-                Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
-                Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
+            Point pointStart = new Point(originX + startOffsetX, originY + startOffsetY);
+            Point pointEnd = new Point(originX + endOffsetX, originY + endOffsetY);
 
-                if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
-                    addClassRelation(endRelationClass.get(), startRelationClass.get(), relation);
-                }
+            Optional<Class> startRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointStart)).findFirst();
+            Optional<Class> endRelationClass = classes.stream().filter(item -> item.getRectangle().contains(pointEnd)).findFirst();
+
+            if (startRelationClass.isPresent() && endRelationClass.isPresent()) {
+                addClassRelation(endRelationClass.get(), startRelationClass.get(), relation);
             }
         }
 
@@ -142,6 +155,7 @@ public class UMLetTransformer {
             case INHERITANCE -> addInheritanceRelation(eClassEnd, eClassStart);
             case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, attributes);
             case DIRECTED_ASSOCIATION -> addDirectedAssociationRelation(eClassStart, eClassEnd, attributes);
+            case REALIZATION -> addRealizationRelation(eClassEnd, eClassStart);
             case AGGREGATION -> addAggregationRelation(eClassEnd, eClassStart, attributes);
             case COMPOSITION -> addCompositeRelation(eClassEnd, eClassStart, attributes);
             case null, default -> {
@@ -187,6 +201,10 @@ public class UMLetTransformer {
     private void addDirectedAssociationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
         EReference eRef = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=", 1);
         parentClass.getEStructuralFeatures().add(eRef);
+    }
+
+    private void addRealizationRelation(EClass parentClass, EClass childClass) {
+
     }
 
     private void aggregationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes, final boolean containment) {
@@ -251,6 +269,4 @@ public class UMLetTransformer {
             System.out.println("Error saving Ecore model to " + fileName);
         }
     }
-
-
 }
