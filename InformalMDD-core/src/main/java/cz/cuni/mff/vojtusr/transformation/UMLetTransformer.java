@@ -151,6 +151,15 @@ public class UMLetTransformer {
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
+        if (eClassStart == null) {
+            System.err.println("ERROR: Class " + startClassName + " not found");
+            return;
+        }
+        else if (eClassEnd == null) {
+            System.err.println("ERROR: Class " + endClassName + " not found");
+            return;
+        }
+
         final List<String> attributes = relation.getPanelAttributesAsList();
 
         addEMFClassRelation(classRelation, eClassStart, eClassEnd, attributes);
