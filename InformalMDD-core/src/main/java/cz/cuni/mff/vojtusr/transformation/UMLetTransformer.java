@@ -44,26 +44,28 @@ public class UMLetTransformer {
         saveEcoreModel(ePackage, EcoreFilePath);
     }
 
+    private final String interfaceRegex = "^<<\\s*[Ii]+nterface\\s*>>$";
+    private final String enumRegex = "^<<\\s*[Ee]num(eration)?\\s*>>$";
+
     private void processUMLClassElement(Class UMLClass, List<Class> classes) {
         classes.add(UMLClass);
         EClass umlClass = EcoreFactory.eINSTANCE.createEClass();
-        String name = UMLClass.getPanelAttributes().trim().split("--")[0].trim();
-        if (UMLClass.getPanelAttributesAsList().getFirst().matches("^<<\\s*[Ii]+nterface\\s*>>$")) { // Interface matching
-            String interfaceName = "InterfaceName";
-            if (UMLClass.getPanelAttributesAsList().size() > 1)
-                interfaceName = UMLClass.getPanelAttributesAsList().get(1).trim();
+        String name = getUMLetClassName(UMLClass);
+        umlClass.setName(name);
+        if (UMLClass.getPanelAttributesAsList().getFirst().matches(interfaceRegex)) { // Interface matching
             umlClass.setInterface(true);
             umlClass.setAbstract(true);
-            umlClass.setName(interfaceName);
-        }
-        else { // Standard Class
-            umlClass.setName(name);
+            ePackage.getEClassifiers().add(umlClass);
+        } else if (UMLClass.getPanelAttributesAsList().getFirst().matches(enumRegex)) {
+            EEnum eEnum = EcoreFactory.eINSTANCE.createEEnum();
+            ePackage.getEClassifiers().add(eEnum);
+        } else { // Standard Class
             String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
             if (classNameAttribute.matches("/.+/")) {
                 umlClass.setAbstract(true);
             }
+            ePackage.getEClassifiers().add(umlClass);
         }
-        ePackage.getEClassifiers().add(umlClass);
     }
 
     private PointDoubleIndexed getEndCoordinationPoint(final Iterator<PointDoubleIndexed> iter) {
@@ -143,14 +145,31 @@ public class UMLetTransformer {
 
     private void addClassRelation(Class startRelationClass, Class endRelationClass, Relation relation) {
         UMLClassRelations classRelation = getClassRelationType(relation);
-        String startClassName = startRelationClass.getPanelAttributes().trim().split("--")[0].trim();
-        String endClassName = endRelationClass.getPanelAttributes().trim().split("--")[0].trim();
+        String startClassName = getUMLetClassName(startRelationClass);
+        String endClassName = getUMLetClassName(endRelationClass);
 
         EClass eClassStart = (EClass) ePackage.getEClassifier(startClassName);
         EClass eClassEnd = (EClass) ePackage.getEClassifier(endClassName);
 
         final List<String> attributes = relation.getPanelAttributesAsList();
 
+        addEMFClassRelation(classRelation, eClassStart, eClassEnd, attributes);
+    }
+
+    private String getUMLetClassName(Class clazz) {
+        List<String> panelAttributes = clazz.getPanelAttributesAsList();
+        if (panelAttributes.isEmpty())
+            return "";
+        if (panelAttributes.getFirst().trim().matches(interfaceRegex) ||
+            panelAttributes.getFirst().trim().matches(enumRegex)) {
+            if (panelAttributes.size() == 1)
+                return "DefaultName";
+            return panelAttributes.get(1).trim();
+        }
+        return panelAttributes.getFirst().trim();
+    }
+
+    private void addEMFClassRelation(final UMLClassRelations classRelation, EClass eClassStart, EClass eClassEnd, final List<String> attributes) {
         switch (classRelation) {
             case INHERITANCE -> addInheritanceRelation(eClassEnd, eClassStart);
             case ASSOCIATION -> addAssociationRelation(eClassStart, eClassEnd, attributes);
@@ -204,7 +223,8 @@ public class UMLetTransformer {
     }
 
     private void addRealizationRelation(EClass parentClass, EClass childClass) {
-
+        System.out.println("Parent: " + parentClass.getName() + " child: " + childClass.getName());
+        addInheritanceRelation(parentClass, childClass);
     }
 
     private void aggregationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes, final boolean containment) {
