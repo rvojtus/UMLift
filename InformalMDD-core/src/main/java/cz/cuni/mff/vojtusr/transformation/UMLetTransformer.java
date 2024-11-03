@@ -6,7 +6,6 @@ import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
 import com.baselet.element.sticking.PointDoubleIndexed;
 import com.baselet.gui.CurrentGui;
-import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -227,8 +226,8 @@ public class UMLetTransformer {
     }
 
     private void addAssociationRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
-        EReference parentToChild = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=", 1);
-        EReference childToParent = directedAssociationRelationHelper(childClass, parentClass, attributes, "m2=", 2);
+        EReference parentToChild = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=");
+        EReference childToParent = directedAssociationRelationHelper(childClass, parentClass, attributes, "m2=");
 
         parentToChild.setEOpposite(childToParent);
         childToParent.setEOpposite(parentToChild);
@@ -237,7 +236,7 @@ public class UMLetTransformer {
         childClass.getEStructuralFeatures().add(childToParent);
     }
 
-    private EReference directedAssociationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes, final String delimiter, final int attributeIndex) {
+    private EReference directedAssociationRelationHelper(EClass parentClass, EClass childClass, final List<String> attributes, final String delimiter) { // todo rework
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
         eRef.setName(childClass.getName());
@@ -247,23 +246,24 @@ public class UMLetTransformer {
             eRef.setUpperBound(1);
             return eRef;
         }
-        final String cardinalityAttribute = attributes.get(attributeIndex).trim();
-        if (cardinalityAttribute.matches("^"+delimiter+"[0-9]+\\.\\.[*n0-9]")) {
-            processCardinality(eRef, cardinalityAttribute, delimiter, 1);
-        }
-        else {
-            processCardinality(eRef, cardinalityAttribute, " ", 0);
+        final String cardinalityRegEx = "[0-9]+\\.\\.[*n0-9]$";
+        final int attributeIndex = Integer.parseInt(String.valueOf(delimiter.charAt(1)));
+        for (String attribute : attributes) {
+            if (attribute.matches("^" + delimiter + cardinalityRegEx)) {
+                processCardinality(eRef, attribute, delimiter);
+            } else if (attribute.matches("^r" + attributeIndex + "=" + cardinalityRegEx)) {
+                processCardinality(eRef, attribute, "r"+attributeIndex+"=");
+            }
         }
         return eRef;
     }
 
     private void addDirectedAssociationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
-        EReference eRef = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=", 1);
+        EReference eRef = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=");
         parentClass.getEStructuralFeatures().add(eRef);
     }
 
     private void addRealizationRelation(EClass parentClass, EClass childClass) {
-        System.out.println("Parent: " + parentClass.getName() + " child: " + childClass.getName());
         addInheritanceRelation(parentClass, childClass);
     }
 
@@ -277,12 +277,12 @@ public class UMLetTransformer {
             eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
         }
         else {
-            final String cardinalityAttribute = attributes.get(1).trim();
-            if (cardinalityAttribute.matches("^m2=[0-9]+\\.\\.[*n0-9]")) {
-                processCardinality(eRef, cardinalityAttribute, "m2=", 1);
-            }
-            else {
-                processCardinality(eRef, cardinalityAttribute, " ", 0);
+            for (String attribute : attributes) {
+                if (attribute.matches("^m2=[0-9]+\\.\\.[*n0-9]$")) {
+                    processCardinality(eRef, attribute, "m2=");
+                } else if (attribute.matches("^r2=[0-9]+\\.\\.[*n0-9]$")) {
+                    processCardinality(eRef, attribute, "r2=");
+                }
             }
         }
         parentClass.getEStructuralFeatures().add(eRef);
@@ -296,8 +296,8 @@ public class UMLetTransformer {
         aggregationRelationHelper(parentClass, childClass, attributes, true);
     }
 
-    private void processCardinality(EReference eRef, final String cardinalityAttribute, final String UMLetCardinalityIdentifier, final int valuePos) {
-        final String cardinalityChild = cardinalityAttribute.split(UMLetCardinalityIdentifier)[valuePos];
+    private void processCardinality(EReference eRef, final String cardinalityAttribute, final String UMLetCardinalityIdentifier) {
+        final String cardinalityChild = cardinalityAttribute.split(UMLetCardinalityIdentifier)[1];
         final int cardinalityChild_0 = Integer.parseInt(cardinalityChild.split("\\.\\.")[0]);
         final String cardinalityChild_1 = cardinalityChild.split("\\.\\.")[1];
         eRef.setLowerBound(cardinalityChild_0);
