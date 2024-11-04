@@ -17,7 +17,6 @@
     <modules>
         <module>umlet-15.1</module>
         <module>InformalMDD-core</module>
-        <module>Eclipse-plugin</module>
         <module>IntelliJ</module>
     </modules>
 
@@ -31,6 +30,10 @@
         <repository>
             <id>eclipse-releases</id>
             <url>https://repo.eclipse.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>eclipse-snapshots</id>
+            <url>https://repo.eclipse.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
     <build>
