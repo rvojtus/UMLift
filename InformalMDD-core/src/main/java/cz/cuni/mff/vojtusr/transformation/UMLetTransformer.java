@@ -434,7 +434,10 @@ public class UMLetTransformer {
         // Create a new EReference instance
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
-        eRef.setName(childClass.getName());
+        String relationName = getRelationName(attributes);
+        if (relationName == null)
+            relationName = childClass.getName();
+        eRef.setName(relationName);
 
         // Check if only one attribute is provided (indicating no cardinality specified)
         if (attributes.size() == 1) {
@@ -456,6 +459,15 @@ public class UMLetTransformer {
             }
         }
         return eRef; // Return the configured EReference
+    }
+
+    private String getRelationName(final List<String> attributes) {
+        final String relationRegex = "^(?!r\\d=|m\\d=).*";
+        for (String attribute : attributes) {
+            if (attribute.trim().matches(relationRegex))
+                return attribute;
+        }
+        return null;
     }
 
     /**
@@ -501,8 +513,12 @@ public class UMLetTransformer {
         // Create a new EReference for the aggregation relationship
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
-        eRef.setName(childClass.getName());
         eRef.setContainment(containment);
+
+        String relationName = getRelationName(attributes);
+        if (relationName == null)
+            relationName = childClass.getName();
+        eRef.setName(relationName);
 
         // Check if only one attribute is provided, indicating a default implicit relation
         if (attributes.size() == 1) {
