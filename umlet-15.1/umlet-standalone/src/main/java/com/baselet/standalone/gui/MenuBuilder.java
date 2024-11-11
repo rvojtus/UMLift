@@ -106,29 +106,6 @@ public class MenuBuilder {
 		helpMenu.add(menuFactory.createAboutProgram());
 		menu.add(helpMenu);
 
-		/**
-		 * @author vojtusr
-		 * Menu to use Code Generation
-		 */
-		JMenu codeGenerationMenu = new JMenu("Code Generation");
-		// Menu Item to do Code Generation
-		JMenuItem generateCodeItem = new JMenuItem(new AbstractAction("Generate Code") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Generate Code");
-			}
-		});
-		codeGenerationMenu.add(generateCodeItem);
-		JMenuItem codeGenerateOptionsItem = new JMenuItem(new AbstractAction("Options...") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Options...");
-			}
-		});
-		codeGenerationMenu.add(codeGenerateOptionsItem);
-
-		menu.add(codeGenerationMenu);
-
 		menu.add(searchPanel);
 		menu.add(zoomPanel);
 		this.mailButton = mailButton;
