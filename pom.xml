@@ -17,7 +17,6 @@
     <modules>
         <module>umlet-15.1</module>
         <module>InformalMDD-core</module>
-        <module>IntelliJ</module>
     </modules>
 
     <dependencyManagement>
