@@ -47,9 +47,8 @@ public class JavaGenerator {
     /**
      * Generates Java code from provided GenModel
      * @param genModel
-     * @throws java.io.IOException
      */
-    public static void generateCode(GenModel genModel, String rootPath) throws java.io.IOException {
+    public static void generateCode(GenModel genModel, String rootPath) {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
         EPackage.Registry.INSTANCE.put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE);
 
