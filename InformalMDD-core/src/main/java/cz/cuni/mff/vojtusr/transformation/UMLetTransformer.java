@@ -464,8 +464,8 @@ public class UMLetTransformer {
     private String getRelationName(final List<String> attributes) {
         final String relationRegex = "^(?!r\\d=|m\\d=).*";
         for (String attribute : attributes) {
-            if (attribute.trim().matches(relationRegex))
-                return attribute;
+            if (attribute.trim().matches(relationRegex)){}
+                //return attribute.trim();
         }
         return null;
     }
