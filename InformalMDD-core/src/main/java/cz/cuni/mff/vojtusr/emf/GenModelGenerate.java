@@ -37,7 +37,7 @@ public class GenModelGenerate {
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
         genModel.setModelName(projectName);
         genModel.setModelDirectory(projectName + "/java");
-        genModel.setComplianceLevel(GenJDKLevel.JDK130_LITERAL);
+        genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL);
         genModel.initialize(Collections.singleton(ecorePackage));
 
         // Save the GenModel
