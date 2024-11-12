@@ -434,10 +434,7 @@ public class UMLetTransformer {
         // Create a new EReference instance
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
-        String relationName = getRelationName(attributes);
-        if (relationName == null)
-            relationName = childClass.getName();
-        eRef.setName(relationName);
+
 
         // Check if only one attribute is provided (indicating no cardinality specified)
         if (attributes.size() == 1) {
@@ -450,6 +447,11 @@ public class UMLetTransformer {
         final String cardinalityRegEx = "[0-9]+\\.\\.[*n0-9]$";
         final int attributeIndex = Integer.parseInt(String.valueOf(delimiter.charAt(1)));
 
+        String relationName = getRelationName(attributes, attributeIndex);
+        if (relationName == null)
+            relationName = childClass.getName();
+        eRef.setName(relationName);
+
         // Iterate through attributes to find cardinality specifications
         for (String attribute : attributes) {
             if (attribute.matches("^" + delimiter + cardinalityRegEx)) {
@@ -461,11 +463,11 @@ public class UMLetTransformer {
         return eRef; // Return the configured EReference
     }
 
-    private String getRelationName(final List<String> attributes) {
-        final String relationRegex = "^(?!r\\d=|m\\d=).*";
+    private String getRelationName(final List<String> attributes, int position) {
+        final String relationRegex = "^r" + position + "=.+$";
         for (String attribute : attributes) {
-            if (attribute.trim().matches(relationRegex)){}
-                //return attribute.trim();
+            if (attribute.trim().matches(relationRegex))
+                return attribute.trim().split("r"+position+"=")[1];
         }
         return null;
     }
@@ -515,7 +517,7 @@ public class UMLetTransformer {
         eRef.setEType(childClass);
         eRef.setContainment(containment);
 
-        String relationName = getRelationName(attributes);
+        String relationName = getRelationName(attributes, 2); // check pos
         if (relationName == null)
             relationName = childClass.getName();
         eRef.setName(relationName);
