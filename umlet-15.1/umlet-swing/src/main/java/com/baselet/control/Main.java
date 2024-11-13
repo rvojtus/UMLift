@@ -1,11 +1,11 @@
 package com.baselet.control;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
@@ -194,7 +194,10 @@ public class Main implements CanCloseProgram, CanOpenDiagram {
 	private List<File> scanForPalettes() {
 		// scan palettes directory...
 		FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-		File[] paletteFiles = fileSystemView.getFiles(new File(Path.homeProgram() + "palettes/"), false);
+        //File[] paletteFiles = fileSystemView.getFiles(new File(Path.homeProgram() + "palettes/"), false);
+		String umletResPath = System.getProperty("user.dir") + "/umlet-15.1/umlet-res/src/main/resources/"; // todo add version variable
+		File[] paletteFiles = fileSystemView.getFiles(new File(umletResPath + "palettes/"), false);
+
 		List<File> palettes = new ArrayList<File>();
 		for (File palette : paletteFiles) {
 			if (palette.getName().endsWith("." + Program.getInstance().getExtension())) {
