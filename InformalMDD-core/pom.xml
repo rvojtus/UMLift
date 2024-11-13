@@ -110,7 +110,7 @@
 
     <build>
         <plugins>
-            <!--
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -121,13 +121,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"/>
-                                <mainClass>com.baeldung.executable.ExecutableMavenJar</mainClass>
-                            </transformers>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -141,12 +134,12 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -159,7 +152,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <outputDirectory>${project.basedir}/target/classes</outputDirectory>
+        <!-- <outputDirectory>${project.basedir}/target/classes</outputDirectory> -->
     </build>
 
     <repositories>
