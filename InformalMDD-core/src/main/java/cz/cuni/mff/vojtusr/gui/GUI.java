@@ -4,6 +4,8 @@ import com.baselet.control.Main;
 import com.baselet.control.config.Config;
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
+import com.baselet.standalone.gui.StandaloneGUI;
+import com.baselet.standalone.gui.StandaloneGUIBuilder;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 import cz.cuni.mff.vojtusr.transformation.UMLetTransformer;
 
@@ -18,10 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 public class GUI {
     private static final int fontSize = 14;
@@ -38,8 +36,18 @@ public class GUI {
 
     private static String umletFilePath = "";
 
+    public static JFrame getUMLetMainFrame() {
+        startPluginUMLet();
+        return (JFrame) CurrentGui.getInstance().getGui().getMainFrame();
+    }
+
+    public static JFrame getUMLetMainFrame(String fileToOpen) {
+        startUMLet(fileToOpen);
+        return (JFrame) CurrentGui.getInstance().getGui().getMainFrame();
+    }
+
     public static void createAndShowGUI() {
-        JFrame.setDefaultLookAndFeelDecorated(true);
+        //JFrame.setDefaultLookAndFeelDecorated(true);
         setFonts();
         mainFrame.setSize(500, 600);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,7 +68,7 @@ public class GUI {
         UIManager.put("RadioButton.font", new Font("Monospaced", Font.PLAIN, fontSize));
     }
 
-    private static JPanel getTopPanel() {
+    public static JPanel getTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -107,7 +115,7 @@ public class GUI {
 
         projectDirTextField = new JTextField(30);
         //projectDirTextField.setText("No directory selected");
-        projectDirTextField.setText("/Users/rastislav.vojtus/Documents/Bakalarka/testing/");//temp
+        projectDirTextField.setText("/Users/rastislav.vojtus/Documents/Bakalarka/testing");//temp
         projectDirTextField.setHorizontalAlignment(JTextField.CENTER);
         projectDirTextField.setEditable(false);
         configFormPanel.add(projectDirTextField);
@@ -197,8 +205,13 @@ public class GUI {
         return programButtonPanel;
     }
 
+    private static void startPluginUMLet() {
+        MainStandalone.main(new String[]{});
+    }
+
     private static void startUMLet() {
         MainStandalone.main(new String[]{});
+        CurrentGui.getInstance().getGui().getMainFrame().setVisible(true);
         addCodeGenerationButton();
     }
 
@@ -206,6 +219,17 @@ public class GUI {
         System.out.println("Starting UMLet: " + filePath);
         MainStandalone.main(new String[]{filePath});
         addCodeGenerationButton();
+    }
+
+    public static void startPluginCodeGeneration(String projectDir, String projectName) {
+        try {
+            JavaGenerator javaGenerator = new JavaGenerator();
+            javaGenerator.generate(projectDir, projectName);
+        } catch (IOException e) {// todo better error display
+            System.err.println("IOException occurred: " + e);
+        } catch (TransformerException e) {
+            System.err.println("TransformerException occurred: " + e);
+        }
     }
 
     private static void startCodeGeneration() {
@@ -344,6 +368,15 @@ public class GUI {
         return projectDirChooseButton;
     }
 
+    public static JButton getCodeGenerationButton() {
+        return new JButton(new AbstractAction("Code Generation") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startCodeGeneration();
+            }
+        });
+    }
+
     private static void addCodeGenerationButton() {
         CurrentGui currentGui = CurrentGui.getInstance();
         JFrame mainUMLetFrame = (JFrame) currentGui.getGui().getMainFrame();
@@ -352,17 +385,6 @@ public class GUI {
         JButton codeGenerationButton = new JButton(new AbstractAction("Code Generation") {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                JDialog generationOptionsFrame = new JDialog(mainUMLetFrame, "Code Generation Options", true);
-//                generationOptionsFrame.setSize(300, 200);
-//                generationOptionsFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//
-//                // Center the new frame relative to the main frame
-//                generationOptionsFrame.setLocationRelativeTo(mainUMLetFrame);
-//
-//                // Disable resizing, which prevents full-screen mode
-//                generationOptionsFrame.setResizable(false);
-//
-//                generationOptionsFrame.setVisible(true);
                 startCodeGeneration();
             }
         });
