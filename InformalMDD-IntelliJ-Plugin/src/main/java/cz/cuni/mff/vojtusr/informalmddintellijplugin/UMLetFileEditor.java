@@ -1,6 +1,6 @@
 package cz.cuni.mff.vojtusr.informalmddintellijplugin;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
+import com.baselet.control.Main;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
@@ -9,29 +9,51 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
+import cz.cuni.mff.vojtusr.gui.GUI;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.diagnostic.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
 public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
+    private static final Logger LOG = Logger.getInstance(UMLetFileEditor.class);
+
     private final JPanel myPanel;
 
     private final Project myProject;
     private final VirtualFile myFile;
-    //private final Document myDocument;
+    private final Document myDocument;
 
     public UMLetFileEditor(@NotNull Project project, @NotNull VirtualFile virtualFile) {
-        myPanel = new JPanel();
-        myPanel.setLayout(new BorderLayout());
-        myPanel.add(new JLabel("Editor for: " + virtualFile.getName()), BorderLayout.CENTER);
-        //myPanel.add(new JLabel("Path: " + virtualFile.getPath()));
         myProject = project;
         myFile = virtualFile;
-//        myDocument = FileDocumentManager.getInstance().getDocument(myFile);
+        myDocument = FileDocumentManager.getInstance().getDocument(myFile);
+
+        LOG.info("Initializing UMLet for file: " + myFile.getPath());
+
+        JFrame UMLetMainFrame = GUI.getUMLetMainFrame();
+        Main.getInstance().doOpen(myFile.getPath());
+        myPanel = convert(UMLetMainFrame);
+        UMLetMainFrame.getContentPane().removeAll();
+        UMLetMainFrame.dispose();
+
+        LOG.info("UMLet successfully initialized!");
+    }
+
+    private JPanel convert(JFrame frame) {
+        JPanel panel = new JPanel();
+        panel.setLayout(frame.getContentPane().getLayout());
+
+        for (Component component : frame.getContentPane().getComponents()) {
+            frame.getContentPane().remove(component);
+            panel.add(component);
+        }
+
+        return panel;
     }
 
     @Override
@@ -88,6 +110,11 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
 
     @Override
     public void dispose() {
+        LOG.info("Disposing UMLetFileEditor for file: " + myFile.getPath());
+        if (myPanel != null) {
+            //Main.getInstance().closeProgram();
+            myPanel.removeAll();
+        }
 
     }
 
