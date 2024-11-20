@@ -13,8 +13,8 @@
     <artifactId>InformalMDD-core</artifactId>
 
     <properties>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -97,7 +97,6 @@
             <version>3.31.100</version>
         </dependency>
 
-
         <!-- UMLet Standalone module -->
         <dependency>
             <groupId>com.umlet</groupId>
@@ -121,6 +120,14 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>plugin.properties</resource>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                </transformer>
+                            </transformers>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -129,8 +136,14 @@
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
                                     </excludes>
+
                                 </filter>
                             </filters>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.slf4j:slf4j-api</exclude>
+                                </excludes>
+                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>
