@@ -17,7 +17,6 @@ repositories {
 
 dependencies {
   implementation("cz.cuni.mff.vojtusr:InformalMDD-core:1.0-SNAPSHOT") {
-    exclude("org.slf4j", "slf4j-api")
   }
   intellijPlatform {
     intellijIdeaCommunity("2024.2.4")
@@ -41,8 +40,8 @@ tasks {
   }
 
   patchPluginXml {
-    sinceBuild.set("232")
-    untilBuild.set("242.*")
+    sinceBuild.set("242.23726.103")
+    untilBuild.set("243.*")
   }
 
   signPlugin {
