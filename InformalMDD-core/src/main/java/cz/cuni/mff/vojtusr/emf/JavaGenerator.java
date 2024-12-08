@@ -53,7 +53,7 @@ public class JavaGenerator {
         GenModel genModel = genModelGenerate.generate(projectDir, projectName);
 
         // Generate Java code from the GenModel
-        JavaGenerator.generateCode(genModel, rootPath + "/src/main/");
+        generateCode(genModel, rootPath + "/src/main/");
     }
 
     /**
@@ -62,7 +62,7 @@ public class JavaGenerator {
      * @param genModel The GenModel instance used to generate Java code.
      * @param rootPath The root path where the generated Java files will be saved.
      */
-    public static void generateCode(GenModel genModel, String rootPath) {
+    private void generateCode(GenModel genModel, String rootPath) {
         // Register the GenModel resource factory to handle .genmodel files
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
         
