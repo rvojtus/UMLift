@@ -1,5 +1,11 @@
 package com.baselet.diagram.io;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,31 +114,31 @@ public class InputHandler extends DefaultHandler {
 				}
 				id = null;
 			}
-			else if (!ignoreElements.contains(entityname)) { // OldGridElement handling which can be removed as soon as all OldGridElements have been replaced
-				try {
-					if (code == null) {
-						e = InputHandler.getOldGridElementFromPath(entityname);
-					}
-					else {
-						e = CustomElementCompiler.getInstance().genEntity(code);
-					}
-				} catch (InstantiationException e1) {
-					e = new ErrorOccurred();
-				} catch (IllegalAccessException e1) {
-					e = new ErrorOccurred();
-				} catch (ClassNotFoundException e1) {
-					e = new ErrorOccurred();
-				}
-				e.setRectangle(new Rectangle(x, y, w, h));
-				e.setPanelAttributes(panel_attributes);
-				e.setAdditionalAttributes(additional_attributes);
-				handler.setHandlerAndInitListeners(e);
-
-				if (currentGroup != null) {
-					e.setProperty(GroupFacet.KEY, currentGroup);
-				}
-				_p.addElement(e);
-			}
+//			else if (!ignoreElements.contains(entityname)) { // OldGridElement handling which can be removed as soon as all OldGridElements have been replaced
+//				try {
+//					if (code == null) {
+//						e = InputHandler.getOldGridElementFromPath(entityname);
+//					}
+//					else {
+//						e = CustomElementCompiler.getInstance().genEntity(code);
+//					}
+//				} catch (InstantiationException e1) {
+//					e = new ErrorOccurred();
+//				} catch (IllegalAccessException e1) {
+//					e = new ErrorOccurred();
+//				} catch (ClassNotFoundException e1) {
+//					e = new ErrorOccurred();
+//				}
+//				e.setRectangle(new Rectangle(x, y, w, h));
+//				e.setPanelAttributes(panel_attributes);
+//				e.setAdditionalAttributes(additional_attributes);
+//				handler.setHandlerAndInitListeners(e);
+//
+//				if (currentGroup != null) {
+//					e.setProperty(GroupFacet.KEY, currentGroup);
+//				}
+//				_p.addElement(e);
+//			}
 		}
 		else if (elementname.equals("type")) {
 			entityname = elementtext;
@@ -173,14 +179,29 @@ public class InputHandler extends DefaultHandler {
 	}
 
 	private static GridElement getOldGridElementFromPath(String path) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		Class<?> foundClass = null;
+		String jarFilePath = System.getProperty("user.home")+ File.separator + ".m2/repository/cz/cuni/mff/vojtusr/InformalMDD-core/1.0-SNAPSHOT/InformalMDD-core-1.0-SNAPSHOT.jar";
+		File jarFile = new File(jarFilePath);
+		URL jarURL = null;
+        try {
+            jarURL = jarFile.toURI().toURL();
+
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        }
+        Class<?> foundClass = null;
 		String className = path.substring(path.lastIndexOf("."));
 		for (String possPackage : oldGridElementPackages) {
-			try {
-				foundClass = Thread.currentThread().getContextClassLoader().loadClass(possPackage + className);
-				break;
-			} catch (ClassNotFoundException e1) {/* do nothing; try next package */}
-		}
+			try(URLClassLoader ucl = new URLClassLoader(new URL[] { jarURL });) {
+				//foundClass = Thread.currentThread().getContextClassLoader().loadClass(possPackage + className);
+				foundClass = ucl.loadClass(possPackage + className);
+				return (GridElement) foundClass.getDeclaredConstructor().newInstance();
+				//break;
+			} catch (ClassNotFoundException | IOException e1) {/* do nothing; try next package */}
+				catch (
+                    InvocationTargetException | NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
 		if (foundClass == null) {
 			ClassNotFoundException ex = new ClassNotFoundException("class " + path + " not found");
 			log.error(null, ex);
