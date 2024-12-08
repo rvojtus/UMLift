@@ -18,10 +18,22 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import java.io.IOException;
 import java.util.Collections;
 
-
+/**
+ * Utility class for generating a GenModel from an Ecore model.
+ */
 public class GenModelGenerate {
+
+    /**
+     * Generates a GenModel for a specified project based on an Ecore model.
+     *
+     * @param projectDir   The base directory of the project.
+     * @param projectName  The name of the project.
+     * @return             The generated GenModel instance.
+     * @throws IOException If there is an issue reading or writing resources.
+     */
     public GenModel generate(String projectDir, String projectName) throws IOException {
         final String resourcesPath = projectDir + "/" + projectName + "/src/main/resources";
+
         // Initialize resource set
         ResourceSet resourceSet = new ResourceSetImpl();
 
@@ -33,14 +45,14 @@ public class GenModelGenerate {
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
 
-        // Create a GenModel
+        // Create a GenModel instance
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
         genModel.setModelName(projectName);
         genModel.setModelDirectory(projectName + "/java");
         genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL);
         genModel.initialize(Collections.singleton(ecorePackage));
 
-        // Save the GenModel
+        // Save the GenModel to a file
         URI genmodelURI = URI.createFileURI(resourcesPath + "/genmodel.genmodel");// todo maybe change file name
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
