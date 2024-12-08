@@ -149,23 +149,6 @@ public class MainStandalone {
 		}
 	}
 
-	public static Main initInstance() {
-		initAll(RuntimeType.STANDALONE);
-		alreadyRunningChecker(true); // start checker
-
-		if (Config.getInstance().isCheckForUpdates()) {
-			new Timer("Update Checker", true).schedule(UpdateCheckTimerTask.getInstance(), 0);
-		}
-//		Main.getInstance().init(new StandaloneGUI(Main.getInstance(), tmpFile()));
-//		if (filenameToOpen == null) {
-//			Main.getInstance().doNew();
-//		}
-//		else {
-//			Main.getInstance().doOpen(filenameToOpen);
-//		}
-		return Main.getInstance();
-	}
-
 	private static void initAndPrintUsage() {
 		readBuildInfoAndInitVersion(RuntimeType.BATCH);
 		printUsage();
