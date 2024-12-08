@@ -1,8 +1,42 @@
 package cz.cuni.mff.vojtusr.emf;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+
+import java.io.IOException;
+import java.util.Collections;
 
 public class HelperUtil {
+
+    /**
+     * Saves an Ecore model to a specified file using the XMI format.
+     *
+     * @param ePackage the EPackage to be saved
+     * @param fileName the name of the file where the Ecore model will be saved
+     */
+    public static void saveEcoreModel(EPackage ePackage, String fileName) throws IOException {
+        // Register the XMI resource factory for handling Ecore models
+        Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
+
+        // Create a resource set for managing resources
+        ResourceSet resourceSet = new ResourceSetImpl();
+
+        // Create a new resource for the specified file
+        Resource resource = resourceSet.createResource(URI.createURI(fileName));
+
+        // Add the EPackage to the resource's contents
+        resource.getContents().add(ePackage);
+
+        // Save the resource, which writes the Ecore model to the file
+        resource.save(Collections.EMPTY_MAP);
+        System.out.println("Ecore model saved to " + fileName);
+    }
+
     /**
      * Prints content of an Ecore Package - For debugging purposes
      * @param ePackage

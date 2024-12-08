@@ -6,12 +6,8 @@ import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
 import com.baselet.element.sticking.PointDoubleIndexed;
 import com.baselet.gui.CurrentGui;
-import org.eclipse.emf.common.util.URI;
+import cz.cuni.mff.vojtusr.emf.HelperUtil;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.IOException;
 import java.util.*;
@@ -52,7 +48,12 @@ public class UMLetTransformer {
         processRelations(relations, classes);
 
         // Save the transformed Ecore model to the specified file path
-        saveEcoreModel(ePackage, EcoreFilePath);
+        try {
+            HelperUtil.saveEcoreModel(ePackage, EcoreFilePath);
+        } catch (IOException e) {
+            System.err.println("Could not save EcoreModel: " + e.getMessage());
+        }
+
     }
 
     private final String interfaceRegex = "^<<\\s*[Ii]+nterface\\s*>>$";
@@ -601,33 +602,4 @@ public class UMLetTransformer {
         }
     }
 
-    /**
-     * Saves an Ecore model to a specified file using the XMI format.
-     *
-     * @param ePackage the EPackage to be saved
-     * @param fileName the name of the file where the Ecore model will be saved
-     */
-    private static void saveEcoreModel(EPackage ePackage, String fileName) {
-        // Register the XMI resource factory for handling Ecore models
-        Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
-
-        // Create a resource set for managing resources
-        ResourceSet resourceSet = new ResourceSetImpl();
-
-        // Create a new resource for the specified file
-        Resource resource = resourceSet.createResource(URI.createURI(fileName));
-
-        // Add the EPackage to the resource's contents
-        resource.getContents().add(ePackage);
-
-        try {
-            // Save the resource, which writes the Ecore model to the file
-            resource.save(Collections.EMPTY_MAP);
-            System.out.println("Ecore model saved to " + fileName);
-        } catch (IOException e) {
-            // Handle any IO exceptions that occur during saving
-            System.out.println("Error saving Ecore model to " + fileName);
-        }
-    }
 }
