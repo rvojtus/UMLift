@@ -1,8 +1,8 @@
 package com.baselet.control;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -191,14 +191,55 @@ public class Main implements CanCloseProgram, CanOpenDiagram {
 		return file.getName().substring(0, file.getName().indexOf("."));
 	}
 
+	private List<File> loadJAR() {
+		// Absolute path to the JAR file
+		String jarFilePath = System.getProperty("user.home")+ File.separator + ".m2/repository/cz/cuni/mff/vojtusr/InformalMDD-core/1.0-SNAPSHOT/InformalMDD-core-1.0-SNAPSHOT.jar";
+		String resourcePath = "palettes/"; // Directory inside the JAR
+		List<File> palettes = new ArrayList<>();
+
+		// Open the JAR file
+		try (JarFile jarFile = new JarFile(jarFilePath)) {
+			Enumeration<JarEntry> entries = jarFile.entries();
+			java.nio.file.Path tempDir = Files.createTempDirectory("tmp_UMLetResPalettesDir");
+			tempDir.toFile().deleteOnExit();
+			while (entries.hasMoreElements()) {
+				JarEntry entry = entries.nextElement();
+				if (entry.getName().startsWith(resourcePath) && !entry.isDirectory()) {
+					// Create a temporary file
+					File tempFile = new File(tempDir.toFile(), entry.getName().split("/")[1]);
+
+					// Extract the file content to the temporary file
+					try (InputStream inputStream = jarFile.getInputStream(entry);
+						 FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
+						byte[] buffer = new byte[4096];
+						int bytesRead;
+						while ((bytesRead = inputStream.read(buffer)) != -1) {
+							fileOutputStream.write(buffer, 0, bytesRead);
+						}
+					}
+
+					// Add loaded palette
+					palettes.add(tempFile);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return palettes;
+	}
+
 	private List<File> scanForPalettes() {
 		// scan palettes directory...
 		FileSystemView fileSystemView = FileSystemView.getFileSystemView();
         //File[] paletteFiles = fileSystemView.getFiles(new File(Path.homeProgram() + "palettes/"), false);
 		String umletResPath = System.getProperty("user.dir") + "/umlet-15.1/umlet-res/src/main/resources/"; // todo add version variable
 		File[] paletteFiles = fileSystemView.getFiles(new File(umletResPath + "palettes/"), false);
-
 		List<File> palettes = new ArrayList<File>();
+
+		if (paletteFiles == null || paletteFiles.length == 0) {
+			paletteFiles = loadJAR().toArray(new File[0]);
+		}
+
 		for (File palette : paletteFiles) {
 			if (palette.getName().endsWith("." + Program.getInstance().getExtension())) {
 				palettes.add(palette);
