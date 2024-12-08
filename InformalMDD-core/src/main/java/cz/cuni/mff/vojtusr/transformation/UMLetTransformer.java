@@ -405,10 +405,10 @@ public class UMLetTransformer {
      */
     private void addAssociationRelation(EClass parentClass, EClass childClass, final List<String> attributes) {
         // Create a directed association from the parent class to the child class
-        EReference parentToChild = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=");
+        EReference parentToChild = directedAssociationRelationHelper(childClass, attributes, "m1=");
 
         // Create a directed association from the child class to the parent class
-        EReference childToParent = directedAssociationRelationHelper(childClass, parentClass, attributes, "m2=");
+        EReference childToParent = directedAssociationRelationHelper(parentClass, attributes, "m2=");
 
         // Set the opposite references for bidirectional association
         parentToChild.setEOpposite(childToParent);
@@ -425,13 +425,12 @@ public class UMLetTransformer {
      * Helper method to create an EReference representing a directed association
      * between two EClasses, with optional cardinality specifications from the attributes.
      *
-     * @param parentClass the EClass that represents the parent end of the association
      * @param childClass  the EClass that represents the child end of the association
      * @param attributes  a list of attributes that may define cardinality and other properties
      * @param delimiter   a string that helps identify cardinality attributes in the list
      * @return the created EReference with set properties
      */
-    private EReference directedAssociationRelationHelper(EClass parentClass, EClass childClass, final List<String> attributes, final String delimiter) { // todo rework
+    private EReference directedAssociationRelationHelper(EClass childClass, final List<String> attributes, final String delimiter) { // todo rework
         // Create a new EReference instance
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
@@ -483,7 +482,7 @@ public class UMLetTransformer {
      */
     private void addDirectedAssociationRelation(EClass parentClass, EClass childClass, List<String> attributes) {
         // Create the EReference for the directed association using the helper method
-        EReference eRef = directedAssociationRelationHelper(parentClass, childClass, attributes, "m1=");
+        EReference eRef = directedAssociationRelationHelper(childClass, attributes, "m1=");
 
         // Add the created EReference to the parent class's structural features
         parentClass.getEStructuralFeatures().add(eRef);
