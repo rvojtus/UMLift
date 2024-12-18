@@ -17,8 +17,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Transforms UMLet diagrams into Ecore models.
+ *
+ * <p>The {@code UMLetToEcoreTransformer} class provides functionality for converting UML diagrams
+ * created in UMLet into Ecore models compatible with the Eclipse Modeling Framework (EMF).
+ * The transformation initializes an {@link EPackage} with project-specific metadata and processes
+ * the elements of the UMLet diagram into corresponding Ecore elements.</p>
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>Initializing the Ecore model's package metadata (name, namespace prefix, and URI).</li>
+ *   <li>Providing methods to process UML elements and generate Ecore models.</li>
+ * </ul>
+ * </p>
+ */
 public class UMLetToEcoreTransformer {
     private final EPackage ePackage;
+
+    /**
+     * Initializes a new transformer for converting UMLet diagrams to Ecore models.
+     *
+     * <p>This constructor creates an {@link EPackage} with metadata based on the specified project name.
+     * The package's name, namespace prefix, and namespace URI are set using the project name.</p>
+     *
+     * @param projectName the name of the project, used to configure the Ecore package metadata
+     */
     public UMLetToEcoreTransformer(String projectName) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
