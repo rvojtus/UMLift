@@ -67,7 +67,7 @@ public class GenModelGenerator {
         return genModel;
     }
 
-    public GenModel generateGenModelFromEcore(String ecoreFilePath) throws IOException {
+    public GenModel generateGenModelFromEcore(String ecoreFilePath) {
         // Load the Ecore model
         URI ecoreURI = URI.createFileURI(ecoreFilePath);
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
@@ -80,14 +80,15 @@ public class GenModelGenerator {
         genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL);
         genModel.initialize(Collections.singleton(ecorePackage));
 
-        // Save the GenModel to a file
-        URI genmodelURI = URI.createFileURI(ecoreResource.getURI() + "../genmodel.genmodel"); // todo test
+        System.out.println("Genmodel created successfully.");
+        return genModel;
+    }
+
+    public void saveGenModel(GenModel genModel, String dirToSave) throws IOException {
+        URI genmodelURI = URI.createFileURI(dirToSave + "/genmodel.genmodel"); // todo test
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
         genModelResource.getContents().add(genModel);
         genModelResource.save(Collections.EMPTY_MAP);
-
-        System.out.println("Genmodel created successfully.");
-        return genModel;
     }
 }
