@@ -1,6 +1,10 @@
 package cz.cuni.mff.vojtusr.transformation;
 
 import com.baselet.control.basics.geom.Point;
+import com.baselet.control.enums.Program;
+import com.baselet.control.enums.RuntimeType;
+import com.baselet.control.util.Utils;
+import com.baselet.diagram.DiagramHandler;
 import com.baselet.element.elementnew.uml.Class;
 import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
@@ -9,12 +13,13 @@ import com.baselet.gui.CurrentGui;
 import cz.cuni.mff.vojtusr.emf.HelperUtil;
 import org.eclipse.emf.ecore.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class UMLetTransformer {
+public class UMLetToEcoreTransformer {
     private final EPackage ePackage;
-    public UMLetTransformer(String projectName) {
+    public UMLetToEcoreTransformer(String projectName) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
         ePackage.setNsPrefix(projectName);
@@ -22,14 +27,58 @@ public class UMLetTransformer {
     }
 
     /**
+     * Transforms a UMLet diagram file into an Ecore model file.
+     *
+     * <p>This method initializes the UMLet program in batch mode if it is not already initialized.
+     * It reads the UMLet diagram from the specified file path, extracts the grid elements, and
+     * processes them to generate the corresponding Ecore model, which is saved to the specified
+     * output file path.</p>
+     *
+     * @param UMLetFilePath the file path to the UMLet diagram
+     * @param EcoreFilePath the file path where the generated Ecore model will be saved
+     */
+    public void transform(String UMLetFilePath, String EcoreFilePath) {
+        if (!Program.isInitialized()) { // todo close the UMLet program after transformation is done
+            Utils.BuildInfo buildInfo = Utils.readBuildInfo();
+            Program.init(buildInfo.version, RuntimeType.BATCH);
+        }
+        DiagramHandler diagram = new DiagramHandler(new File(UMLetFilePath));
+        List<GridElement> elements = diagram.getDrawPanel().getGridElements();
+
+        processUMLetDiagram(EcoreFilePath, elements);
+    }
+
+    /**
      * Transforms the current UML diagram into an Ecore model and saves it to the specified file path.
      *
      * @param EcoreFilePath the file path where the transformed Ecore model will be saved
      */
-    public void transform(String EcoreFilePath) {
+    public void transformCurrentUMLet(String EcoreFilePath) {
         // Retrieve all elements from the current diagram in the GUI
         List<GridElement> elements = CurrentGui.getInstance().getGui().getCurrentDiagram().getGridElements();
 
+        processUMLetDiagram(EcoreFilePath, elements);
+    }
+
+    /**
+     * Processes an UMLet diagram's elements and transforms them into an Ecore model.
+     *
+     * <p>This method extracts UML class elements and relations from the provided list of grid elements,
+     * processes them to create an Ecore representation, and saves the resulting Ecore model to the
+     * specified file path.</p>
+     *
+     * <p>Steps include:
+     * <ul>
+     *   <li>Identifying UML class elements and processing them into a list of Ecore-compatible classes.</li>
+     *   <li>Identifying relations between classes and processing them accordingly.</li>
+     *   <li>Saving the final Ecore model to the specified file path.</li>
+     * </ul>
+     * </p>
+     *
+     * @param EcoreFilePath the file path where the transformed Ecore model will be saved
+     * @param elements a list of grid elements representing the UMLet diagram's content
+     */
+    private void processUMLetDiagram(String EcoreFilePath, List<GridElement> elements) {
         // Initialize lists to hold UML class elements and relations
         List<Relation> relations = new ArrayList<>();
         List<Class> classes = new ArrayList<>();
@@ -53,7 +102,6 @@ public class UMLetTransformer {
         } catch (IOException e) {
             System.err.println("Could not save EcoreModel: " + e.getMessage());
         }
-
     }
 
     private final String interfaceRegex = "^<<\\s*[Ii]+nterface\\s*>>$";
@@ -430,11 +478,10 @@ public class UMLetTransformer {
      * @param delimiter   a string that helps identify cardinality attributes in the list
      * @return the created EReference with set properties
      */
-    private EReference directedAssociationRelationHelper(EClass childClass, final List<String> attributes, final String delimiter) { // todo rework
+    private EReference directedAssociationRelationHelper(EClass childClass, final List<String> attributes, final String delimiter) {
         // Create a new EReference instance
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
-
 
         // Check if only one attribute is provided (indicating no cardinality specified)
         if (attributes.size() == 1) {
@@ -462,6 +509,14 @@ public class UMLetTransformer {
         }
         return eRef; // Return the configured EReference
     }
+
+    /**
+     * Retrieves the name of a relation from a list of attributes based on its position.
+     *
+     * @param attributes a list of attributes to search for the relation name
+     * @param position the position of the relation to match
+     * @return the name of the relation if found; {@code null} otherwise
+     */
 
     private String getRelationName(final List<String> attributes, int position) {
         final String relationRegex = "^r" + position + "=.+$";
