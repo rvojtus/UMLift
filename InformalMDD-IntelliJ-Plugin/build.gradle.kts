@@ -1,6 +1,6 @@
 plugins {
   id("java")
-  id("org.jetbrains.intellij.platform") version "2.1.0"
+  id("org.jetbrains.intellij.platform") version "2.2.1"
 }
 
 group = "cz.cuni.mff.vojtusr"
@@ -24,7 +24,6 @@ dependencies {
 
     pluginVerifier()
     zipSigner()
-    instrumentationTools()
   }
 }
 
