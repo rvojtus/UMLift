@@ -9,6 +9,7 @@ import com.baselet.control.util.Path;
 import com.baselet.control.util.Utils;
 import com.baselet.diagram.DiagramHandler;
 import com.baselet.diagram.DrawPanel;
+import com.baselet.diagram.PaletteHandler;
 import com.baselet.element.old.custom.CustomElementHandler;
 import com.baselet.gui.CurrentGui;
 import com.baselet.gui.pane.OwnSyntaxPane;
@@ -32,6 +33,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
@@ -67,8 +70,19 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
         Config.getInstance().setUiManager(LafManager.getInstance().getCurrentUIThemeLookAndFeel().toString());
         Main.getInstance().init(new UMLetIntelliJGUI(Main.getInstance()));
         embeddedPanel = guiComponents.buildGUI();
-
         createControl();
+
+        embeddedPanel.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                refocus();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Handle focus lost logic here
+            }
+        });
     }
 
     private void createControl() {
@@ -102,6 +116,18 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
         Path.setHomeProgram(realPath);
     }
 
+    private void refocus() {
+        getGui().setCurrentEditor(this);
+        getGui().setCurrentDiagramHandler(handler);
+        if (handler != null) {
+            handler.getDrawPanel().getSelector().updateSelectorInformation();
+        }
+        refreshPalette();
+        showPalette(getSelectedPaletteName());
+        getGui().setValueOfZoomDisplay(handler.getGridSize());
+        guiComponents.getPropertyTextPane().invalidate();
+    }
+
     @Override
     public @NotNull JComponent getComponent() {
         return embeddedPanel;
@@ -110,6 +136,15 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     @Override
     public @Nullable JComponent getPreferredFocusedComponent() {
         return embeddedPanel;
+    }
+
+    private void refreshPalette() {
+        if (guiComponents.getPalettePanel().getComponentCount() == 0) {
+            for (PaletteHandler paletteHandler : Main.getInstance().getPalettes().values()) {
+                guiComponents.getPalettePanel().add(paletteHandler.getDrawPanel().getScrollPane(), paletteHandler.getName());
+                paletteHandler.getDrawPanel().getScrollPane().invalidate();
+            }
+        }
     }
 
     @Override
@@ -157,11 +192,7 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     @Override
     public void dispose() {
         LOG.info("Disposing UMLetFileEditor for file: " + virtualFile.getPath());
-        if (embeddedPanel != null) {
-            //Main.getInstance().closeProgram();
-            embeddedPanel.removeAll();
-        }
-
+        getGui().editorRemoved(this);
     }
 
     @Override
