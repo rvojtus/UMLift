@@ -303,7 +303,7 @@ public class MainStandalone {
 		return false;
 	}
 
-	public static File tmpFile() {
+	private static File tmpFile() {
 		String userPart = System.getProperty("user.name").replaceAll("[^a-zA-Z0-9\\._]+", "_"); // #535: append username to file for multiuser systems (but strip out invalid filename chars)
 		return new File(Path.temp() + Program.getInstance().getProgramName().toLowerCase() + "-" + userPart + ".tmp");
 	}

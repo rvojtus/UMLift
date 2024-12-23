@@ -1,10 +1,13 @@
 package com.baselet.standalone.gui;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import com.baselet.control.constants.MenuConstants;
 import com.baselet.diagram.CustomPreviewHandler;
@@ -109,7 +112,7 @@ public class MenuBuilder {
 		menu.add(searchPanel);
 		menu.add(zoomPanel);
 		this.mailButton = mailButton;
-		//menu.add(mailButton);
+		menu.add(mailButton);
 
 		return menu;
 	}

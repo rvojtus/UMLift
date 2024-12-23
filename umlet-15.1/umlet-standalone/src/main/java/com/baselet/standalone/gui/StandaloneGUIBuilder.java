@@ -75,7 +75,7 @@ public class StandaloneGUIBuilder extends BaseGUIBuilder {
 			// If Main starts maximized we set fixed bounds and must set the frame visible
 			// now to avoid a bug where the right sidebar doesn't have the correct size
 			mainFrame.setExtendedState(mainFrame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-			//mainFrame.setVisible(true);
+			mainFrame.setVisible(true);
 		}
 
 		mainFrame.setJMenuBar(menuBuilder.createMenu(createSearchPanel(), createZoomPanel(), createMailButton()));
@@ -86,7 +86,7 @@ public class StandaloneGUIBuilder extends BaseGUIBuilder {
 		mainFrame.add(baseSplitPane);
 
 		ToolTipManager.sharedInstance().setInitialDelay(100);
-		//mainFrame.setVisible(true);
+		mainFrame.setVisible(true);
 
 		return mainFrame;
 	}
