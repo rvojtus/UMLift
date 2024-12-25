@@ -43,6 +43,8 @@ import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.jar.JarFile;
 
 public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
@@ -125,11 +127,16 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
         String jarPath = PathUtil.getJarPathForClass(Path.class);
         String palettesPath = "palettes/";
         String homeProgramPalettesPath = Path.homeProgram() + "palettes/";
+        if (Files.isDirectory(Paths.get(homeProgramPalettesPath))) {
+            return;// palettes already extracted
+        }
 
         try (JarFile jarFile = new JarFile(jarPath)) {
             File palettesDir = new File(homeProgramPalettesPath);
             boolean dirCreated = palettesDir.mkdir();
-            assert dirCreated;
+            if (!dirCreated) {
+                return;
+            }
             jarFile.stream()
                     .filter(entry -> entry.getName().startsWith(palettesPath))
                     .forEach(entry -> {
@@ -143,8 +150,7 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
                             while ((bytesRead = inputStream.read(buffer)) != -1) {
                                 outputStream.write(buffer, 0, bytesRead);
                             }
-                        } catch (IOException e) {
-                            LOG.error(e.getMessage());
+                        } catch (IOException ignored) {
                         }
                     });
         } catch (IOException e) {
