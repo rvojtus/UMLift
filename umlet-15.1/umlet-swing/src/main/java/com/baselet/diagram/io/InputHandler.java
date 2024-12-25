@@ -108,31 +108,31 @@ public class InputHandler extends DefaultHandler {
 				}
 				id = null;
 			}
-			else if (!ignoreElements.contains(entityname)) { // OldGridElement handling which can be removed as soon as all OldGridElements have been replaced
-				try {
-					if (code == null) {
-						e = InputHandler.getOldGridElementFromPath(entityname);
-					}
-					else {
-						e = CustomElementCompiler.getInstance().genEntity(code);
-					}
-				} catch (InstantiationException e1) {
-					e = new ErrorOccurred();
-				} catch (IllegalAccessException e1) {
-					e = new ErrorOccurred();
-				} catch (ClassNotFoundException e1) {
-					e = new ErrorOccurred();
-				}
-				e.setRectangle(new Rectangle(x, y, w, h));
-				e.setPanelAttributes(panel_attributes);
-				e.setAdditionalAttributes(additional_attributes);
-				handler.setHandlerAndInitListeners(e);
-
-				if (currentGroup != null) {
-					e.setProperty(GroupFacet.KEY, currentGroup);
-				}
-				_p.addElement(e);
-			}
+//			else if (!ignoreElements.contains(entityname)) { // OldGridElement handling which can be removed as soon as all OldGridElements have been replaced
+//				try {
+//					if (code == null) {
+//						e = InputHandler.getOldGridElementFromPath(entityname);
+//					}
+//					else {
+//						e = CustomElementCompiler.getInstance().genEntity(code);
+//					}
+//				} catch (InstantiationException e1) {
+//					e = new ErrorOccurred();
+//				} catch (IllegalAccessException e1) {
+//					e = new ErrorOccurred();
+//				} catch (ClassNotFoundException e1) {
+//					e = new ErrorOccurred();
+//				}
+//				e.setRectangle(new Rectangle(x, y, w, h));
+//				e.setPanelAttributes(panel_attributes);
+//				e.setAdditionalAttributes(additional_attributes);
+//				handler.setHandlerAndInitListeners(e);
+//
+//				if (currentGroup != null) {
+//					e.setProperty(GroupFacet.KEY, currentGroup);
+//				}
+//				_p.addElement(e);
+//			}
 		}
 		else if (elementname.equals("type")) {
 			entityname = elementtext;

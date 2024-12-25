@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.security.ProtectionDomain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,10 +153,6 @@ public class Path {
 	private static String executableHelper(Class<?> c) {
 		String path = null;
 		URL codeSourceUrl = c.getProtectionDomain().getCodeSource().getLocation();
-		if (codeSourceUrl == null) {
-			return System.getProperty("user.home") + File.separator + ".m2/repository/cz/cuni/mff/vojtusr/InformalMDD-core/1.0-SNAPSHOT/InformalMDD-core-1.0-SNAPSHOT.jar";
-		}
-
 		try { // Convert URL to URI to avoid HTML problems with special characters like space,ä,ö,ü,...
 			path = codeSourceUrl.toURI().getPath();
 		} catch (URISyntaxException e) {/* path stays null */}
