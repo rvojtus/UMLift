@@ -13,8 +13,11 @@ import com.baselet.diagram.PaletteHandler;
 import com.baselet.element.old.custom.CustomElementHandler;
 import com.baselet.gui.CurrentGui;
 import com.baselet.gui.pane.OwnSyntaxPane;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
@@ -23,6 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.util.PathUtil;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.GUI.UMLetIntelliJGUI;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.GUI.UMLetIntelliJPluginGUIBuilder;
 import org.jetbrains.annotations.Nls;
@@ -36,9 +40,13 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeListener;
-import java.io.File;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.jar.JarFile;
 
 public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
+    private static final String PLUGIN_ID = "cz.cuni.mff.vojtusr.InformalMDD-IntelliJ-Plugin";
     private static final Logger LOG = Logger.getInstance(UMLetFileEditor.class);
 
     private JBPanel<?> embeddedPanel;
@@ -105,15 +113,59 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     }
 
     private void initHomeProgramPath() {
-        String tempPath, realPath;
-        tempPath = Path.executable();
-        tempPath = tempPath.substring(0, tempPath.length() - 1);
-        tempPath = tempPath.substring(0, tempPath.lastIndexOf('/') + 1);
-        if (tempPath.endsWith("/lib/")) {
-            tempPath = tempPath.substring(0, tempPath.length() - "lib/".length());
+        String jarPath = PathUtil.getJarPathForClass(Path.class);
+        String libPath = PathUtil.getParentPath(jarPath);
+        String homeProgramPath = PathUtil.getParentPath(libPath) + "/";
+
+        Path.setHomeProgram(homeProgramPath);
+        extractPalettes();
+    }
+
+    private void extractPalettes() {
+        String jarPath = PathUtil.getJarPathForClass(Path.class);
+        String palettesPath = "palettes/";
+        String homeProgramPalettesPath = Path.homeProgram() + "palettes/";
+
+        try (JarFile jarFile = new JarFile(jarPath)) {
+            File palettesDir = new File(homeProgramPalettesPath);
+            boolean dirCreated = palettesDir.mkdir();
+            assert dirCreated;
+            jarFile.stream()
+                    .filter(entry -> entry.getName().startsWith(palettesPath))
+                    .forEach(entry -> {
+                        String relativePath = entry.getName().substring(palettesPath.length());
+                        File outputFile = new File(homeProgramPalettesPath, relativePath);
+
+                        try (InputStream inputStream = jarFile.getInputStream(entry);
+                        OutputStream outputStream = new FileOutputStream(outputFile)) {
+                            byte[] buffer = new byte[1024];
+                            int bytesRead;
+                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                outputStream.write(buffer, 0, bytesRead);
+                            }
+                        } catch (IOException e) {
+                            LOG.error(e.getMessage());
+                        }
+                    });
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
         }
-        realPath = new File(tempPath).getAbsolutePath() + "/";
-        Path.setHomeProgram(realPath);
+    }
+
+    public static URL getURL() {
+        try {
+            IdeaPluginDescriptor pluginDescriptor = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID));
+            if (pluginDescriptor != null) {
+                File pluginPath = pluginDescriptor.getPluginPath().toFile();
+                return pluginPath.toURI().toURL();
+            }
+            else {
+                System.err.println("Plugin ID: " + PLUGIN_ID + " not found");
+                return null;
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void refocus() {
