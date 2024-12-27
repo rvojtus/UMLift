@@ -31,5 +31,13 @@
       id="cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettingsConfigurable"
       displayName="EMF Settings"/>
   </extensions>
+  
+  <actions>
+    <action id="UxfFileContextMenuAction" class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.UxfFileContextMenuAction"
+            text="Transform UXF File" description="Transforms UMLet File to EMF Ecore and GenModel files">
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+      <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
+    </action>
+  </actions>
 
 </idea-plugin>

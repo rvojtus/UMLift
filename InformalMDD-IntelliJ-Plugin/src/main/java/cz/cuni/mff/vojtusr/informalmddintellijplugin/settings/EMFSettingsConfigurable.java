@@ -34,6 +34,7 @@ final class EMFSettingsConfigurable implements Configurable {
         return !emfSettingsComponent.getProjectName().equals(state.projectName) ||
                 !emfSettingsComponent.getNsURI().equals(state.NsURI) ||
                 !emfSettingsComponent.getNsPrefix().equals(state.NsPrefix) ||
+                !emfSettingsComponent.getEcoreFileDestination().equals(state.ecoreDestination) ||
                 !emfSettingsComponent.getModelDir().equals(state.modelDir);
     }
 
@@ -43,6 +44,7 @@ final class EMFSettingsConfigurable implements Configurable {
         state.projectName = emfSettingsComponent.getProjectName();
         state.NsURI = emfSettingsComponent.getNsURI();
         state.NsPrefix = emfSettingsComponent.getNsPrefix();
+        state.ecoreDestination = emfSettingsComponent.getEcoreFileDestination();
         state.modelDir = emfSettingsComponent.getModelDir();
     }
 
@@ -52,6 +54,7 @@ final class EMFSettingsConfigurable implements Configurable {
         emfSettingsComponent.setProjectName(state.projectName);
         emfSettingsComponent.setNsURI(state.NsURI);
         emfSettingsComponent.setNsPrefix(state.NsPrefix);
+        emfSettingsComponent.setEcoreFileDestination(state.ecoreDestination);
         emfSettingsComponent.setModelDir(state.modelDir);
     }
 

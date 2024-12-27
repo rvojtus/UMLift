@@ -19,21 +19,35 @@ public class EMFSettingsComponent {
     private final JBTextField projectNameText = new JBTextField();
     private final JBTextField NsURIText = new JBTextField();
     private final JBTextField NsPrefixText = new JBTextField();
+    private final TextFieldWithBrowseButton ecoreDestinationBrowseButton = new TextFieldWithBrowseButton();
     private final TextFieldWithBrowseButton modelDirBrowseButton = new TextFieldWithBrowseButton();
 
     public EMFSettingsComponent() {
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        descriptor.setTitle("Select Model Directory");
-        descriptor.setDescription("Choose a directory where the files will be generated.");
-        modelDirBrowseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
+        setUpModelDirBrowserButton();
+        setUpEcoreFileBrowseButton();
 
         mainPanel = FormBuilder.createFormBuilder()
                 .addLabeledComponent(new JBLabel("Project name:"), projectNameText, 1, false)
                 .addLabeledComponent("NsURI:", NsURIText, 1, false)
                 .addLabeledComponent("NsPrefix:", NsPrefixText, 1, false)
+                .addLabeledComponent("Ecore file destination:", ecoreDestinationBrowseButton, 1, false)
                 .addLabeledComponent("ModelDir:", modelDirBrowseButton, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
+    }
+
+    private void setUpModelDirBrowserButton() {
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        descriptor.setTitle("Select Model Directory");
+        descriptor.setDescription("Choose a directory where the files will be generated.");
+        modelDirBrowseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
+    }
+
+    private void setUpEcoreFileBrowseButton() {
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        descriptor.setTitle("Select Directory for Ecore");
+        descriptor.setDescription("Choose a directory where the Ecore file will be generated.");
+        ecoreDestinationBrowseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
     }
 
     public JPanel getPanel() {
@@ -69,6 +83,15 @@ public class EMFSettingsComponent {
 
     public void setNsPrefix(@NotNull String nsPrefix) {
         NsPrefixText.setText(nsPrefix);
+    }
+
+    @NotNull
+    public String getEcoreFileDestination() {
+        return ecoreDestinationBrowseButton.getText();
+    }
+
+    public void setEcoreFileDestination(@NotNull String ecoreFileDestination) {
+        ecoreDestinationBrowseButton.setText(ecoreFileDestination);
     }
 
     @NotNull
