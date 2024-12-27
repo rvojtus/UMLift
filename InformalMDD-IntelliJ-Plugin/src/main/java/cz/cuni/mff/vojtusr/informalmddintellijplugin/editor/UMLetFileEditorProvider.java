@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 public class UMLetFileEditorProvider implements FileEditorProvider, DumbAware {
-    private static final Logger LOG = Logger.getInstance(UMLetToolWindow.class);
+    private static final Logger LOG = Logger.getInstance(UMLetFileEditorProvider.class);
 
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile virtualFile) {
