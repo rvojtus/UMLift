@@ -1,4 +1,4 @@
-package cz.cuni.mff.vojtusr.informalmddintellijplugin;
+package cz.cuni.mff.vojtusr.informalmddintellijplugin.editor;
 
 import com.baselet.control.Main;
 import com.baselet.control.config.Config;

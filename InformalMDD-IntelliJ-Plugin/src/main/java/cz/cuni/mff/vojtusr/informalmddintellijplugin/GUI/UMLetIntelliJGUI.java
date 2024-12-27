@@ -10,7 +10,7 @@ import com.baselet.element.old.custom.CustomElementHandler;
 import com.baselet.gui.BaseGUI;
 import com.baselet.gui.CurrentGui;
 import com.baselet.gui.pane.OwnSyntaxPane;
-import cz.cuni.mff.vojtusr.informalmddintellijplugin.UMLetFileEditor;
+import cz.cuni.mff.vojtusr.informalmddintellijplugin.editor.UMLetFileEditor;
 
 import java.awt.*;
 import java.util.Collection;

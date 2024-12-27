@@ -1,5 +1,6 @@
-package cz.cuni.mff.vojtusr.informalmddintellijplugin;
+package cz.cuni.mff.vojtusr.informalmddintellijplugin.editor;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 public class UMLetFileEditorProvider implements FileEditorProvider, DumbAware {
+    private static final Logger LOG = Logger.getInstance(UMLetToolWindow.class);
 
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile virtualFile) {
