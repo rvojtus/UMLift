@@ -22,9 +22,9 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         public String projectName = "exampleProject";
         public String NsURI = "http://example.org/"+projectName;
         public String NsPrefix = projectName;
-        public String ecoreDestination = "/resources/";
+        public String ecoreDestination = "resources/";
         // Generation
-        public String modelDir = projectName + "/src-gen/";
+        public String modelDir = projectName + "src-gen/";
 
     }
 
