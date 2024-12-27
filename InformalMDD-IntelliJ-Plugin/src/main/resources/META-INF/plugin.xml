@@ -33,11 +33,14 @@
   </extensions>
   
   <actions>
-    <action id="UxfFileContextMenuAction" class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.UxfFileContextMenuAction"
-            text="Transform UXF File" description="Transforms UMLet File to EMF Ecore and GenModel files">
+    <group id="InformalMDDActionGroup" class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.InformalMDDActionGroup"
+            popup="true" text="InformalMDD" description="Contains actions for processing UMLet and Eclipse Modeling Framework files">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
       <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
-    </action>
+      <action id="UxfFileContextMenuAction" class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.UMLetToEMFContextMenuAction"
+              text="Transform UMLet to EMF" description="Transforms UMLet File to EMF Ecore and GenModel files">
+      </action>
+    </group>
   </actions>
 
 </idea-plugin>
