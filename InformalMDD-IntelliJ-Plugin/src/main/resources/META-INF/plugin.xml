@@ -22,10 +22,14 @@
   <!-- Extension points defined by the plugin.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
-    <fileEditorProvider implementation="cz.cuni.mff.vojtusr.informalmddintellijplugin.UMLetFileEditorProvider"/>
-    <toolWindow factoryClass="cz.cuni.mff.vojtusr.informalmddintellijplugin.UMLetToolWindow"
-                id="UMLetToolWindow"
-                anchor="right"/>
+    <fileEditorProvider implementation="cz.cuni.mff.vojtusr.informalmddintellijplugin.editor.UMLetFileEditorProvider"/>
+    <applicationService
+            serviceImplementation="cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings"/>
+    <applicationConfigurable
+      parentId="tools"
+      instance="cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettingsConfigurable"
+      id="cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettingsConfigurable"
+      displayName="EMF Settings"/>
   </extensions>
 
 </idea-plugin>
