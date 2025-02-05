@@ -5,15 +5,30 @@
 
   <!-- Public plugin name should be written in Title Case.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-  <name>InformalMDD</name>
+  <name>UMLet2EMF</name>
 
   <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-  <vendor email="rastislav.vojtus@gmail.com" url="https://www.mff.cuni.cz">MFF-CUNI</vendor>
+  <vendor email="rastislav.vojtus@gmail.com" >Rastislav Vojtuš</vendor>
 
   <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
        Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-  <description>InformalMDD Plugin using UMLet and Eclipse Modeling Framework</description>
+  <description>
+    <![CDATA[
+    Adds support for Informal Model-Driven Development by integrating UMLet 15.1
+    with the Eclipse Modeling Framework (EMF) to generate various artifacts and code.
+    This plugin builds upon the UMLet project but is independently developed.
+    <br>
+    Features:
+    <ul>
+      <li>Integrated UMLet GUI – Edit and visualize <code>.uxf</code> files directly within the file editor.</li>
+      <li>Seamless UXF to EMF Transformation – Convert UMLet diagrams into Ecore and GenModel files.</li>
+      <li>Code & Artifact Generation – Automatically generate Java code and other artifacts from EMF models.</li>
+    </ul>
+    Note: UMLet is an independent open-source project. Learn more at the
+    <a href="https://www.umlet.com/">official UMLet site</a>.
+    ]]>
+  </description>
 
   <!-- Product and plugin compatibility requirements.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -29,12 +44,12 @@
       parentId="tools"
       instance="cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettingsConfigurable"
       id="cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettingsConfigurable"
-      displayName="EMF Settings"/>
+      displayName="UMLet2EMF"/>
   </extensions>
   
   <actions>
     <group id="InformalMDDActionGroup" class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.InformalMDDActionGroup"
-            popup="true" text="InformalMDD" description="Contains actions for processing UMLet and Eclipse Modeling Framework files">
+            popup="true" text="UMLet2EMF" description="Contains actions for processing UMLet and Eclipse Modeling Framework files">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
       <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
       <action id="UxfFileContextMenuAction" class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.UMLetToEMFContextMenuAction"
