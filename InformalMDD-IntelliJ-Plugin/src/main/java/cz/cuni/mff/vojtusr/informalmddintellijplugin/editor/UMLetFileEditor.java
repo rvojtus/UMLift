@@ -18,10 +18,7 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorLocation;
-import com.intellij.openapi.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -341,6 +338,12 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
         }
     }
 
+    public void askSave() {
+        if (handler != null) {
+            handler.doSave();
+        }
+    }
+
     @Override
     public @Nls(capitalization = Nls.Capitalization.Title) @NotNull String getName() {
         return "UMLet Editor";
@@ -353,12 +356,12 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
 
     @Override
     public boolean isModified() {
-        return false;
+        return handler != null && handler.isChanged();
     }
 
     @Override
     public boolean isValid() {
-        return true;
+        return handler != null;
     }
 
     @Override
