@@ -9,8 +9,10 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 public class HelperUtil {
+    private static final Logger LOG = Logger.getLogger(HelperUtil.class.getName());
 
     /**
      * Saves an Ecore model to a specified file using the XMI format.
@@ -34,11 +36,13 @@ public class HelperUtil {
 
         // Save the resource, which writes the Ecore model to the file
         resource.save(Collections.EMPTY_MAP);
-        System.out.println("Ecore model saved to " + fileName);
+
+        LOG.info("Saved Ecore to: " + fileName);
     }
 
     /**
      * Prints content of an Ecore Package - For debugging purposes
+     *
      * @param ePackage
      */
     public static void printEPackageContents(EPackage ePackage) {
