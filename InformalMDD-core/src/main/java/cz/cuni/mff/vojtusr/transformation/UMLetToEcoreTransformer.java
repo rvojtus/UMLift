@@ -47,7 +47,7 @@ public class UMLetToEcoreTransformer {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         ePackage.setName(projectName);
         ePackage.setNsPrefix(projectName);
-        ePackage.setNsURI("https://wwww." +projectName);
+        ePackage.setNsURI("https://wwww." + projectName);
     }
 
     /**
@@ -59,9 +59,8 @@ public class UMLetToEcoreTransformer {
      * output file path.</p>
      *
      * @param UMLetFilePath the file path to the UMLet diagram
-     * @param EcoreFilePath the file path where the generated Ecore model will be saved
      */
-    public void transform(String UMLetFilePath, String EcoreFilePath) {
+    public EPackage transform(String UMLetFilePath) {
         if (!Program.isInitialized()) { // todo close the UMLet program after transformation is done
             Utils.BuildInfo buildInfo = Utils.readBuildInfo();
             Program.init(buildInfo.version, RuntimeType.BATCH);
@@ -69,19 +68,27 @@ public class UMLetToEcoreTransformer {
         DiagramHandler diagram = new DiagramHandler(new File(UMLetFilePath));
         List<GridElement> elements = diagram.getDrawPanel().getGridElements();
 
-        processUMLetDiagram(EcoreFilePath, elements);
+        processUMLetDiagram(elements);
+        return ePackage;
+    }
+
+    /**
+     * @param EcoreFilePath the file path where the generated Ecore model will be saved
+     * @throws IOException
+     */
+    public void saveEcore(String EcoreFilePath) throws IOException {
+        // Save the transformed Ecore model to the specified file path
+        HelperUtil.saveEcoreModel(ePackage, EcoreFilePath);
     }
 
     /**
      * Transforms the current UML diagram into an Ecore model and saves it to the specified file path.
-     *
-     * @param EcoreFilePath the file path where the transformed Ecore model will be saved
      */
-    public void transformCurrentUMLet(String EcoreFilePath) {
+    public void transformCurrentUMLet() { // todo maybe add Diagram as param
         // Retrieve all elements from the current diagram in the GUI
         List<GridElement> elements = CurrentGui.getInstance().getGui().getCurrentDiagram().getGridElements();
 
-        processUMLetDiagram(EcoreFilePath, elements);
+        processUMLetDiagram(elements);
     }
 
     /**
@@ -99,10 +106,9 @@ public class UMLetToEcoreTransformer {
      * </ul>
      * </p>
      *
-     * @param EcoreFilePath the file path where the transformed Ecore model will be saved
      * @param elements a list of grid elements representing the UMLet diagram's content
      */
-    private void processUMLetDiagram(String EcoreFilePath, List<GridElement> elements) {
+    private void processUMLetDiagram(List<GridElement> elements) {
         // Initialize lists to hold UML class elements and relations
         List<Relation> relations = new ArrayList<>();
         List<Class> classes = new ArrayList<>();
@@ -111,21 +117,13 @@ public class UMLetToEcoreTransformer {
         for (GridElement element : elements) {
             if (element instanceof Class UMLClass) {
                 processUMLClassElement(UMLClass, classes);
-            }
-            else if (element instanceof Relation relation) {
+            } else if (element instanceof Relation relation) {
                 relations.add(relation);
             }
         }
 
         // Process all relations between classes
         processRelations(relations, classes);
-
-        // Save the transformed Ecore model to the specified file path
-        try {
-            HelperUtil.saveEcoreModel(ePackage, EcoreFilePath);
-        } catch (IOException e) {
-            System.err.println("Could not save EcoreModel: " + e.getMessage());
-        }
     }
 
     private final String interfaceRegex = "^<<\\s*[Ii]+nterface\\s*>>$";
@@ -160,8 +158,7 @@ public class UMLetToEcoreTransformer {
             EEnum eEnum = EcoreFactory.eINSTANCE.createEEnum();
             eEnum.setName(name);
             ePackage.getEClassifiers().add(eEnum);
-        }
-        else { // Process as a standard (non-interface, non-enum) class
+        } else { // Process as a standard (non-interface, non-enum) class
             // Trim the class name attribute and check if it is abstract (indicated by enclosing slashes)
             String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
             if (classNameAttribute.matches("/.+/")) {
@@ -332,8 +329,7 @@ public class UMLetToEcoreTransformer {
         if (eClassStart == null) {
             System.err.println("ERROR: Class " + startClassName + " not found");
             return;
-        }
-        else if (eClassEnd == null) {
+        } else if (eClassEnd == null) {
             System.err.println("ERROR: Class " + endClassName + " not found");
             return;
         }
@@ -411,7 +407,7 @@ public class UMLetToEcoreTransformer {
      *
      * @param clazz the UMLet class from which to get the name
      * @return the name of the class or "DefaultName" if it is an enum or interface with one attribute,
-     *         or an empty string if there are no attributes
+     * or an empty string if there are no attributes
      */
     private String getUMLetClassName(Class clazz) {
         // Retrieve the list of panel attributes for the UMLet class
@@ -437,9 +433,9 @@ public class UMLetToEcoreTransformer {
      * Adds a relationship between two EClasses in the Ecore model based on the type of UML class relation.
      *
      * @param classRelation the type of relation to add (e.g., inheritance, association, etc.)
-     * @param eClassStart  the starting EClass of the relation
-     * @param eClassEnd    the ending EClass of the relation
-     * @param attributes   additional attributes related to the relation (if any)
+     * @param eClassStart   the starting EClass of the relation
+     * @param eClassEnd     the ending EClass of the relation
+     * @param attributes    additional attributes related to the relation (if any)
      */
     private void addEMFClassRelation(final UMLClassRelations classRelation, EClass eClassStart, EClass eClassEnd, final List<String> attributes) {
         // Switch based on the type of UML class relation
@@ -497,9 +493,9 @@ public class UMLetToEcoreTransformer {
      * Helper method to create an EReference representing a directed association
      * between two EClasses, with optional cardinality specifications from the attributes.
      *
-     * @param childClass  the EClass that represents the child end of the association
-     * @param attributes  a list of attributes that may define cardinality and other properties
-     * @param delimiter   a string that helps identify cardinality attributes in the list
+     * @param childClass the EClass that represents the child end of the association
+     * @param attributes a list of attributes that may define cardinality and other properties
+     * @param delimiter  a string that helps identify cardinality attributes in the list
      * @return the created EReference with set properties
      */
     private EReference directedAssociationRelationHelper(EClass childClass, final List<String> attributes, final String delimiter) {
@@ -528,7 +524,7 @@ public class UMLetToEcoreTransformer {
             if (attribute.matches("^" + delimiter + cardinalityRegEx)) {
                 processCardinality(eRef, attribute, delimiter);
             } else if (attribute.matches("^r" + attributeIndex + "=" + cardinalityRegEx)) {
-                processCardinality(eRef, attribute, "r"+attributeIndex+"=");
+                processCardinality(eRef, attribute, "r" + attributeIndex + "=");
             }
         }
         return eRef; // Return the configured EReference
@@ -538,7 +534,7 @@ public class UMLetToEcoreTransformer {
      * Retrieves the name of a relation from a list of attributes based on its position.
      *
      * @param attributes a list of attributes to search for the relation name
-     * @param position the position of the relation to match
+     * @param position   the position of the relation to match
      * @return the name of the relation if found; {@code null} otherwise
      */
 
@@ -546,7 +542,7 @@ public class UMLetToEcoreTransformer {
         final String relationRegex = "^r" + position + "=.+$";
         for (String attribute : attributes) {
             if (attribute.trim().matches(relationRegex))
-                return attribute.trim().split("r"+position+"=")[1];
+                return attribute.trim().split("r" + position + "=")[1];
         }
         return null;
     }
@@ -605,8 +601,7 @@ public class UMLetToEcoreTransformer {
         if (attributes.size() == 1) {
             eRef.setLowerBound(0);
             eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
-        }
-        else {
+        } else {
             // Iterate through attributes to find cardinality specifications
             for (String attribute : attributes) {
                 if (attribute.matches("^m2=[0-9]+\\.\\.[*n0-9]$")) {
@@ -647,8 +642,8 @@ public class UMLetToEcoreTransformer {
      * Processes and sets the cardinality for an EReference based on the given attribute
      * that describes the cardinality in UMLet format.
      *
-     * @param eRef                 the EReference to which the cardinality will be applied
-     * @param cardinalityAttribute  the string attribute containing the cardinality information
+     * @param eRef                       the EReference to which the cardinality will be applied
+     * @param cardinalityAttribute       the string attribute containing the cardinality information
      * @param UMLetCardinalityIdentifier the identifier used to parse the cardinality from the attribute
      */
     private void processCardinality(EReference eRef, final String cardinalityAttribute, final String UMLetCardinalityIdentifier) {
@@ -666,8 +661,7 @@ public class UMLetToEcoreTransformer {
         if (cardinalityChild_1.matches("[*nN]")) {
             // Set upper bound to unbounded
             eRef.setUpperBound(ETypedElement.UNBOUNDED_MULTIPLICITY);
-        }
-        else {
+        } else {
             try {
                 // Parse the upper bound and set it
                 final int cardChild1 = Integer.parseInt(cardinalityChild_1);
