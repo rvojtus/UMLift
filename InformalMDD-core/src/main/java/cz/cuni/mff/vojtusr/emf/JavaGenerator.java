@@ -40,7 +40,8 @@ import java.nio.file.Path;
  * UML models and offers methods to streamline these processes.</p>
  */
 public class JavaGenerator {
-    public JavaGenerator() {}
+    public JavaGenerator() {
+    }
 
     /**
      * Generates Java code from an Ecore model by performing transformations, creating a GenModel,
@@ -48,8 +49,8 @@ public class JavaGenerator {
      *
      * @param projectDir  The directory of the project where resources and generated code will be placed.
      * @param projectName The name of the project to be used in paths and transformations.
-     * @throws IOException           If there is an issue creating directories or accessing files.
-     * @throws TransformerException  If there is an issue during the UMLet transformation process.
+     * @throws IOException          If there is an issue creating directories or accessing files.
+     * @throws TransformerException If there is an issue during the UMLet transformation process.
      */
     public void generateCodeFromUMLetProject(String projectDir, String projectName) throws IOException, TransformerException {
         // Construct the root and resources paths
@@ -60,7 +61,8 @@ public class JavaGenerator {
 
         // Transform the UML diagram into an Ecore model using UMLetTransformer
         UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
-        transformer.transformCurrentUMLet(outputFileEcore);
+        transformer.transformCurrentUMLet();
+        transformer.saveEcore(outputFileEcore);
 
         Files.createDirectories(outputPath.getParent());
 
@@ -80,8 +82,8 @@ public class JavaGenerator {
      * files are organized in the specified project directory structure.</p>
      *
      * @param umletFilePath the file path to the UMLet diagram
-     * @param projectDir the directory of the project where the code should be generated
-     * @param projectName the name of the project, used to structure the output paths
+     * @param projectDir    the directory of the project where the code should be generated
+     * @param projectName   the name of the project, used to structure the output paths
      * @throws IOException if an error occurs during file operations
      */
     public void generateCodeFromUMLetFile(String umletFilePath, String projectDir, String projectName) throws IOException {
@@ -92,7 +94,8 @@ public class JavaGenerator {
 
         // Transform the UML diagram into an Ecore model using UMLetTransformer
         UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
-        transformer.transform(umletFilePath, outputFileEcore);
+        transformer.transform(umletFilePath);
+        transformer.saveEcore(outputFileEcore);
 
         Files.createDirectories(outputPath.getParent());
 
@@ -119,7 +122,7 @@ public class JavaGenerator {
      * </ul>
      * </p>
      *
-     * @param ecorePath the file path to the Ecore model
+     * @param ecorePath         the file path to the Ecore model
      * @param generatedFilesDir the directory where generated files will be saved
      * @throws IOException if an error occurs during file operations
      */
@@ -142,12 +145,11 @@ public class JavaGenerator {
         // Save the generated GenModel to the resources
         genModelGenerator.saveGenModel(genModel, generatedFilesDir);
 
-        Diagnostic diagnostic = generateJavaCodeForGenModel(genModel, generatedFilesDir+"/src/main/");
+        Diagnostic diagnostic = generateJavaCodeForGenModel(genModel, generatedFilesDir + "/src/main/");
         // Check for generation errors and print appropriate messages
         if (diagnostic.getSeverity() == Diagnostic.ERROR) {
             System.err.println(diagnostic);
-        }
-        else {
+        } else {
             System.out.println("Code generation complete.");
         }
     }
@@ -172,7 +174,7 @@ public class JavaGenerator {
     public void generateCodeFromGenModel(GenModel genModel, String rootPath) {
         // Register the GenModel resource factory to handle .genmodel files
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
-        
+
         // Register the GenModel package to the EPackage registry
         EPackage.Registry.INSTANCE.put(GenModelPackage.eNS_URI, GenModelPackage.eINSTANCE);
 
@@ -185,8 +187,7 @@ public class JavaGenerator {
         // Check for generation errors and print appropriate messages
         if (diagnostic.getSeverity() == Diagnostic.ERROR) {
             System.err.println(diagnostic);
-        }
-        else {
+        } else {
             System.out.println("Code generation complete.");
         }
     }
@@ -206,7 +207,7 @@ public class JavaGenerator {
      * the model project. The method returns a diagnostic object that provides information about the
      * success or failure of the code generation process.</p>
      *
-     * @param genModel the GenModel to generate code from
+     * @param genModel          the GenModel to generate code from
      * @param generatedFilesDir the directory where the generated files will be saved
      * @return a {@link Diagnostic} object containing the results of the code generation process
      */
