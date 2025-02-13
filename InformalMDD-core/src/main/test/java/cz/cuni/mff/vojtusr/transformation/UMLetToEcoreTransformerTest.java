@@ -315,19 +315,66 @@ public class UMLetToEcoreTransformerTest {
         }
 
         @Test
-        void givenManyClassesManyRelations_whenTransform_thenEcoreValid() throws Exception {
+        void givenFewClassesFewRelations_whenTransform_thenEcoreValid() throws Exception {
+            final File uxfFile = new File(relationshipElementsResources + "fewRelations.uxf");
+            final String expectedClassName = "SimpleClass";
+            final int expectedNumberOfClasses = 5;
 
+            // Run the transformation and validate
+            EPackage ePackage = validateAndTransform(uxfFile);
+
+            // Validate Ecore package contains all expected EClasses
+            for (int i = 0; i < expectedNumberOfClasses; i++) {
+                // Validate Ecore package contains EClassifier of type EClass with name 'SimpleClass_#'
+                validateClassExists(ePackage, expectedClassName + "_" + i);
+            }
+
+            // Validate Relations between Classes
+            // Visualization of Relations: SimpleClass_i --> SimpleClass_i++
+            for (int i = 0; i < expectedNumberOfClasses - 1; i++) {
+                validateRelationExists(ePackage, expectedClassName + "_" + i, expectedClassName + "_" + (i + 1));
+            }
+        }
+
+        @Test
+        void givenManyClassesManyRelations_whenTransform_thenEcoreValid() throws Exception {
+            final File uxfFile = new File(relationshipElementsResources + "manyRelations.uxf");
         }
 
         @Test
         void givenAbstractClassSuperTypeClass_whenTransform_thenEcoreValid() throws Exception {
             final File uxfFile = new File(relationshipElementsResources + "abstractClassSuperType.uxf");
+
+            // Run the transformation and validate
+            EPackage ePackage = validateAndTransform(uxfFile);
+
+            // Validate existence of Classes
+            validateClassExists(ePackage, "SimpleClass");
+            validateAbstractClassExists(ePackage, "AbstractClass");
+
+            EClass simpleClass = (EClass) ePackage.getEClassifier("SimpleClass");
+            EClass abstractClass = (EClass) ePackage.getEClassifier("AbstractClass");
+
+            // Validate SuperType (Inheritance) relation
+            assertEquals(simpleClass.getESuperTypes().getFirst(), abstractClass, "AbstractClass should be a SuperType of SimpleClass");
         }
 
         @Test
         void givenInterfaceClassRealisation_whenTransform_thenEcoreValid() throws Exception {
             final File uxfFile = new File(relationshipElementsResources + "interfaceClassRealisation.uxf");
 
+            // Run the transformation and validate
+            EPackage ePackage = validateAndTransform(uxfFile);
+
+            // Validate existence of Classes
+            validateClassExists(ePackage, "SimpleClass");
+            validateInterfaceClassExists(ePackage, "InterfaceName");
+
+            EClass simpleClass = (EClass) ePackage.getEClassifier("SimpleClass");
+            EClass interfaceClass = (EClass) ePackage.getEClassifier("InterfaceName");
+
+            // Validate SuperType (Realisation) relation
+            assertEquals(simpleClass.getESuperTypes().getFirst(), interfaceClass, "InterfaceClass should be a SuperType of SimpleClass");
         }
     }
 
@@ -341,7 +388,6 @@ public class UMLetToEcoreTransformerTest {
     }
 
     private void validateAbstractClassExists(EPackage ePackage, final String className) {
-        System.out.println(ePackage.getEClassifiers());
         EClass eClass = (EClass) ePackage.getEClassifier(className);
         assertNotNull(eClass, "EPackage should contain class: " + className);
         assertTrue(eClass.isAbstract(), "EClass should be abstract: " + eClass);
@@ -358,6 +404,18 @@ public class UMLetToEcoreTransformerTest {
         assertNotNull(eEnum, "EPackage should contain enumeration: " + enumName);
     }
 
+    private void validateRelationExists(EPackage ePackage, final String className_0, final String className_1) {
+        final EClass eClass_0 = (EClass) ePackage.getEClassifier(className_0);
+        final EClass eClass_1 = (EClass) ePackage.getEClassifier(className_1);
+
+        assertNotNull(eClass_0, "EClass_0 should not be null. ClassName: " + className_0);
+        assertNotNull(eClass_1, "EClass_1 should not be null. ClassName: " + className_1);
+
+        assertFalse(eClass_0.getEReferences().isEmpty(), "EClass_0 references should not be empty");
+
+        assertEquals(eClass_0.getEReferences().getFirst().getEReferenceType(), eClass_1, "EClass_0 should contain reference");
+    }
+
     private EPackage validateAndTransform(File uxfFile) {
         // Validate UMLet file exists
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());
@@ -370,6 +428,4 @@ public class UMLetToEcoreTransformerTest {
 
         return ePackage;
     }
-
-
 }
