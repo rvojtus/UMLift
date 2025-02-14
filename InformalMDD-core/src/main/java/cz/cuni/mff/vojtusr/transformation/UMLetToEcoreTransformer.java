@@ -82,11 +82,11 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * Transforms the current UML diagram into an Ecore model and saves it to the specified file path.
+     * @param drawPanel
+     * @return
      */
     public EPackage transform(DrawPanel drawPanel) {
         // Retrieve all elements from the current diagram in the GUI
-        //List<GridElement> elements = CurrentGui.getInstance().getGui().getCurrentDiagram().getGridElements();
         List<GridElement> elements = drawPanel.getGridElements();
 
         processUMLetDiagram(elements);
