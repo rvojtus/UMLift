@@ -5,11 +5,11 @@ import com.baselet.control.enums.Program;
 import com.baselet.control.enums.RuntimeType;
 import com.baselet.control.util.Utils;
 import com.baselet.diagram.DiagramHandler;
+import com.baselet.diagram.DrawPanel;
 import com.baselet.element.elementnew.uml.Class;
 import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
 import com.baselet.element.sticking.PointDoubleIndexed;
-import com.baselet.gui.CurrentGui;
 import cz.cuni.mff.vojtusr.emf.HelperUtil;
 import org.eclipse.emf.ecore.*;
 
@@ -84,11 +84,13 @@ public class UMLetToEcoreTransformer {
     /**
      * Transforms the current UML diagram into an Ecore model and saves it to the specified file path.
      */
-    public void transformCurrentUMLet() { // todo maybe add Diagram as param
+    public EPackage transform(DrawPanel drawPanel) {
         // Retrieve all elements from the current diagram in the GUI
-        List<GridElement> elements = CurrentGui.getInstance().getGui().getCurrentDiagram().getGridElements();
+        //List<GridElement> elements = CurrentGui.getInstance().getGui().getCurrentDiagram().getGridElements();
+        List<GridElement> elements = drawPanel.getGridElements();
 
         processUMLetDiagram(elements);
+        return ePackage;
     }
 
     /**
