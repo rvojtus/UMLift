@@ -1,5 +1,7 @@
 package cz.cuni.mff.vojtusr.emf;
 
+import com.baselet.diagram.DrawPanel;
+import com.baselet.gui.CurrentGui;
 import cz.cuni.mff.vojtusr.transformation.UMLetToEcoreTransformer;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
@@ -60,8 +62,9 @@ public class JavaGenerator {
         Path outputPath = Path.of(outputFileEcore);
 
         // Transform the UML diagram into an Ecore model using UMLetTransformer
+        DrawPanel drawPanel = CurrentGui.getInstance().getGui().getCurrentDiagram();
         UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
-        transformer.transformCurrentUMLet();
+        transformer.transform(drawPanel);
         transformer.saveEcore(outputFileEcore);
 
         Files.createDirectories(outputPath.getParent());
@@ -126,7 +129,7 @@ public class JavaGenerator {
      * @param generatedFilesDir the directory where generated files will be saved
      * @throws IOException if an error occurs during file operations
      */
-    public void generateCodeFromFiles(String ecorePath, String generatedFilesDir) throws IOException {
+    public Diagnostic generateCodeFromFiles(String ecorePath, String generatedFilesDir) throws IOException {
         // Register the GenModel resource factory to handle .genmodel files
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
 
@@ -152,6 +155,7 @@ public class JavaGenerator {
         } else {
             System.out.println("Code generation complete.");
         }
+        return diagnostic;
     }
 
     /**
@@ -171,7 +175,7 @@ public class JavaGenerator {
      * @param genModel the GenModel instance to generate code from
      * @param rootPath the root directory where the generated code will be saved
      */
-    public void generateCodeFromGenModel(GenModel genModel, String rootPath) {
+    public Diagnostic generateCodeFromGenModel(GenModel genModel, String rootPath) {
         // Register the GenModel resource factory to handle .genmodel files
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
 
@@ -190,6 +194,7 @@ public class JavaGenerator {
         } else {
             System.out.println("Code generation complete.");
         }
+        return diagnostic;
     }
 
     /**
