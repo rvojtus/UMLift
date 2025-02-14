@@ -1,7 +1,5 @@
 package cz.cuni.mff.vojtusr.emf;
 
-import com.baselet.diagram.DrawPanel;
-import com.baselet.gui.CurrentGui;
 import cz.cuni.mff.vojtusr.transformation.UMLetToEcoreTransformer;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
@@ -17,7 +15,6 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenModelGeneratorAdapterFactory;
 
-import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,38 +43,6 @@ public class JavaGenerator {
     }
 
     /**
-     * Generates Java code from an Ecore model by performing transformations, creating a GenModel,
-     * and generating the corresponding Java files. Works in-pair with currently open UMLet project.
-     *
-     * @param projectDir  The directory of the project where resources and generated code will be placed.
-     * @param projectName The name of the project to be used in paths and transformations.
-     * @throws IOException          If there is an issue creating directories or accessing files.
-     * @throws TransformerException If there is an issue during the UMLet transformation process.
-     */
-    public void generateCodeFromUMLetProject(String projectDir, String projectName) throws IOException, TransformerException {
-        // Construct the root and resources paths
-        final String rootPath = projectDir + "/" + projectName;
-        final String resourcesPath = rootPath + "/src/main/resources";
-        final String outputFileEcore = resourcesPath + "/ecore.ecore";
-        Path outputPath = Path.of(outputFileEcore);
-
-        // Transform the UML diagram into an Ecore model using UMLetTransformer
-        DrawPanel drawPanel = CurrentGui.getInstance().getGui().getCurrentDiagram();
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
-        transformer.transform(drawPanel);
-        transformer.saveEcore(outputFileEcore);
-
-        Files.createDirectories(outputPath.getParent());
-
-        // Generate the GenModel based on the Ecore model
-        GenModelGenerator genModelGenerator = new GenModelGenerator();
-        GenModel genModel = genModelGenerator.generateProjectGenModel(projectDir, projectName);
-
-        // Generate Java code from the GenModel
-        generateCodeFromGenModel(genModel, rootPath + "/src/main/");
-    }
-
-    /**
      * Generates Java code from an UMLet diagram file.
      *
      * <p>This method processes an UMLet diagram file by transforming it into an Ecore model, generating
@@ -89,7 +54,8 @@ public class JavaGenerator {
      * @param projectName   the name of the project, used to structure the output paths
      * @throws IOException if an error occurs during file operations
      */
-    public void generateCodeFromUMLetFile(String umletFilePath, String projectDir, String projectName) throws IOException {
+    public Diagnostic generateCodeFromUMLetFile(String umletFilePath, String projectDir, String projectName) throws IOException {
+        // Construct the root and resources paths
         final String rootPath = projectDir + "/" + projectName;
         final String resourcesPath = rootPath + "/src/main/resources";
         final String outputFileEcore = resourcesPath + "/ecore.ecore";
@@ -110,7 +76,7 @@ public class JavaGenerator {
         genModelGenerator.saveGenModel(genModel, resourcesPath);
 
         // Generate Java code from the GenModel
-        generateCodeFromGenModel(genModel, rootPath + "/src/main/");
+        return generateCodeFromGenModel(genModel, rootPath + "/src/main/");
     }
 
     /**
@@ -148,14 +114,7 @@ public class JavaGenerator {
         // Save the generated GenModel to the resources
         genModelGenerator.saveGenModel(genModel, generatedFilesDir);
 
-        Diagnostic diagnostic = generateJavaCodeForGenModel(genModel, generatedFilesDir + "/src/main/");
-        // Check for generation errors and print appropriate messages
-        if (diagnostic.getSeverity() == Diagnostic.ERROR) {
-            System.err.println(diagnostic);
-        } else {
-            System.out.println("Code generation complete.");
-        }
-        return diagnostic;
+        return generateJavaCodeForGenModel(genModel, generatedFilesDir + "/src/main/");
     }
 
     /**
@@ -187,14 +146,7 @@ public class JavaGenerator {
                 GenModelPackage.eNS_URI, GenModelGeneratorAdapterFactory.DESCRIPTOR
         );
 
-        Diagnostic diagnostic = generateJavaCodeForGenModel(genModel, rootPath);
-        // Check for generation errors and print appropriate messages
-        if (diagnostic.getSeverity() == Diagnostic.ERROR) {
-            System.err.println(diagnostic);
-        } else {
-            System.out.println("Code generation complete.");
-        }
-        return diagnostic;
+        return generateJavaCodeForGenModel(genModel, rootPath);
     }
 
     /**
