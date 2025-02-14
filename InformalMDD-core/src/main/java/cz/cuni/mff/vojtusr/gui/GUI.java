@@ -1,13 +1,8 @@
 package cz.cuni.mff.vojtusr.gui;
 
-import com.baselet.control.Main;
-import com.baselet.control.config.Config;
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
-import com.baselet.standalone.gui.StandaloneGUI;
-import com.baselet.standalone.gui.StandaloneGUIBuilder;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
-import cz.cuni.mff.vojtusr.transformation.UMLetTransformer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,18 +31,7 @@ public class GUI {
 
     private static String umletFilePath = "";
 
-    public static JFrame getUMLetMainFrame() {
-        startPluginUMLet();
-        return (JFrame) CurrentGui.getInstance().getGui().getMainFrame();
-    }
-
-    public static JFrame getUMLetMainFrame(String fileToOpen) {
-        startUMLet(fileToOpen);
-        return (JFrame) CurrentGui.getInstance().getGui().getMainFrame();
-    }
-
     public static void createAndShowGUI() {
-        //JFrame.setDefaultLookAndFeelDecorated(true);
         setFonts();
         mainFrame.setSize(500, 600);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -178,8 +162,7 @@ public class GUI {
             }
             if (isNewProject) {
                 startUMLet();
-            }
-            else {
+            } else {
                 startUMLet(umletFilePath);
             }
             mainFrame.setVisible(false);
@@ -191,8 +174,7 @@ public class GUI {
             if (!validateStartCodeGeneration()) {
                 JOptionPane.showMessageDialog(mainFrame, "Error occurred during validation!");
                 return;
-            }
-            else {
+            } else {
                 startCodeGeneration();
             }
         });
@@ -203,10 +185,6 @@ public class GUI {
         generateCodeButton.setPreferredSize(buttonSize);
 
         return programButtonPanel;
-    }
-
-    private static void startPluginUMLet() {
-        MainStandalone.main(new String[]{});
     }
 
     private static void startUMLet() {
@@ -221,21 +199,10 @@ public class GUI {
         addCodeGenerationButton();
     }
 
-    public static void startPluginCodeGeneration(String projectDir, String projectName) {
-        try {
-            JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.generate(projectDir, projectName);
-        } catch (IOException e) {// todo better error display
-            System.err.println("IOException occurred: " + e);
-        } catch (TransformerException e) {
-            System.err.println("TransformerException occurred: " + e);
-        }
-    }
-
     private static void startCodeGeneration() {
         try {
             JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.generate(projectDirTextField.getText(), projectNameTextField.getText());
+            javaGenerator.generateCodeFromUMLetProject(projectDirTextField.getText(), projectNameTextField.getText());
             File projectDir = new File(projectDirTextField.getText());
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
@@ -244,8 +211,7 @@ public class GUI {
                 } catch (IOException e) {
                     System.out.println("Error opening project dir: " + projectDir.getAbsolutePath());
                 }
-            }
-            else {
+            } else {
                 System.out.println("Desktop is not supported.");
             }
         } catch (IOException e) {// todo better error display
@@ -334,7 +300,7 @@ public class GUI {
 
                 @Override
                 public String getDescription() {
-                    return "UMLet Files (*"+UMLetFileExtension+")";
+                    return "UMLet Files (*" + UMLetFileExtension + ")";
                 }
             });
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
