@@ -1,5 +1,6 @@
 package cz.cuni.mff.vojtusr.gui;
 
+import com.baselet.diagram.DrawPanel;
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
@@ -8,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -201,37 +201,30 @@ public class GUI {
 
     private static void startCodeGeneration() {
         try {
+            DrawPanel currDrawPanel = CurrentGui.getInstance().getGui().getCurrentDiagram();
+            String currUMLetFilePath = currDrawPanel.getHandler().getFileHandler().getFullPathName();
             JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.generateCodeFromUMLetProject(projectDirTextField.getText(), projectNameTextField.getText());
+            javaGenerator.generateCodeFromUMLetFile(currUMLetFilePath, projectDirTextField.getText(), projectNameTextField.getText());
             File projectDir = new File(projectDirTextField.getText());
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
                 try {
                     desktop.open(projectDir);
                 } catch (IOException e) {
-                    System.out.println("Error opening project dir: " + projectDir.getAbsolutePath());
+                    System.err.println("Error opening project dir: " + projectDir.getAbsolutePath());
                 }
             } else {
-                System.out.println("Desktop is not supported.");
+                System.err.println("Desktop is not supported.");
             }
         } catch (IOException e) {// todo better error display
             System.err.println("IOException occurred: " + e);
-        } catch (TransformerException e) {
-            System.err.println("TransformerException occurred: " + e);
         }
-    }
-
-    private static String getUMLInputFilePath() {
-        String openFileUMLet = CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
-        System.out.println("Open File: " + openFileUMLet);
-        return openFileUMLet;
     }
 
     private static boolean validateStartUMLet() {
         boolean validProjectName = validateProjectName();
         boolean validProjectDir = validateProjectDir();
         boolean validUMLetFile = validateUMLetFile();
-        //System.err.println(validProjectName + " " + validProjectDir + " " + validUMLetFile);
         return validProjectName && validProjectDir && validUMLetFile;
     }
 
