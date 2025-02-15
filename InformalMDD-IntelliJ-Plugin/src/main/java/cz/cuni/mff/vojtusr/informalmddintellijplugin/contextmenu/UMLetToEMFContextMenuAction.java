@@ -20,6 +20,7 @@ import java.util.Objects;
 
 public class UMLetToEMFContextMenuAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(UMLetToEMFContextMenuAction.class);
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -27,8 +28,7 @@ public class UMLetToEMFContextMenuAction extends AnAction {
 
         if (file != null && project != null) {
             transformUXF(file.getPath(), project.getBasePath());
-        }
-        else {
+        } else {
             Messages.showMessageDialog(event.getProject(), "File not found", "Error", Messages.getInformationIcon());
         }
     }
@@ -59,17 +59,22 @@ public class UMLetToEMFContextMenuAction extends AnAction {
         }
 
         UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
-        transformer.transform(uxfPath, ecoreFilePath);
+        transformer.transform(uxfPath);
+
+        try {
+            transformer.saveEcore(ecoreFilePath);
+            LOG.info("Saved Ecore to: " + ecoreFilePath);
+        } catch (IOException e) {
+            LOG.error("Error saving Ecore: ", e);
+        }
 
         GenModelGenerator generator = new GenModelGenerator();
         GenModel genModel = generator.generateGenModelFromEcore(ecoreFilePath);
         try {
             generator.saveGenModel(genModel, genModelFilePath);
-            LOG.info("Saved GenModel to" + genModelFilePath);
+            LOG.info("Saved GenModel to: " + genModelFilePath);
         } catch (IOException e) {
-            System.err.println("Error saving gen model" + e.getMessage());
             LOG.error("Could not save GenModel: " + e);
         }
-
     }
 }

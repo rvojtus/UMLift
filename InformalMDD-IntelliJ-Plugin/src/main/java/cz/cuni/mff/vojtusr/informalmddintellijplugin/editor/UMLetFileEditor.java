@@ -96,7 +96,7 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
      * </ul>
      * </p>
      *
-     * @param project the IntelliJ {@link Project}
+     * @param project     the IntelliJ {@link Project}
      * @param virtualFile the {@link VirtualFile} representing the UMLet file to be edited
      */
     public UMLetFileEditor(@NotNull Project project, @NotNull VirtualFile virtualFile) {
@@ -232,12 +232,12 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
      * and saves them to this plugin's top directory.
      *
      * <p>This method checks if the palette files have already been extracted to the home program directory.
-     *  If they haven't been extracted, the method extracts them from the JAR file where they are stored in
-     *  a directory named {@code "palettes/"} and saves them to a corresponding directory in the home program
-     *  directory.</p>
+     * If they haven't been extracted, the method extracts them from the JAR file where they are stored in
+     * a directory named {@code "palettes/"} and saves them to a corresponding directory in the home program
+     * directory.</p>
      *
-     *  <p>If any I/O errors occur during extraction, they are logged. If the palette directory already exists
-     *  or if the extraction fails, the method gracefully handles these scenarios without interrupting the program.</p>
+     * <p>If any I/O errors occur during extraction, they are logged. If the palette directory already exists
+     * or if the extraction fails, the method gracefully handles these scenarios without interrupting the program.</p>
      */
     private void extractPalettes() {
         String jarPath = PathUtil.getJarPathForClass(Path.class);
@@ -260,7 +260,7 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
                         File outputFile = new File(homeProgramPalettesPath, relativePath);
 
                         try (InputStream inputStream = jarFile.getInputStream(entry);
-                        OutputStream outputStream = new FileOutputStream(outputFile)) {
+                             OutputStream outputStream = new FileOutputStream(outputFile)) {
                             byte[] buffer = new byte[1024];
                             int bytesRead;
                             while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -280,9 +280,8 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
             if (pluginDescriptor != null) {
                 File pluginPath = pluginDescriptor.getPluginPath().toFile();
                 return pluginPath.toURI().toURL();
-            }
-            else {
-                System.err.println("Plugin ID: " + PLUGIN_ID + " not found");
+            } else {
+                LOG.warn("Plugin ID: " + PLUGIN_ID + " not found!");
                 return null;
             }
         } catch (MalformedURLException e) {
@@ -450,7 +449,7 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
 
     }
 
-    public void dirtyChanged(){
+    public void dirtyChanged() {
 
     }
 
