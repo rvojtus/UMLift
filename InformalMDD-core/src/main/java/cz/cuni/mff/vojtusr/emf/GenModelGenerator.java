@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 /**
  * A utility class for generating GenModels from Ecore models.
@@ -24,6 +25,8 @@ import java.util.Collections;
  * and GenModel, which is used in the Eclipse Modeling Framework for code generation.</p>
  */
 public class GenModelGenerator {
+    private static final Logger LOG = Logger.getLogger(GenModelGenerator.class.getName());
+
     private ResourceSet resourceSet;
 
     /**
@@ -63,10 +66,10 @@ public class GenModelGenerator {
      * </ul>
      * </p>
      *
-     * @param   projectDir the directory where the project is located
-     * @param   projectName the name of the project, used to set the GenModel properties
-     * @return  the generated {@link GenModel} instance
-     * @throws  IOException if an error occurs while reading or writing the Ecore or GenModel files
+     * @param projectDir  the directory where the project is located
+     * @param projectName the name of the project, used to set the GenModel properties
+     * @return the generated {@link GenModel} instance
+     * @throws IOException if an error occurs while reading or writing the Ecore or GenModel files
      */
     public GenModel generateProjectGenModel(String projectDir, String projectName) throws IOException {
         final String resourcesPath = projectDir + "/" + projectName + "/src/main/resources";
@@ -90,7 +93,7 @@ public class GenModelGenerator {
         genModelResource.getContents().add(genModel);
         genModelResource.save(Collections.EMPTY_MAP);
 
-        System.out.println("Genmodel created successfully.");
+        LOG.info("Genmodel created successfully.");
         return genModel;
     }
 
@@ -124,8 +127,8 @@ public class GenModelGenerator {
         genModel.setModelDirectory(ecorePackage.getName() + "/java");
         genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL);
         genModel.initialize(Collections.singleton(ecorePackage));
-
-        System.out.println("Genmodel created successfully.");
+        
+        LOG.info("Genmodel created successfully.");
         return genModel;
     }
 
@@ -136,7 +139,7 @@ public class GenModelGenerator {
      * it to the specified directory. The file is named {@code genmodel.genmodel}, and it is saved using
      * UTF-8 encoding.</p>
      *
-     * @param genModel the {@link GenModel} instance to save
+     * @param genModel  the {@link GenModel} instance to save
      * @param dirToSave the directory where the GenModel file will be saved
      * @throws IOException if an error occurs while saving the GenModel file
      */
