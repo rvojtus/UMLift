@@ -1,23 +1,35 @@
 package cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationGroupManager;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Objects;
 
 public class GenerateCodeContextMenuAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(GenerateCodeContextMenuAction.class);
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -30,8 +42,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
                 LOG.error("Error when generating code from Ecore file: " + e);
             }
 
-        }
-        else {
+        } else {
             Messages.showMessageDialog(event.getProject(), "File not found", "Error", Messages.getInformationIcon());
         }
     }
@@ -56,6 +67,76 @@ public class GenerateCodeContextMenuAction extends AnAction {
         if (!outputDir.startsWith("/")) {
             outputDir = project.getBasePath() + File.separator + outputDir;
         }
-        generator.generateCodeFromFiles(file.getPath(), outputDir);
+
+        String finalOutputDir = outputDir;
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Generating code from Ecore file...", true) {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                PrintStream originalStream = System.out;
+                progressIndicator.setIndeterminate(true);
+                progressIndicator.setText("Generating code from Ecore file...");
+                try {
+                    PrintStream printStream = new PrintStream(new ProgressOutputStream(progressIndicator));
+                    System.setOut(printStream);
+                    Diagnostic diagnostic = generator.generateCodeFromFiles(file.getPath(), finalOutputDir);
+
+                    if (diagnostic.getSeverity() == Diagnostic.ERROR) {
+                        notifyFailure(diagnostic);
+                    } else {
+                        progressIndicator.setText("Code generation finished successfully.");
+                        notifySuccess(project);
+                        refreshFiles();
+                    }
+
+                } catch (IOException e) {
+                    LOG.error("Error when generating code from Ecore file: " + e);
+                } finally {
+                    System.setOut(originalStream);
+                }
+                progressIndicator.setIndeterminate(false);
+            }
+        });
+    }
+
+    private static class ProgressOutputStream extends OutputStream {
+        private final ProgressIndicator progressIndicator;
+
+        public ProgressOutputStream(ProgressIndicator progressIndicator) {
+            this.progressIndicator = progressIndicator;
+        }
+
+        @Override
+        public void write(int b) {
+            String output = String.valueOf((char) b);
+            if (progressIndicator != null) {
+                progressIndicator.setText(progressIndicator.getText() + output);
+            }
+        }
+    }
+
+    private static void notifySuccess(@NotNull Project project) {
+        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.vojtusr.notificationgroup")
+                .createNotification("Code generation finished successfully", NotificationType.INFORMATION)
+                .notify(project);
+    }
+
+    private static void notifyFailure(Diagnostic diagnostic) {
+        final String message = "Code Generation Failed: " + diagnostic.getMessage();
+
+        // Log error
+        LOG.error(message);
+
+        // Show error notification
+        Notification notification = new Notification(
+                "cz.cuni.mff.vojtusr.notificationgroup", "Error", message, NotificationType.ERROR
+        );
+        Notifications.Bus.notify(notification);
+
+        // Show error dialog
+        Messages.showErrorDialog(message, "Code Generation Error");
+    }
+
+    private static void refreshFiles() {
+        VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
     }
 }
