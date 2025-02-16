@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Transforms UMLet diagrams into Ecore models.
@@ -33,6 +34,8 @@ import java.util.*;
  * </p>
  */
 public class UMLetToEcoreTransformer {
+    private static final Logger LOG = Logger.getLogger(UMLetToEcoreTransformer.class.getName());
+
     private final EPackage ePackage;
 
     /**
@@ -329,10 +332,10 @@ public class UMLetToEcoreTransformer {
 
         // If either the start or end class is not found in the Ecore model, log an error and exit
         if (eClassStart == null) {
-            System.err.println("ERROR: Class " + startClassName + " not found");
+            LOG.severe("ERROR: Class " + startClassName + " not found");
             return;
         } else if (eClassEnd == null) {
-            System.err.println("ERROR: Class " + endClassName + " not found");
+            LOG.severe("ERROR: Class " + endClassName + " not found");
             return;
         }
 
@@ -361,7 +364,7 @@ public class UMLetToEcoreTransformer {
 
             // Ensure the relation type is a directed association; otherwise, log an error and exit
             if (classRelation != UMLClassRelations.DIRECTED_ASSOCIATION) {
-                System.err.println("Wrong type of relation between a Class " + endClassName + " and Enumeration" + startClassName + "!");
+                LOG.severe("Wrong type of relation between a Class " + endClassName + " and Enumeration" + startClassName);
                 return false;
             }
 
