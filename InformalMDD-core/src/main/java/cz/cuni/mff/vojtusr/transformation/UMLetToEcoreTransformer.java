@@ -5,7 +5,6 @@ import com.baselet.control.enums.Program;
 import com.baselet.control.enums.RuntimeType;
 import com.baselet.control.util.Utils;
 import com.baselet.diagram.DiagramHandler;
-import com.baselet.diagram.DrawPanel;
 import com.baselet.element.elementnew.uml.Class;
 import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
@@ -63,7 +62,7 @@ public class UMLetToEcoreTransformer {
      *
      * @param UMLetFilePath the file path to the UMLet diagram
      */
-    public EPackage transform(String UMLetFilePath) {
+    public EPackage transform(String UMLetFilePath) { // todo add exceptions
         if (!Program.isInitialized()) { // todo close the UMLet program after transformation is done
             Utils.BuildInfo buildInfo = Utils.readBuildInfo();
             Program.init(buildInfo.version, RuntimeType.BATCH);
@@ -72,6 +71,7 @@ public class UMLetToEcoreTransformer {
         List<GridElement> elements = diagram.getDrawPanel().getGridElements();
 
         processUMLetDiagram(elements);
+        LOG.info("UMLet to Ecore transformation finished for: " + UMLetFilePath);
         return ePackage;
     }
 
@@ -82,18 +82,6 @@ public class UMLetToEcoreTransformer {
     public void saveEcore(String EcoreFilePath) throws IOException {
         // Save the transformed Ecore model to the specified file path
         HelperUtil.saveEcoreModel(ePackage, EcoreFilePath);
-    }
-
-    /**
-     * @param drawPanel
-     * @return
-     */
-    public EPackage transform(DrawPanel drawPanel) {
-        // Retrieve all elements from the current diagram in the GUI
-        List<GridElement> elements = drawPanel.getGridElements();
-
-        processUMLetDiagram(elements);
-        return ePackage;
     }
 
     /**
