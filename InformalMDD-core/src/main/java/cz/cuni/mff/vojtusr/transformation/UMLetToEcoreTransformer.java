@@ -168,6 +168,7 @@ public class UMLetToEcoreTransformer {
             String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
             if (classNameAttribute.matches("/.+/")) {
                 umlClass.setAbstract(true);
+                umlClass.setName(name.substring(1, name.length() - 1));
             }
             ePackage.getEClassifiers().add(umlClass);
         }
@@ -319,6 +320,14 @@ public class UMLetToEcoreTransformer {
         // Get the names of the start and end classes from UMLet
         String startClassName = getUMLetClassName(startRelationClass);
         String endClassName = getUMLetClassName(endRelationClass);
+
+        // Trim Abstract Class names
+        if (startClassName.matches("/.+/")) {
+            startClassName = startClassName.substring(1, startClassName.length() - 1);
+        }
+        if (endClassName.matches("/.+/")) {
+            endClassName = endClassName.substring(1, endClassName.length() - 1);
+        }
 
         // Check if the start class is an enum and process it accordingly; exit if handled
         if (processUMLetEnum(startRelationClass, classRelation, startClassName, endClassName)) return;
