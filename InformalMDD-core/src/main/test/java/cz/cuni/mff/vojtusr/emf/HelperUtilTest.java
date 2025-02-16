@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,9 +19,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class HelperUtilTest {
+    private File tmpFile;
+
+    @AfterEach
+    void tearDown() throws IOException {
+        // Cleanup
+        Files.deleteIfExists(tmpFile.toPath());
+    }
+
     @Test
     void givenEcoreModel_whenSaveEcoreModel_thenCorrect() throws IOException {
-        File file = File.createTempFile("test", ".ecore");
+        tmpFile = File.createTempFile("test", ".ecore");
 
         // Create an EPackage
         EPackage ePackage = EcoreFactory.eINSTANCE.createEPackage();
@@ -30,17 +39,14 @@ public class HelperUtilTest {
         eclass.setName("TestClass");
         ePackage.getEClassifiers().add(eclass);
 
-        assertTrue(file.exists());
+        assertTrue(tmpFile.exists());
         assertNotNull(ePackage);
 
         // Save the EPackage to an Ecore file
-        HelperUtil.saveEcoreModel(ePackage, file.getAbsolutePath());
+        HelperUtil.saveEcoreModel(ePackage, tmpFile.getAbsolutePath());
 
         // Validate
-        checkIfEcoreContainsClass(file, eclass.getName());
-
-        // Cleanup
-        Files.deleteIfExists(file.toPath());
+        checkIfEcoreContainsClass(tmpFile, eclass.getName());
     }
 
     void checkIfEcoreContainsClass(File ecoreFile, final String className) throws IOException {
