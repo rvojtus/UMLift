@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UMLetToEcoreTransformerTest {
+    final String testProjectName = "testProject";
+
     private UMLetToEcoreTransformer transformer;
 
     final static String testResourcesPath = "src/main/test/resources/";
@@ -27,7 +29,6 @@ public class UMLetToEcoreTransformerTest {
 
     @BeforeEach
     public void setUp() {
-        final String testProjectName = "testProject";
         transformer = new UMLetToEcoreTransformer(testProjectName);
     }
 
@@ -240,12 +241,12 @@ public class UMLetToEcoreTransformerTest {
              */
 
             // Validate Cardinality SimpleClass_0
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getLowerBound() == 0);
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getUpperBound() == 1);
+            assertTrue(SimpleClass_0.getEReferences().getFirst().getLowerBound() == 0, "SimpleClass_0 should have lower bound == 0");
+            assertTrue(SimpleClass_0.getEReferences().getFirst().getUpperBound() == 1, "SimpleClass_0 should have upper bound == 1");
 
             // Validate Cardinality SimpleClass_1
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getLowerBound() == 0);
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getUpperBound() == ETypedElement.UNBOUNDED_MULTIPLICITY);
+            assertTrue(SimpleClass_1.getEReferences().getFirst().getLowerBound() == 0, "SimpleClass_1 should have lower bound == 0");
+            assertTrue(SimpleClass_1.getEReferences().getFirst().getUpperBound() == ETypedElement.UNBOUNDED_MULTIPLICITY, "SimpleClass_1 should have upper bound == -1");
         }
 
         @Test
