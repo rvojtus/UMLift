@@ -168,7 +168,15 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
      */
     private void createControl() {
         getGui().setCurrentEditor(this);
-        handler = new DiagramHandler(openedFile);
+        try {
+            if (Files.size(openedFile.toPath()) != 0) {
+                handler = new DiagramHandler(openedFile);
+            } else {
+                handler = new DiagramHandler(null);
+            }
+        } catch (IOException e) {
+            handler = new DiagramHandler(null);
+        }
         getGui().registerEditorForDiagramHandler(this, handler);
         getGui().setCurrentDiagramHandler(handler);
         open(handler);
