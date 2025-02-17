@@ -15,16 +15,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import static cz.cuni.mff.vojtusr.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
 public class JavaGeneratorTest {
     private JavaGenerator generator;
-
-    final String projectName = "testProject";
-
-    final static String testResourcesPath = "src/main/test/resources/";
-    final static String UMLetFilesDir = testResourcesPath + "UMLetFiles/";
 
     private Path tmpDir;
 

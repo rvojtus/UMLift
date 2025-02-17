@@ -17,23 +17,18 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static cz.cuni.mff.vojtusr.TestConstants.*;
 
 public class UMLetToEcoreTransformerTest {
-    final String testProjectName = "testProject";
-
     private UMLetToEcoreTransformer transformer;
-
-    final static String testResourcesPath = "src/main/test/resources/";
-    final static String UxfFilesDir = testResourcesPath + "UMLetFiles/";
-    final static String EMFFilesDir = testResourcesPath + "EMFFiles/";
 
     @BeforeEach
     public void setUp() {
-        transformer = new UMLetToEcoreTransformer(testProjectName);
+        transformer = new UMLetToEcoreTransformer(projectName);
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {
-        Path testDir = Paths.get(UxfFilesDir);
+        Path testDir = Paths.get(UMLetFilesDir);
         return Files.walk(testDir)
                 .filter(Files::isRegularFile)
                 .filter(path -> path.getFileName().toString().endsWith(".uxf"));
@@ -68,8 +63,6 @@ public class UMLetToEcoreTransformerTest {
 
     @Nested
     class UMLetDiagramElementsValidation {
-        private final String diagramElementsResources = UxfFilesDir + "diagramElements/";
-
         @Test
         void givenSingleClass_whenTransform_thenEcoreValid() throws Exception {
             final File uxfFile = new File(diagramElementsResources + "singleClass.uxf");
@@ -174,8 +167,6 @@ public class UMLetToEcoreTransformerTest {
 
     @Nested
     class UMLetDiagramRelationshipsValidation {
-        private final String relationshipElementsResources = UxfFilesDir + "diagramRelationships/";
-
         @Test
         void givenTwoClassesSingleReference_whenTransform_thenEcoreValid() throws Exception {
             final File uxfFile = new File(relationshipElementsResources + "simpleReference.uxf");
