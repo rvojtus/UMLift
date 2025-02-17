@@ -1,5 +1,6 @@
 package cz.cuni.mff.vojtusr.transformation;
 
+import com.baselet.control.Main;
 import com.baselet.control.basics.geom.Point;
 import com.baselet.control.enums.Program;
 import com.baselet.control.enums.RuntimeType;
@@ -62,8 +63,8 @@ public class UMLetToEcoreTransformer {
      *
      * @param UMLetFilePath the file path to the UMLet diagram
      */
-    public EPackage transform(String UMLetFilePath) { // todo add exceptions
-        if (!Program.isInitialized()) { // todo close the UMLet program after transformation is done
+    public EPackage transform(String UMLetFilePath) {
+        if (!Program.isInitialized()) {
             Utils.BuildInfo buildInfo = Utils.readBuildInfo();
             Program.init(buildInfo.version, RuntimeType.BATCH);
         }
@@ -72,6 +73,16 @@ public class UMLetToEcoreTransformer {
 
         processUMLetDiagram(elements);
         LOG.info("UMLet to Ecore transformation finished for: " + UMLetFilePath);
+        return ePackage;
+    }
+
+    public EPackage transform(String UMLetFilePath, boolean keepOpen) {
+        EPackage ePackage = transform(UMLetFilePath);
+        if (!keepOpen) {
+            if (Program.isInitialized()) {
+                Main.getInstance().closeProgram();
+            }
+        }
         return ePackage;
     }
 
