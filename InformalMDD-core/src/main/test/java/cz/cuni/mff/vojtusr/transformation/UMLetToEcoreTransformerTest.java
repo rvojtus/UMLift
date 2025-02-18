@@ -24,7 +24,11 @@ public class UMLetToEcoreTransformerTest {
 
     @BeforeEach
     public void setUp() {
-        transformer = new UMLetToEcoreTransformer(projectName);
+        transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
+                .setEPackageName(projectName)
+                .setEPackageNsPrefix(projectNsPrefix)
+                .setEPackageNsURI(projectNsUri)
+                .build();
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {

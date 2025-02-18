@@ -54,15 +54,19 @@ public class JavaGenerator {
      * @param projectName   the name of the project, used to structure the output paths
      * @throws IOException if an error occurs during file operations
      */
-    public Diagnostic generateCodeFromUMLetFile(String umletFilePath, String projectDir, String projectName) throws IOException {
+    public Diagnostic generateCodeFromUMLetFile(String umletFilePath, String projectDir, String projectName, String NsPrefix, String NsURI) throws IOException {
         // Construct the root and resources paths
-        final String rootPath = projectDir + "/" + projectName;
+        final String rootPath = projectDir + "/" + projectName;// todo change
         final String resourcesPath = rootPath + "/src/main/resources";
         final String outputFileEcore = resourcesPath + "/ecore.ecore";
         Path outputPath = Path.of(outputFileEcore);
 
         // Transform the UML diagram into an Ecore model using UMLetTransformer
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
+        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
+                .setEPackageName(projectName)
+                .setEPackageNsPrefix(NsPrefix)
+                .setEPackageNsURI(NsURI)
+                .build();
         transformer.transform(umletFilePath);
         transformer.saveEcore(outputFileEcore);
 
@@ -95,7 +99,7 @@ public class JavaGenerator {
      * @param generatedFilesDir the directory where generated files will be saved
      * @throws IOException if an error occurs during file operations
      */
-    public Diagnostic generateCodeFromFiles(String ecorePath, String generatedFilesDir) throws IOException {
+    public Diagnostic generateCodeFromEcore(String ecorePath, String generatedFilesDir) throws IOException {
         // Register the GenModel resource factory to handle .genmodel files
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
 

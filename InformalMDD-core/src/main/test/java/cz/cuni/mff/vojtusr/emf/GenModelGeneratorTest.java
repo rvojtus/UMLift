@@ -61,7 +61,7 @@ public class GenModelGeneratorTest {
     static Stream<Path> provideEcoreFiles() throws Exception {
         Stream<Path> uxfFiles = provideUxfFiles();
 
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
+        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder().build();
 
         uxfFiles.forEach(path -> {
             EPackage ePackage = transformer.transform(path.toAbsolutePath().toString());

@@ -72,7 +72,7 @@ public class JavaGeneratorTest {
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 
         // Run code generation
-        Diagnostic diagnostic = generator.generateCodeFromUMLetFile(uxfFile.getAbsolutePath(), tmpDir.toString(), projectName);
+        Diagnostic diagnostic = generator.generateCodeFromUMLetFile(uxfFile.getAbsolutePath(), tmpDir.toString(), projectName, projectNsPrefix, projectNsUri);
 
         // Restore default PrintStream
         System.setOut(originalStream);

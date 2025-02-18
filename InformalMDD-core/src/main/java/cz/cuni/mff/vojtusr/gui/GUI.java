@@ -204,7 +204,7 @@ public class GUI {
             DrawPanel currDrawPanel = CurrentGui.getInstance().getGui().getCurrentDiagram();
             String currUMLetFilePath = currDrawPanel.getHandler().getFileHandler().getFullPathName();
             JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.generateCodeFromUMLetFile(currUMLetFilePath, projectDirTextField.getText(), projectNameTextField.getText());
+            javaGenerator.generateCodeFromUMLetFile(currUMLetFilePath, projectDirTextField.getText(), projectNameTextField.getText(), "testPrefix", "testURI");
             File projectDir = new File(projectDirTextField.getText());
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
