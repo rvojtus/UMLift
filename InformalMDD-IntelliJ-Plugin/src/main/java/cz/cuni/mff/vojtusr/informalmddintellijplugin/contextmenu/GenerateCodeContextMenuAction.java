@@ -78,7 +78,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
                 try {
                     PrintStream printStream = new PrintStream(new ProgressOutputStream(progressIndicator));
                     System.setOut(printStream);
-                    Diagnostic diagnostic = generator.generateCodeFromFiles(file.getPath(), finalOutputDir);
+                    Diagnostic diagnostic = generator.generateCodeFromEcore(file.getPath(), finalOutputDir);
 
                     if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                         notifyFailure(diagnostic);

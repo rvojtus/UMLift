@@ -66,7 +66,11 @@ public class UMLetToEMFContextMenuAction extends AnAction {
 
         String finalEcoreFilePath = ecoreFilePath;
         String finalGenModelFilePath = genModelFilePath;
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer(projectName);
+        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
+                .setEPackageName(projectName)
+                .setEPackageNsPrefix(state.NsPrefix)
+                .setEPackageNsURI(state.NsURI)
+                .build();
         GenModelGenerator generator = new GenModelGenerator();
 
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "Transforming " + projectName, false) {
@@ -77,7 +81,7 @@ public class UMLetToEMFContextMenuAction extends AnAction {
 
                 transformer.transform(uxfPath);
                 notifySuccess(project, "UMLet transformation finished successfully");
-                
+
                 try {
                     transformer.saveEcore(finalEcoreFilePath);
                     LOG.info("Successfully saved Ecore: " + finalEcoreFilePath);
