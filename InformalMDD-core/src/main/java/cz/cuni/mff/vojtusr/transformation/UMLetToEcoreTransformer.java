@@ -36,21 +36,41 @@ import java.util.logging.Logger;
 public class UMLetToEcoreTransformer {
     private static final Logger LOG = Logger.getLogger(UMLetToEcoreTransformer.class.getName());
 
-    private final EPackage ePackage;
+    private EPackage ePackage = null;
 
-    /**
-     * Initializes a new transformer for converting UMLet diagrams to Ecore models.
-     *
-     * <p>This constructor creates an {@link EPackage} with metadata based on the specified project name.
-     * The package's name, namespace prefix, and namespace URI are set using the project name.</p>
-     *
-     * @param projectName the name of the project, used to configure the Ecore package metadata
-     */
-    public UMLetToEcoreTransformer(String projectName) {
-        ePackage = EcoreFactory.eINSTANCE.createEPackage();
-        ePackage.setName(projectName);
-        ePackage.setNsPrefix(projectName);
-        ePackage.setNsURI("https://wwww." + projectName);
+    private final String ePackageName;
+    private final String ePackageNsPrefix;
+    private final String ePackageNsURI;
+
+    private UMLetToEcoreTransformer(EcoreConfigBuilder ecoreConfigBuilder) {
+        this.ePackageName = ecoreConfigBuilder.ePackageName;
+        this.ePackageNsPrefix = ecoreConfigBuilder.ePackageNsPrefix;
+        this.ePackageNsURI = ecoreConfigBuilder.ePackageNsURI;
+    }
+
+    public static class EcoreConfigBuilder {
+        private String ePackageName = "defaultProjectName";
+        private String ePackageNsPrefix = "defaultProjectNsPrefix";
+        private String ePackageNsURI = "defaultProjectNsURI";
+
+        public EcoreConfigBuilder setEPackageName(String ePackageName) {
+            this.ePackageName = ePackageName;
+            return this;
+        }
+
+        public EcoreConfigBuilder setEPackageNsPrefix(String ePackageNsPrefix) {
+            this.ePackageNsPrefix = ePackageNsPrefix;
+            return this;
+        }
+
+        public EcoreConfigBuilder setEPackageNsURI(String ePackageNsURI) {
+            this.ePackageNsURI = ePackageNsURI;
+            return this;
+        }
+
+        public UMLetToEcoreTransformer build() {
+            return new UMLetToEcoreTransformer(this);
+        }
     }
 
     /**
@@ -64,6 +84,8 @@ public class UMLetToEcoreTransformer {
      * @param UMLetFilePath the file path to the UMLet diagram
      */
     public EPackage transform(String UMLetFilePath) {
+        ePackage = EcoreFactory.eINSTANCE.createEPackage();
+        setUpEPackage(ePackage);
         if (!Program.isInitialized()) {
             Utils.BuildInfo buildInfo = Utils.readBuildInfo();
             Program.init(buildInfo.version, RuntimeType.BATCH);
@@ -73,6 +95,9 @@ public class UMLetToEcoreTransformer {
 
         processUMLetDiagram(elements);
         LOG.info("UMLet to Ecore transformation finished for: " + UMLetFilePath);
+        LOG.info("Name: " + ePackageName);
+        LOG.info("NsPrefix: " + ePackageNsPrefix);
+        LOG.info("NsURI: " + ePackageNsURI);
         return ePackage;
     }
 
@@ -84,6 +109,20 @@ public class UMLetToEcoreTransformer {
             }
         }
         return ePackage;
+    }
+
+    private void setUpEPackage(EPackage ePackage) {
+        ePackage.setName(ePackageName);
+        ePackage.setNsPrefix(ePackageNsPrefix);
+        ePackage.setNsURI(ePackageNsURI);
+    }
+
+    public boolean closeTransformer() {
+        if (!Program.isInitialized()) {
+            return false;
+        }
+        Main.getInstance().closeProgram();
+        return true;
     }
 
     /**
