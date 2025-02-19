@@ -47,7 +47,7 @@ public class UMLetToEcoreTransformerTest {
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());
 
         // Run the transformation
-        EPackage ePackage = transformer.transform(uxfFile.getAbsolutePath());
+        EPackage ePackage = transformer.transform(uxfFile.toPath());
 
         // Validate Ecore package is not null
         validateEPackageExists(ePackage);
@@ -57,7 +57,7 @@ public class UMLetToEcoreTransformerTest {
 
         // Resulting Ecore file
         Path tmpOutputEcoreFile = Files.createTempFile("test-uxf-", ".ecore");
-        transformer.saveEcore(tmpOutputEcoreFile.toFile().getAbsolutePath());
+        transformer.saveEcore(tmpOutputEcoreFile);
 
         // Validate Ecore package is successfully saved on disk
         assertTrue(tmpOutputEcoreFile.toFile().exists(), "Result Ecore file should exist: " + tmpOutputEcoreFile.toFile().getAbsolutePath());
@@ -417,7 +417,7 @@ public class UMLetToEcoreTransformerTest {
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());
 
         // Run the transformation
-        EPackage ePackage = transformer.transform(uxfFile.getAbsolutePath());
+        EPackage ePackage = transformer.transform(uxfFile.toPath());
 
         // Validate Ecore package is not null
         validateEPackageExists(ePackage);

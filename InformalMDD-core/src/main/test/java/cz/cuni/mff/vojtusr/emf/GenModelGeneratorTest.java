@@ -64,11 +64,11 @@ public class GenModelGeneratorTest {
         UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder().build();
 
         uxfFiles.forEach(path -> {
-            EPackage ePackage = transformer.transform(path.toAbsolutePath().toString());
+            EPackage ePackage = transformer.transform(path);
             if (ePackage != null) {
                 try {
                     Path tmpEcore = Files.createTempFile(tmpDir, path.getFileName().toString(), ".ecore");
-                    transformer.saveEcore(tmpEcore.toAbsolutePath().toString());
+                    transformer.saveEcore(tmpEcore);
                 } catch (IOException ignored) {
                 }
             }
@@ -87,7 +87,7 @@ public class GenModelGeneratorTest {
         // Validate existence of Ecore file
         assertTrue(file.exists(), "Ecore: " + file.getAbsolutePath() + " does not exist");
 
-        GenModel genModel = genModelGenerator.generateGenModelFromEcore(file);
+        GenModel genModel = genModelGenerator.generateGenModelFromEcore(file.toPath());
 
         assertNotNull(genModel, "GenModel should not be null");
 
@@ -111,6 +111,7 @@ public class GenModelGeneratorTest {
             assertNotNull(genModelFile, "GenModelFile should not be null");
             assertTrue(genModelFile.exists(), "GenModel file does not exist: " + genModelFile.getAbsolutePath());
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             return false;
         }
         return true;

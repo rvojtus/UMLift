@@ -43,7 +43,7 @@ public class HelperUtilTest {
         assertNotNull(ePackage);
 
         // Save the EPackage to an Ecore file
-        HelperUtil.saveEcoreModel(ePackage, tmpFile.getAbsolutePath());
+        HelperUtil.saveEcoreModel(ePackage, tmpFile.toPath());
 
         // Validate
         checkIfEcoreContainsClass(tmpFile, eclass.getName());

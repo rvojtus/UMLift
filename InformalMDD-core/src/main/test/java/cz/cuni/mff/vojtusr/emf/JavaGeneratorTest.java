@@ -53,12 +53,6 @@ public class JavaGeneratorTest {
                 .filter(path -> !path.getFileName().toString().equals("empty.uxf")); // skip empty Diagram
     }
 
-    boolean generatedJavaFilesPresent() throws IOException {
-        return Files.walk(tmpDir)
-                .filter(Files::isRegularFile)
-                .anyMatch(path -> path.toString().endsWith(".java"));
-    }
-
     @ParameterizedTest(name = "{index} - Generating code for UXF: {0}")
     @MethodSource("provideUxfFiles")
     void givenUMLetFile_whenGenerateCodeFromUMLetFile_thenCorrectlyGeneratedArtefacts(Path inputFile) throws Exception {
@@ -72,7 +66,16 @@ public class JavaGeneratorTest {
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 
         // Run code generation
-        Diagnostic diagnostic = generator.generateCodeFromUMLetFile(uxfFile.getAbsolutePath(), tmpDir.toString(), projectName, projectNsPrefix, projectNsUri);
+        CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance()
+                .setInputUMLetFile(inputFile)
+                .setGeneratedFilesDir(tmpDir)
+                .setOutputEcoreFile(Path.of(tmpDir.toString() + "/ecore.ecore"))
+                .setOutputGenModelFile(Path.of(tmpDir.toString() + "/genmodel.genmodel"))
+                .setProjectName(projectName)
+                .setProjectNsPrefix(projectNsPrefix)
+                .setProjectNsURI(projectNsUri)
+                .build();
+        Diagnostic diagnostic = generator.generateCodeFromUMLetFile(codeGenerationConfig);
 
         // Restore default PrintStream
         System.setOut(originalStream);
@@ -82,6 +85,12 @@ public class JavaGeneratorTest {
 
         // Assert Java Files have been generated
         assertTrue(generatedJavaFilesPresent(), "Generated Java files should be present in directory: " + tmpDir.toString());
+    }
+
+    boolean generatedJavaFilesPresent() throws IOException {
+        return Files.walk(tmpDir)
+                .filter(Files::isRegularFile)
+                .anyMatch(path -> path.toString().endsWith(".java"));
     }
 
 }
