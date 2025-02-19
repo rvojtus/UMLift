@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.logging.Logger;
 
@@ -17,10 +18,10 @@ public class HelperUtil {
     /**
      * Saves an Ecore model to a specified file using the XMI format.
      *
-     * @param ePackage the EPackage to be saved
-     * @param fileName the name of the file where the Ecore model will be saved
+     * @param ePackage        the EPackage to be saved
+     * @param outputEcoreFile the name of the file where the Ecore model will be saved
      */
-    public static void saveEcoreModel(EPackage ePackage, String fileName) throws IOException {
+    public static void saveEcoreModel(EPackage ePackage, Path outputEcoreFile) throws IOException {
         // Register the XMI resource factory for handling Ecore models
         Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
@@ -29,7 +30,7 @@ public class HelperUtil {
         ResourceSet resourceSet = new ResourceSetImpl();
 
         // Create a new resource for the specified file
-        Resource resource = resourceSet.createResource(URI.createURI(fileName));
+        Resource resource = resourceSet.createResource(URI.createURI(outputEcoreFile.toAbsolutePath().toString()));
 
         // Add the EPackage to the resource's contents
         resource.getContents().add(ePackage);
@@ -37,7 +38,7 @@ public class HelperUtil {
         // Save the resource, which writes the Ecore model to the file
         resource.save(Collections.EMPTY_MAP);
 
-        LOG.info("Saved Ecore to: " + fileName);
+        LOG.info("Saved Ecore to: " + outputEcoreFile);
     }
 
     /**
