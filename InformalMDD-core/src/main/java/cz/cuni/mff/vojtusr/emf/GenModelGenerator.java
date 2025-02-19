@@ -67,28 +67,24 @@ public class GenModelGenerator {
      * </ul>
      * </p>
      *
-     * @param ecoreFilePath the file path to the Ecore model
+     * @param inputEcoreFile the file path to the Ecore model
      * @return the generated {@link GenModel} instance
      */
-    public GenModel generateGenModelFromEcore(String ecoreFilePath) {
+    public GenModel generateGenModelFromEcore(Path inputEcoreFile) {
         // Load the Ecore model
-        URI ecoreURI = URI.createFileURI(ecoreFilePath);
+        URI ecoreURI = URI.createFileURI(inputEcoreFile.toAbsolutePath().toString());
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
 
         // Create a GenModel instance
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
         genModel.setModelName(ecorePackage.getName());
-        genModel.setModelDirectory(ecorePackage.getName() + "/java");
-        genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL);
+        genModel.setModelDirectory(ecorePackage.getName()); // todo needs proper documentation
+        genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL); // todo make it configurable
         genModel.initialize(Collections.singleton(ecorePackage));
 
-        LOG.info("Genmodel created successfully.");
+        LOG.info("GenModel created successfully for Ecore: " + inputEcoreFile.toAbsolutePath());
         return genModel;
-    }
-
-    public GenModel generateGenModelFromEcore(File ecoreFile) {
-        return generateGenModelFromEcore(ecoreFile.getAbsolutePath());
     }
 
     /**
@@ -98,25 +94,21 @@ public class GenModelGenerator {
      * it to the specified directory. The file is named {@code genmodel.genmodel}, and it is saved using
      * UTF-8 encoding.</p>
      *
-     * @param genModel  the {@link GenModel} instance to save
-     * @param dirToSave the directory where the GenModel file will be saved
+     * @param genModel       the {@link GenModel} instance to save
+     * @param outputGenModel
      * @throws IOException if an error occurs while saving the GenModel file
      */
-    public File saveGenModel(GenModel genModel, String dirToSave) throws IOException {
-        return saveGenModel(genModel, dirToSave, "/genmodel.genmodel");
+    public File saveGenModel(GenModel genModel, Path outputGenModel) throws IOException {
+        return saveGenModel(genModel, outputGenModel, "");
     }
 
-    public File saveGenModel(GenModel genModel, Path filePath) throws IOException {
-        return saveGenModel(genModel, filePath.toAbsolutePath().toString(), "");
-    }
-
-    public File saveGenModel(GenModel genModel, String dirToSave, String fileName) throws IOException {
-        URI genmodelURI = URI.createFileURI(dirToSave + fileName);
+    public File saveGenModel(GenModel genModel, Path outputDir, String fileName) throws IOException {
+        URI genmodelURI = URI.createFileURI(outputDir + fileName);
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
         genModelResource.getContents().add(genModel);
         genModelResource.save(Collections.EMPTY_MAP);
-        LOG.info("Genmodel saved successfully to: " + genmodelURI.toString());
+        LOG.info("GenModel saved successfully to: " + genmodelURI.toString());
         return new File(genmodelURI.path());
     }
 
