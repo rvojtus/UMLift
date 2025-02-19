@@ -13,8 +13,8 @@ import com.baselet.element.sticking.PointDoubleIndexed;
 import cz.cuni.mff.vojtusr.emf.HelperUtil;
 import org.eclipse.emf.ecore.*;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -81,28 +81,25 @@ public class UMLetToEcoreTransformer {
      * processes them to generate the corresponding Ecore model, which is saved to the specified
      * output file path.</p>
      *
-     * @param UMLetFilePath the file path to the UMLet diagram
+     * @param inputUMLetFile the file path to the UMLet diagram
      */
-    public EPackage transform(String UMLetFilePath) {
+    public EPackage transform(java.nio.file.Path inputUMLetFile) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
         setUpEPackage(ePackage);
         if (!Program.isInitialized()) {
             Utils.BuildInfo buildInfo = Utils.readBuildInfo();
             Program.init(buildInfo.version, RuntimeType.BATCH);
         }
-        DiagramHandler diagram = new DiagramHandler(new File(UMLetFilePath));
+        DiagramHandler diagram = new DiagramHandler(inputUMLetFile.toFile());
         List<GridElement> elements = diagram.getDrawPanel().getGridElements();
 
         processUMLetDiagram(elements);
-        LOG.info("UMLet to Ecore transformation finished for: " + UMLetFilePath);
-        LOG.info("Name: " + ePackageName);
-        LOG.info("NsPrefix: " + ePackageNsPrefix);
-        LOG.info("NsURI: " + ePackageNsURI);
+        LOG.info("UMLet to Ecore transformation finished for: " + inputUMLetFile);
         return ePackage;
     }
 
-    public EPackage transform(String UMLetFilePath, boolean keepOpen) {
-        EPackage ePackage = transform(UMLetFilePath);
+    public EPackage transform(java.nio.file.Path inputUMLetFile, boolean keepOpen) {
+        EPackage ePackage = transform(inputUMLetFile);
         if (!keepOpen) {
             if (Program.isInitialized()) {
                 Main.getInstance().closeProgram();
@@ -126,12 +123,12 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * @param EcoreFilePath the file path where the generated Ecore model will be saved
+     * @param outputEcoreFile the file path where the generated Ecore model will be saved
      * @throws IOException
      */
-    public void saveEcore(String EcoreFilePath) throws IOException {
+    public void saveEcore(Path outputEcoreFile) throws IOException {
         // Save the transformed Ecore model to the specified file path
-        HelperUtil.saveEcoreModel(ePackage, EcoreFilePath);
+        HelperUtil.saveEcoreModel(ePackage, outputEcoreFile);
     }
 
     /**
