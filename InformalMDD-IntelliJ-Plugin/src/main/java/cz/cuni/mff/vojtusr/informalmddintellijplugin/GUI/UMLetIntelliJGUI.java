@@ -28,7 +28,6 @@ public class UMLetIntelliJGUI extends BaseGUI {
 
     @Override
     public void close(DiagramHandler diagram) {
-        // intellij does the closing
     }
 
     @Override
@@ -42,12 +41,11 @@ public class UMLetIntelliJGUI extends BaseGUI {
         if (currentDiagram == null) {
             return;
         }
-        boolean enable = handler != null &&!currentDiagram.getGridElements().isEmpty();
-        //niečo
     }
 
     @Override
-    public void enablePasteMenuEntry() {}
+    public void enablePasteMenuEntry() {
+    }
 
     @Override
     public CustomElementHandler getCurrentCustomHandler() {
@@ -89,7 +87,8 @@ public class UMLetIntelliJGUI extends BaseGUI {
     }
 
     @Override
-    protected void init() {}
+    protected void init() {
+    }
 
     @Override
     public void open(DiagramHandler diagram) {
@@ -99,7 +98,8 @@ public class UMLetIntelliJGUI extends BaseGUI {
     }
 
     @Override
-    public void jumpTo(DiagramHandler diagram) {}
+    public void jumpTo(DiagramHandler diagram) {
+    }
 
     @Override
     public void showPalette(String palette) {
@@ -110,13 +110,11 @@ public class UMLetIntelliJGUI extends BaseGUI {
     }
 
     @Override
-    public void setCustomElementChanged(CustomElementHandler handler, boolean changed) {}
+    public void setCustomElementChanged(CustomElementHandler handler, boolean changed) {
+    }
 
     @Override
     public void setCustomElementSelected(boolean selected) {
-//        if (editor != null && contributor != null) {
-//            contributor.setCustomElementSelected(selected);
-//        }
     }
 
     @Override
@@ -185,14 +183,14 @@ public class UMLetIntelliJGUI extends BaseGUI {
         if (editor.equals(this.editor)) {
             this.editor = null;
         }
+        closeWindow();
     }
 
     @Override
     public OwnSyntaxPane getPropertyPane() {
         if (editor != null) {
             return editor.getPropertyPane();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -222,7 +220,6 @@ public class UMLetIntelliJGUI extends BaseGUI {
     @Override
     public void afterSaving() {
         super.afterSaving();
-        //EclipseGUI.refreshWorkspace();
     }
 
     @Override
