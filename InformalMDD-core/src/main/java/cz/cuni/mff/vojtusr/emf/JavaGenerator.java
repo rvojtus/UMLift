@@ -111,7 +111,7 @@ public class JavaGenerator {
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(inputEcorePath);
 
         // Save the generated GenModel to the resources
-        genModelGenerator.saveGenModel(genModel, generatedFilesDir);
+        //genModelGenerator.saveGenModel(genModel, generatedFilesDir); // todo maybe allow it?
 
         return generateJavaCodeForGenModel(genModel, generatedFilesDir);
     }
