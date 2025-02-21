@@ -16,10 +16,9 @@ public class UMLetIntelliJPluginGUIBuilder extends BaseGUIBuilder {
     public JBPanel<?> buildGUI() {
         JBPanel<?> mainPanel = new JBPanel<>();
         mainPanel.setLayout(new BorderLayout());
-        final int minWidthEMFPalette = 400;
-        final int mainDividerLoc = Config.getInstance().getMain_split_position() - minWidthEMFPalette;
-        mainPanel.add(initBase(contentPlaceHolder, mainDividerLoc));
+        mainPanel.add(initBase(contentPlaceHolder, Config.getInstance().getMain_split_position()));
         mainPanel.addKeyListener(new GUIListener());
+        Config.getInstance().setShow_grid(true);
 
         return mainPanel;
     }
