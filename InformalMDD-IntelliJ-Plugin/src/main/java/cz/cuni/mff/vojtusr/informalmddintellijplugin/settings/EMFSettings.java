@@ -4,11 +4,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.nio.file.Path;
 
 @State(
         name = "cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings",
@@ -20,12 +20,14 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         @NonNls
         // Ecore
         public String projectName = "exampleProject";
-        public String NsURI = "http://example.org/"+projectName;
-        public String NsPrefix = projectName;
-        public String ecoreDestination = "resources/";
+        public String NsURI = "https://example.org/" + projectName;
+        public String NsPrefix = projectName + "Prefix";
+        public String ecoreFileName = "ecore";
+        // GenModel
+        public String genModelFileName = "genmodel";
         // Generation
-        public String modelDir = projectName + "src-gen/";
-
+        public Path ecoreGenModelOutputDir = Path.of("resources");
+        public String generatedFilesOutputDir = projectName;
     }
 
     private State myState = new State();

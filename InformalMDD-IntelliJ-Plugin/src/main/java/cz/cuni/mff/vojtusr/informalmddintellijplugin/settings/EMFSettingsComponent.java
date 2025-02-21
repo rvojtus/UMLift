@@ -16,38 +16,53 @@ import javax.swing.*;
  */
 public class EMFSettingsComponent {
     private final JPanel mainPanel;
+    // Ecore settings
     private final JBTextField projectNameText = new JBTextField();
     private final JBTextField NsURIText = new JBTextField();
     private final JBTextField NsPrefixText = new JBTextField();
-    private final TextFieldWithBrowseButton ecoreDestinationBrowseButton = new TextFieldWithBrowseButton();
-    private final TextFieldWithBrowseButton modelDirBrowseButton = new TextFieldWithBrowseButton();
+    private final JBTextField ecoreFileNameTextField = new JBTextField();
+
+    // GenModel settings
+    private final JBTextField genModelFileNameTextField = new JBTextField();
+
+    // Generation settings
+    private final TextFieldWithBrowseButton ecoreGenModelOutputDirBrowse = new TextFieldWithBrowseButton();
+    private final TextFieldWithBrowseButton generatedFilesOutputDirBrowseButton = new TextFieldWithBrowseButton();
 
     public EMFSettingsComponent() {
-        setUpModelDirBrowserButton();
-        setUpEcoreFileBrowseButton();
+        setUpGeneratedFilesOutputDirBrowserButton();
+        setUpEcoreGenModelOutputBrowseButton();
 
         mainPanel = FormBuilder.createFormBuilder()
+                .addComponent(new JLabel("Ecore settings"))
+                .addSeparator()
                 .addLabeledComponent(new JBLabel("Project name:"), projectNameText, 1, false)
                 .addLabeledComponent("NsURI:", NsURIText, 1, false)
                 .addLabeledComponent("NsPrefix:", NsPrefixText, 1, false)
-                .addLabeledComponent("Ecore file destination:", ecoreDestinationBrowseButton, 1, false)
-                .addLabeledComponent("ModelDir:", modelDirBrowseButton, 1, false)
+                .addLabeledComponent("Ecore file name:", ecoreFileNameTextField, 1, false)
+                .addComponent(new JBLabel("GenModel settings"))
+                .addSeparator()
+                .addLabeledComponent("GenModel file name:", genModelFileNameTextField, 1, false)
+                .addComponent(new JBLabel("Generation settings"))
+                .addSeparator()
+                .addLabeledComponent("Ecore + GenModel destination:", ecoreGenModelOutputDirBrowse, 1, false)
+                .addLabeledComponent("Generated files output directory:", generatedFilesOutputDirBrowseButton, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
 
-    private void setUpModelDirBrowserButton() {
+    private void setUpGeneratedFilesOutputDirBrowserButton() {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setTitle("Select Model Directory");
         descriptor.setDescription("Choose a directory where the files will be generated.");
-        modelDirBrowseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
+        generatedFilesOutputDirBrowseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
     }
 
-    private void setUpEcoreFileBrowseButton() {
+    private void setUpEcoreGenModelOutputBrowseButton() {
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setTitle("Select Directory for Ecore");
-        descriptor.setDescription("Choose a directory where the Ecore file will be generated.");
-        ecoreDestinationBrowseButton.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
+        descriptor.setDescription("Choose a directory where the Ecore + GenModel files will be generated.");
+        ecoreGenModelOutputDirBrowse.addBrowseFolderListener(new TextBrowseFolderListener(descriptor));
     }
 
     public JPanel getPanel() {
@@ -86,20 +101,38 @@ public class EMFSettingsComponent {
     }
 
     @NotNull
-    public String getEcoreFileDestination() {
-        return ecoreDestinationBrowseButton.getText();
+    public String getEcoreFileName() {
+        return ecoreFileNameTextField.getText();
     }
 
-    public void setEcoreFileDestination(@NotNull String ecoreFileDestination) {
-        ecoreDestinationBrowseButton.setText(ecoreFileDestination);
+    public void setEcoreFileName(@NotNull String ecoreFileName) {
+        ecoreFileNameTextField.setText(ecoreFileName);
     }
 
     @NotNull
-    public String getModelDir() {
-        return modelDirBrowseButton.getText();
+    public String getGenModelFileName() {
+        return genModelFileNameTextField.getText();
     }
 
-    public void setModelDir(@NotNull String modelDir) {
-        modelDirBrowseButton.setText(modelDir);
+    public void setGenModelFileName(@NotNull String genModelFileName) {
+        genModelFileNameTextField.setText(genModelFileName);
+    }
+
+    @NotNull
+    public String getEcoreGenModelDestination() {
+        return ecoreGenModelOutputDirBrowse.getText();
+    }
+
+    public void setEcoreGenModelDestination(@NotNull String ecoreFileDestination) {
+        ecoreGenModelOutputDirBrowse.setText(ecoreFileDestination);
+    }
+
+    @NotNull
+    public String getGeneratedFilesOutputDir() {
+        return generatedFilesOutputDirBrowseButton.getText();
+    }
+
+    public void setGeneratedFilesOutputDir(@NotNull String modelDir) {
+        generatedFilesOutputDirBrowseButton.setText(modelDir);
     }
 }
