@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class GenerateCodeContextMenuAction extends AnAction {
@@ -63,12 +64,12 @@ public class GenerateCodeContextMenuAction extends AnAction {
     private void generateCode(Project project, VirtualFile file) throws IOException {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
         JavaGenerator generator = new JavaGenerator();
-        String outputDir = state.modelDir;
+        String outputDir = state.generatedFilesOutputDir;
         if (!outputDir.startsWith("/")) {
             outputDir = project.getBasePath() + File.separator + outputDir;
         }
 
-        String finalOutputDir = outputDir;
+        final String finalOutputDir = outputDir;
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "Generating code from Ecore file...", true) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
@@ -78,7 +79,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
                 try {
                     PrintStream printStream = new PrintStream(new ProgressOutputStream(progressIndicator));
                     System.setOut(printStream);
-                    Diagnostic diagnostic = generator.generateCodeFromEcore(file.getPath(), finalOutputDir);
+                    Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(file.getPath()), Path.of(finalOutputDir));
 
                     if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                         notifyFailure(diagnostic);
