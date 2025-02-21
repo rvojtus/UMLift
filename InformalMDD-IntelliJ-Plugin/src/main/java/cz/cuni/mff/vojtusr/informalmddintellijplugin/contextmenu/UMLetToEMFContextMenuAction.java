@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class UMLetToEMFContextMenuAction extends AnAction {
@@ -55,52 +56,58 @@ public class UMLetToEMFContextMenuAction extends AnAction {
     private void transformUXF(@NotNull Project project, String uxfPath, String projectDir) {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
 
-        String projectName = state.projectName;
-        String ecoreFilePath = state.ecoreDestination + "/ecore.ecore";
-        String genModelFilePath = state.ecoreDestination;
-
-        if (!ecoreFilePath.startsWith("/")) {
-            ecoreFilePath = projectDir + File.separator + ecoreFilePath;
-            genModelFilePath = projectDir + File.separator + genModelFilePath;
-        }
-
-        String finalEcoreFilePath = ecoreFilePath;
-        String finalGenModelFilePath = genModelFilePath;
         UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
-                .setEPackageName(projectName)
+                .setEPackageName(state.projectName)
                 .setEPackageNsPrefix(state.NsPrefix)
                 .setEPackageNsURI(state.NsURI)
                 .build();
-        GenModelGenerator generator = new GenModelGenerator();
 
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Transforming " + projectName, false) {
+        Path ecoreGenModelOutputDir = state.ecoreGenModelOutputDir;
+        if (!ecoreGenModelOutputDir.startsWith("/")) {
+            ecoreGenModelOutputDir = Path.of(projectDir + File.separator + ecoreGenModelOutputDir);
+        }
+        final Path finalEcoreGenModelOutputDir = ecoreGenModelOutputDir;
+
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Transforming " + state.projectName, false) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 progressIndicator.setIndeterminate(true);
                 progressIndicator.setText("Transforming UMLet" + uxfPath);
 
-                transformer.transform(uxfPath);
+                transformer.transform(Path.of(uxfPath));
                 notifySuccess(project, "UMLet transformation finished successfully");
 
-                try {
-                    transformer.saveEcore(finalEcoreFilePath);
-                    LOG.info("Successfully saved Ecore: " + finalEcoreFilePath);
-                } catch (IOException e) {
-                    LOG.error("Error saving Ecore: ", e);
-                    notifyFailure(project, "Error saving Ecore " + finalEcoreFilePath);
-                }
+                Path inputEcoreFile = saveEcoreFile();
 
-                GenModel genModel = generator.generateGenModelFromEcore(finalEcoreFilePath);
-                try {
-                    generator.saveGenModel(genModel, finalGenModelFilePath);
-                    LOG.info("Successfully saved GenModel: " + finalGenModelFilePath);
-                } catch (IOException e) {
-                    LOG.error("Error saving GenModel: ", e);
-                    notifyFailure(project, "Error saving GenModel " + finalGenModelFilePath);
-                }
+                generateGenmodel(inputEcoreFile);
 
                 progressIndicator.setIndeterminate(false);
                 refreshFiles();
+            }
+
+            private void generateGenmodel(Path inputEcoreFile) {
+                GenModelGenerator generator = new GenModelGenerator();
+                GenModel genModel = generator.generateGenModelFromEcore(inputEcoreFile);
+                final Path genmodelPath = Path.of(finalEcoreGenModelOutputDir + File.separator + state.genModelFileName);
+                try {
+                    generator.saveGenModel(genModel, genmodelPath);
+                    LOG.info("Successfully saved GenModel: " + state.genModelFileName);
+                } catch (IOException e) {
+                    LOG.error("Error saving GenModel: ", e);
+                    notifyFailure(project, "Error saving GenModel " + state.genModelFileName);
+                }
+            }
+
+            private @NotNull Path saveEcoreFile() {
+                final Path ecorePath = Path.of(finalEcoreGenModelOutputDir + File.separator + state.ecoreFileName);
+                try {
+                    transformer.saveEcore(ecorePath);
+                    LOG.info("Successfully saved Ecore: " + state.ecoreFileName);
+                } catch (IOException e) {
+                    LOG.error("Error saving Ecore: ", e);
+                    notifyFailure(project, "Error saving Ecore " + state.ecoreFileName);
+                }
+                return ecorePath;
             }
         });
     }
