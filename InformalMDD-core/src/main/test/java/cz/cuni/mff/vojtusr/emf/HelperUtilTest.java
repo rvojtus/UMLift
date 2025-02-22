@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+/**
+ * Tests functionality of {@link HelperUtil}.
+ */
 public class HelperUtilTest {
     private File tmpFile;
 

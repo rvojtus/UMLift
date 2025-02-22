@@ -28,9 +28,25 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * A context menu action that provides code generation for Ecore Model files.
+ *
+ * <p>
+ * This action appears in the context menu when an Ecore File is selected in the Project View.
+ * </p>
+ *
+ * @see AnAction
+ * @see JavaGenerator
+ * @since 1.0
+ */
 public class GenerateCodeContextMenuAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(GenerateCodeContextMenuAction.class);
 
+    /**
+     * Performs the code generation action when user selects it from the context menu.
+     *
+     * @param event the action event containing context
+     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -48,6 +64,15 @@ public class GenerateCodeContextMenuAction extends AnAction {
         }
     }
 
+    /**
+     * Updates the visibility and availability of this action.
+     *
+     * <p>
+     * This method ensures that the action is only available when an Ecore file is selected.
+     * </p>
+     *
+     * @param event the action event containing context
+     */
     @Override
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -61,6 +86,14 @@ public class GenerateCodeContextMenuAction extends AnAction {
         return ActionUpdateThread.BGT;
     }
 
+    /**
+     * Generates code using {@link JavaGenerator}. Uses {@link ProgressIndicator} to show progress of the generation.
+     *
+     * @param project the current project context
+     * @param file    the file to generate code from
+     * @throws IOException if there is any file I/O related problem
+     * @see JavaGenerator#generateCodeFromEcore(Path, Path) for details about the generation
+     */
     private void generateCode(Project project, VirtualFile file) throws IOException {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
         JavaGenerator generator = new JavaGenerator();

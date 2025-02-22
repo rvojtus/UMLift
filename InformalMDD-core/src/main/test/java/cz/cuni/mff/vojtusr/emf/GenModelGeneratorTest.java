@@ -18,8 +18,12 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import static cz.cuni.mff.vojtusr.TestConstants.*;
+import static cz.cuni.mff.vojtusr.emf.HelperUtil.saveGenModel;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests functionality of {@link GenModelGenerator}.
+ */
 public class GenModelGeneratorTest {
     private GenModelGenerator genModelGenerator;
     private static Path tmpDir;
@@ -101,12 +105,18 @@ public class GenModelGeneratorTest {
         assertTrue(validateSaveGenModel(genModel), "Saving of GenModel failed: " + diagnostic);
     }
 
+    /**
+     * Tests that saving a valid {@link GenModel} does not throw and the file is present afterward.
+     *
+     * @param genModel {@link GenModel} to save
+     * @return {@code true} if file was successfully saved on the disk, {@code false} if an {@link IOException} occurred
+     */
     boolean validateSaveGenModel(GenModel genModel) {
         try {
             Path genModelPathToSaveTo = Files.createTempFile(tmpDir, "testGenModel", ".genmodel");
             assertNotNull(genModelPathToSaveTo, "GenModelPathToSaveTo should not be null");
 
-            File genModelFile = genModelGenerator.saveGenModel(genModel, genModelPathToSaveTo);
+            File genModelFile = saveGenModel(genModel, genModelPathToSaveTo);
 
             assertNotNull(genModelFile, "GenModelFile should not be null");
             assertTrue(genModelFile.exists(), "GenModel file does not exist: " + genModelFile.getAbsolutePath());

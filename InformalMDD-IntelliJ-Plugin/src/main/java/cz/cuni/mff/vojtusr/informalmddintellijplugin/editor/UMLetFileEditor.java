@@ -64,6 +64,7 @@ import java.util.jar.JarFile;
  * @see FileEditor
  * @see UMLetIntelliJPluginGUIBuilder
  * @see DiagramHandler
+ * @since 1.0
  */
 public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     private static final String PLUGIN_ID = "cz.cuni.mff.vojtusr.InformalMDD-IntelliJ-Plugin";

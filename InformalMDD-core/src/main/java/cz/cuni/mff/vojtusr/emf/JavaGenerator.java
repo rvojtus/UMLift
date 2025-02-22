@@ -20,13 +20,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
+import static cz.cuni.mff.vojtusr.emf.HelperUtil.saveGenModel;
+
 /**
- * A utility class for generating Java code from UMLet and Ecore models.
+ * A class for generating Java code from UMLet and Ecore models.
  *
- * <p>The {@code JavaGenerator} class provides methods to facilitate the transformation of UMLet
+ * <p>The {@code JavaGenerator} class provides methods for the transformation of UMLet
  * diagram files into Ecore models, the creation of GenModels from Ecore models, and the generation
- * of Java code from GenModels. It integrates with the Eclipse Modeling Framework (EMF) to support
- * model-driven development workflows.</p>
+ * of Java code from GenModels.</p>
  *
  * <p>Key features include:
  * <ul>
@@ -36,8 +37,8 @@ import java.util.logging.Logger;
  * </ul>
  * </p>
  *
- * <p>This class is designed for use in projects that require automated code generation from
- * UML models and offers methods to streamline these processes.</p>
+ * @see EPackage for more information about Ecore
+ * @see GenModel for more information about GenModel
  */
 public class JavaGenerator {
     private static final Logger LOG = Logger.getLogger(JavaGenerator.class.getName());
@@ -52,7 +53,7 @@ public class JavaGenerator {
      * a GenModel from the Ecore model, and then generating Java code based on the GenModel. The generated
      * files are organized in the specified project directory structure.</p>
      *
-     * @param config
+     * @param config represent a configuration, see {@link CodeGenerationConfig} for details
      * @throws IOException if an error occurs during file operations
      */
     public Diagnostic generateCodeFromUMLetFile(CodeGenerationConfig config) throws IOException {
@@ -72,7 +73,7 @@ public class JavaGenerator {
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(config.getOutputEcoreFile());
 
         // Save the generated GenModel to the specified Path
-        genModelGenerator.saveGenModel(genModel, config.getOutputGenModelFile());
+        saveGenModel(genModel, config.getOutputGenModelFile());
 
         // Generate Java code from the GenModel
         return generateCodeFromGenModel(genModel, config.getGeneratedFilesDir());
@@ -85,7 +86,6 @@ public class JavaGenerator {
      * <ul>
      *   <li>Registers the necessary resource factories, packages, and adapter factories for working with GenModels.</li>
      *   <li>Generates a GenModel from the provided Ecore model file.</li>
-     *   <li>Saves the GenModel to the specified directory.</li>
      *   <li>Generates Java code from the GenModel and handles any diagnostic issues.</li>
      * </ul>
      * </p>

@@ -1,9 +1,6 @@
 package cz.cuni.mff.vojtusr.transformation;
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.ETypedElement;
+import org.eclipse.emf.ecore.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +16,9 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static cz.cuni.mff.vojtusr.TestConstants.*;
 
+/**
+ * Tests functionality of {@link UMLetToEcoreTransformer}.
+ */
 public class UMLetToEcoreTransformerTest {
     private UMLetToEcoreTransformer transformer;
 
@@ -65,6 +65,9 @@ public class UMLetToEcoreTransformerTest {
         Files.deleteIfExists(tmpOutputEcoreFile);
     }
 
+    /**
+     * Tests UMLet Diagram Class Elements: Class, Abstract Class, Interface etc.
+     */
     @Nested
     class UMLetDiagramElementsValidation {
         @Test
@@ -169,6 +172,11 @@ public class UMLetToEcoreTransformerTest {
         }
     }
 
+    /**
+     * Tests UMLet Diagram Relationship Elements: inheritance, realisation, relation etc.
+     *
+     * @see UMLClassRelations for types of supported Relations
+     */
     @Nested
     class UMLetDiagramRelationshipsValidation {
         @Test
@@ -191,12 +199,11 @@ public class UMLetToEcoreTransformerTest {
             assertTrue(SimpleClass_0.getEReferences().isEmpty(), "SimpleClass_0 should not have references");
 
             // Validate Reference Type
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getEReferenceType().equals(SimpleClass_0),
-                    "SimpleClass_1 should have reference to SimpleClass_0");
+            assertEquals(SimpleClass_1.getEReferences().getFirst().getEReferenceType(), SimpleClass_0, "SimpleClass_1 should have reference to SimpleClass_0");
 
             // Validate Cardinality
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getLowerBound() == 0);
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getUpperBound() == ETypedElement.UNBOUNDED_MULTIPLICITY);
+            assertEquals(0, SimpleClass_1.getEReferences().getFirst().getLowerBound());
+            assertEquals(ETypedElement.UNBOUNDED_MULTIPLICITY, SimpleClass_1.getEReferences().getFirst().getUpperBound());
         }
 
         @Test
@@ -222,10 +229,8 @@ public class UMLetToEcoreTransformerTest {
             assertFalse(SimpleClass_0.getEReferences().isEmpty(), "SimpleClass_0 references should not be empty");
 
             // Validate Reference Type
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getEReferenceType().equals(SimpleClass_0),
-                    "SimpleClass_1 should have reference to SimpleClass_0");
-            assertTrue(SimpleClass_0.getEReferences().getFirst().getEReferenceType().equals(SimpleClass_1),
-                    "SimpleClass_0 should have reference to SimpleClass_1");
+            assertEquals(SimpleClass_1.getEReferences().getFirst().getEReferenceType(), SimpleClass_0, "SimpleClass_1 should have reference to SimpleClass_0");
+            assertEquals(SimpleClass_0.getEReferences().getFirst().getEReferenceType(), SimpleClass_1, "SimpleClass_0 should have reference to SimpleClass_1");
 
             /* WIP
             // Validate eOpposite Type
@@ -236,12 +241,12 @@ public class UMLetToEcoreTransformerTest {
              */
 
             // Validate Cardinality SimpleClass_0
-            assertTrue(SimpleClass_0.getEReferences().getFirst().getLowerBound() == 0, "SimpleClass_0 should have lower bound == 0");
-            assertTrue(SimpleClass_0.getEReferences().getFirst().getUpperBound() == 1, "SimpleClass_0 should have upper bound == 1");
+            assertEquals(0, SimpleClass_0.getEReferences().getFirst().getLowerBound(), "SimpleClass_0 should have lower bound == 0");
+            assertEquals(1, SimpleClass_0.getEReferences().getFirst().getUpperBound(), "SimpleClass_0 should have upper bound == 1");
 
             // Validate Cardinality SimpleClass_1
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getLowerBound() == 0, "SimpleClass_1 should have lower bound == 0");
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getUpperBound() == ETypedElement.UNBOUNDED_MULTIPLICITY, "SimpleClass_1 should have upper bound == -1");
+            assertEquals(0, SimpleClass_1.getEReferences().getFirst().getLowerBound(), "SimpleClass_1 should have lower bound == 0");
+            assertEquals(ETypedElement.UNBOUNDED_MULTIPLICITY, SimpleClass_1.getEReferences().getFirst().getUpperBound(), "SimpleClass_1 should have upper bound == -1");
         }
 
         @Test
@@ -263,7 +268,7 @@ public class UMLetToEcoreTransformerTest {
             assertTrue(SimpleClass_0.getESuperTypes().isEmpty(), "SimpleClass_0 SuperTypes should be empty");
             assertFalse(SimpleClass_1.getESuperTypes().isEmpty(), "SimpleClass_1 SuperTypes should not be empty");
 
-            assertTrue(SimpleClass_1.getESuperTypes().getFirst().equals(SimpleClass_0));
+            assertEquals(SimpleClass_1.getESuperTypes().getFirst(), SimpleClass_0);
         }
 
         @Test
@@ -285,7 +290,7 @@ public class UMLetToEcoreTransformerTest {
             assertTrue(SimpleClass_0.getESuperTypes().isEmpty(), "SimpleClass_0 SuperTypes should be empty");
             assertFalse(SimpleClass_1.getESuperTypes().isEmpty(), "SimpleClass_1 SuperTypes should not be empty");
 
-            assertTrue(SimpleClass_1.getESuperTypes().getFirst().equals(SimpleClass_0));
+            assertEquals(SimpleClass_1.getESuperTypes().getFirst(), SimpleClass_0);
         }
 
         @Test
@@ -379,10 +384,23 @@ public class UMLetToEcoreTransformerTest {
         assertNotNull(ePackage, "Generated EPackage should not be null");
     }
 
+    /**
+     * Tests that the provided {@link EPackage} contains an {@link EClassifier} of name {@code className}.
+     *
+     * @param ePackage  Ecore model to check
+     * @param className name of the expected {@link EClassifier}
+     */
     private void validateClassExists(EPackage ePackage, final String className) {
         assertNotNull(ePackage.getEClassifier(className), "EPackage should contain class: " + className);
     }
 
+    /**
+     * Tests that the provided {@link EPackage} contains an {@link EClassifier} of name {@code className},
+     * and checks if the abstract modifier is {@code true}.
+     *
+     * @param ePackage  Ecore model to check
+     * @param className name of the expected {@link EClassifier}
+     */
     private void validateAbstractClassExists(EPackage ePackage, final String className) {
         EClass eClass = (EClass) ePackage.getEClassifier(className);
         assertNotNull(eClass, "EPackage should contain class: " + className);
@@ -400,6 +418,13 @@ public class UMLetToEcoreTransformerTest {
         assertNotNull(eEnum, "EPackage should contain enumeration: " + enumName);
     }
 
+    /**
+     * Tests that there exists an {@link EReference} between two classes
+     *
+     * @param ePackage    Ecore model to check
+     * @param className_0 first class name
+     * @param className_1 second class name
+     */
     private void validateRelationExists(EPackage ePackage, final String className_0, final String className_1) {
         final EClass eClass_0 = (EClass) ePackage.getEClassifier(className_0);
         final EClass eClass_1 = (EClass) ePackage.getEClassifier(className_1);
@@ -412,6 +437,13 @@ public class UMLetToEcoreTransformerTest {
         assertEquals(eClass_0.getEReferences().getFirst().getEReferenceType(), eClass_1, "EClass_0 should contain reference");
     }
 
+    /**
+     * Tests existence of provided UMLet File, runs {@link UMLetToEcoreTransformer#transform(Path)},
+     * and validates the resulting {@link EPackage}.
+     *
+     * @param uxfFile UMLet File to transform
+     * @return an Ecore model: {@link EPackage}
+     */
     private EPackage validateAndTransform(File uxfFile) {
         // Validate UMLet file exists
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());

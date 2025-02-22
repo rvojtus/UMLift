@@ -19,19 +19,28 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * Transforms UMLet diagrams into Ecore models.
+ * Transforms UMLet diagrams into Ecore models. Uses {@link EcoreConfigBuilder} for configuration.
  *
- * <p>The {@code UMLetToEcoreTransformer} class provides functionality for converting UML diagrams
+ * <p>The {@link UMLetToEcoreTransformer} class provides functionality for converting UML diagrams
  * created in UMLet into Ecore models compatible with the Eclipse Modeling Framework (EMF).
- * The transformation initializes an {@link EPackage} with project-specific metadata and processes
- * the elements of the UMLet diagram into corresponding Ecore elements.</p>
  *
  * <p>Key features include:
  * <ul>
  *   <li>Initializing the Ecore model's package metadata (name, namespace prefix, and URI).</li>
- *   <li>Providing methods to process UML elements and generate Ecore models.</li>
+ *   <li>Processing UML elements to generate Ecore models.</li>
  * </ul>
  * </p>
+ * <p>
+ * Example usage:
+ * {@snippet :
+ *    UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
+ *                .setEPackageName(projectName)
+ *                .setEPackageNsPrefix(projectNsPrefix)
+ *                .setEPackageNsURI(projectNsUri)
+ *                .build();
+ *}
+ *
+ * @see EPackage for more information about Ecore Models
  */
 public class UMLetToEcoreTransformer {
     private static final Logger LOG = Logger.getLogger(UMLetToEcoreTransformer.class.getName());
@@ -48,6 +57,10 @@ public class UMLetToEcoreTransformer {
         this.ePackageNsURI = ecoreConfigBuilder.ePackageNsURI;
     }
 
+    /**
+     * Represents a configuration for the transformation process in {@link UMLetToEcoreTransformer#transform(Path)}. Includes information for the final Ecore Model.
+     * Needs to be initialized using {@link #build()} method.
+     */
     public static class EcoreConfigBuilder {
         private String ePackageName = "defaultProjectName";
         private String ePackageNsPrefix = "defaultProjectNsPrefix";
@@ -68,6 +81,9 @@ public class UMLetToEcoreTransformer {
             return this;
         }
 
+        /**
+         * @return new instance of {@link UMLetToEcoreTransformer}
+         */
         public UMLetToEcoreTransformer build() {
             return new UMLetToEcoreTransformer(this);
         }
@@ -81,7 +97,7 @@ public class UMLetToEcoreTransformer {
      * processes them to generate the corresponding Ecore model, which is saved to the specified
      * output file path.</p>
      *
-     * @param inputUMLetFile the file path to the UMLet diagram
+     * @param inputUMLetFile the path to the UMLet file
      */
     public EPackage transform(java.nio.file.Path inputUMLetFile) {
         ePackage = EcoreFactory.eINSTANCE.createEPackage();
@@ -98,6 +114,14 @@ public class UMLetToEcoreTransformer {
         return ePackage;
     }
 
+    /**
+     * Transforms a UMLet diagram file into an Ecore model file, and closes or keeps background program running.
+     *
+     * @param inputUMLetFile the path to the UMLet file
+     * @param keepOpen       specifies whether the running UMLet backend program, used for transformation, stays open or closes
+     * @return {@link EPackage} representing transformed UMLet Model
+     * @see #transform(Path)
+     */
     public EPackage transform(java.nio.file.Path inputUMLetFile, boolean keepOpen) {
         EPackage ePackage = transform(inputUMLetFile);
         if (!keepOpen) {

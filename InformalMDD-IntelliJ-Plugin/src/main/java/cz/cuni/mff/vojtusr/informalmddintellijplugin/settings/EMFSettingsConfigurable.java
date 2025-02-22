@@ -8,6 +8,19 @@ import javax.swing.*;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * {@link Configurable} implementation for integrating settings into IntelliJ.
+ *
+ * <p>
+ * This class manages the settings and synchronizes with {@link EMFSettingsComponent}.
+ * It is responsible for displaying the settings form and applying and tracking user changes.
+ * </p>
+ *
+ * @see EMFSettings
+ * @see EMFSettingsComponent
+ * @see Configurable
+ * @since 1.0
+ */
 final class EMFSettingsConfigurable implements Configurable {
     private EMFSettingsComponent emfSettingsComponent;
 
@@ -22,6 +35,11 @@ final class EMFSettingsConfigurable implements Configurable {
         return emfSettingsComponent.getPreferredFocusedComponent();
     }
 
+    /**
+     * Creates the settings UI component.
+     *
+     * @return the root panel of the settings component
+     */
     @Nullable
     @Override
     public JComponent createComponent() {
@@ -29,6 +47,11 @@ final class EMFSettingsConfigurable implements Configurable {
         return emfSettingsComponent.getPanel();
     }
 
+    /**
+     * Checks whether the settings have been modified by the user.
+     *
+     * @return {@code true} if settings were modified, otherwise {@code false}
+     */
     @Override
     public boolean isModified() {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
@@ -41,6 +64,13 @@ final class EMFSettingsConfigurable implements Configurable {
                 !emfSettingsComponent.getGeneratedFilesOutputDir().equals(state.generatedFilesOutputDir);
     }
 
+    /**
+     * Applies the modified settings.
+     *
+     * <p>
+     * This method is called when the user clicks "Apply" or "OK" in the settings UI panel.
+     * </p>
+     */
     @Override
     public void apply() {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
@@ -59,6 +89,9 @@ final class EMFSettingsConfigurable implements Configurable {
         state.generatedFilesOutputDir = emfSettingsComponent.getGeneratedFilesOutputDir();
     }
 
+    /**
+     * Resets the settings UI panel to the currently saved values.
+     */
     @Override
     public void reset() {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
@@ -76,6 +109,9 @@ final class EMFSettingsConfigurable implements Configurable {
         emfSettingsComponent.setGeneratedFilesOutputDir(state.generatedFilesOutputDir);
     }
 
+    /**
+     * Release UI component resource when the settings panel is closed.
+     */
     @Override
     public void disposeUIResources() {
         emfSettingsComponent = null;

@@ -34,8 +34,7 @@ public class GenModelGenerator {
     /**
      * Initializes a new {@link GenModelGenerator} instance and sets up the resource set.
      *
-     * <p>This constructor initializes the {@link ResourceSet} used to load Ecore models. It ensures
-     * that the necessary configuration for processing Ecore files is set up.</p>
+     * <p>This constructor initializes the {@link ResourceSet} used to load Ecore models.</p>
      */
     public GenModelGenerator() {
         initializeResourceSet();
@@ -59,20 +58,12 @@ public class GenModelGenerator {
      * based on the Ecore model, and initializes it with the Ecore package. The method also sets
      * the model's name, directory for generated Java code, and compliance level.</p>
      *
-     * <p>Steps performed:
-     * <ul>
-     *   <li>Loads the Ecore model from the specified file.</li>
-     *   <li>Creates and initializes a GenModel using the Ecore model's package.</li>
-     *   <li>Configures the GenModel with project-specific settings (e.g., model name, directory, JDK compliance).</li>
-     * </ul>
-     * </p>
-     *
-     * @param inputEcoreFile the file path to the Ecore model
+     * @param inputEcorePath the file path to the Ecore file
      * @return the generated {@link GenModel} instance
      */
-    public GenModel generateGenModelFromEcore(Path inputEcoreFile) {
+    public GenModel generateGenModelFromEcore(Path inputEcorePath) {
         // Load the Ecore model
-        URI ecoreURI = URI.createFileURI(inputEcoreFile.toAbsolutePath().toString());
+        URI ecoreURI = URI.createFileURI(inputEcorePath.toAbsolutePath().toString());
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
 
@@ -83,33 +74,8 @@ public class GenModelGenerator {
         genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL); // todo make it configurable
         genModel.initialize(Collections.singleton(ecorePackage));
 
-        LOG.info("GenModel created successfully for Ecore: " + inputEcoreFile.toAbsolutePath());
+        LOG.info("GenModel created successfully for Ecore: " + inputEcorePath.toAbsolutePath());
         return genModel;
-    }
-
-    /**
-     * Saves the specified GenModel to a file in the given directory.
-     *
-     * <p>This method serializes the provided {@link GenModel} instance to an XMI file format and saves
-     * it to the specified directory. The file is named {@code genmodel.genmodel}, and it is saved using
-     * UTF-8 encoding.</p>
-     *
-     * @param genModel       the {@link GenModel} instance to save
-     * @param outputGenModel
-     * @throws IOException if an error occurs while saving the GenModel file
-     */
-    public File saveGenModel(GenModel genModel, Path outputGenModel) throws IOException {
-        return saveGenModel(genModel, outputGenModel, "");
-    }
-
-    public File saveGenModel(GenModel genModel, Path outputDir, String fileName) throws IOException {
-        URI genmodelURI = URI.createFileURI(outputDir + fileName);
-        final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
-        genModelResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
-        genModelResource.getContents().add(genModel);
-        genModelResource.save(Collections.EMPTY_MAP);
-        LOG.info("GenModel saved successfully to: " + genmodelURI.toString());
-        return new File(genmodelURI.path());
     }
 
 }

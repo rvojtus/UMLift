@@ -12,7 +12,17 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 /**
- * Supports creating and managing a {@link JPanel} for the Settings Dialog.
+ * Supports creating and managing a {@link JPanel} for the UI Settings Dialog.
+ *
+ * <p>
+ * This class provides UI to specify various settings needed for code generation and transformation.
+ * Uses {@link FormBuilder} to build the GUI.
+ * Contains default values for all fields. Supports {@link TextFieldWithBrowseButton} for selecting files and directories.
+ * </p>
+ *
+ * @see EMFSettings
+ * @see FormBuilder
+ * @since 1.0
  */
 public class EMFSettingsComponent {
     private final JPanel mainPanel;
@@ -29,6 +39,9 @@ public class EMFSettingsComponent {
     private final TextFieldWithBrowseButton ecoreGenModelOutputDirBrowse = new TextFieldWithBrowseButton();
     private final TextFieldWithBrowseButton generatedFilesOutputDirBrowseButton = new TextFieldWithBrowseButton();
 
+    /**
+     * Creates a new settings panel using {@link FormBuilder}
+     */
     public EMFSettingsComponent() {
         setUpGeneratedFilesOutputDirBrowserButton();
         setUpEcoreGenModelOutputBrowseButton();

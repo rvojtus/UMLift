@@ -12,8 +12,29 @@ import com.intellij.openapi.vfs.VirtualFile;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.editor.UMLetFileEditor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A listener for Save requests. Handles custom saving of {@link UMLetFileEditor}.
+ * <p>
+ * This listener tracks actions related to saving and processes the one made by {@link UMLetFileEditor},
+ * to trigger custom saving action.
+ * </p>
+ *
+ * @see AnActionListener
+ */
 @Service
 public final class SaveRequestListener implements AnActionListener {
+
+    /**
+     * Called before an action is performed.
+     *
+     * <p>
+     * Filters saving-related actions before they are executed.
+     * </p>
+     *
+     * @param action the action that is about to be performed
+     * @param event  the action event containing context
+     * @see UMLetFileEditor#askSave()
+     */
     @Override
     public void beforeActionPerformed(@NotNull AnAction action, @NotNull AnActionEvent event) {
         if ("SaveAll".equals(ActionManager.getInstance().getId(action))) {

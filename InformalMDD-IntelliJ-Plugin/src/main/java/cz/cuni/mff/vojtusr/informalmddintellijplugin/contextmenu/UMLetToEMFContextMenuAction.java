@@ -25,9 +25,21 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * A context menu action that provides transformation of UMLet Diagram files to Ecore Models.
+ *
+ * @see AnAction
+ * @see UMLetToEcoreTransformer
+ * @since 1.0
+ */
 public class UMLetToEMFContextMenuAction extends AnAction {
     private static final Logger LOG = Logger.getInstance(UMLetToEMFContextMenuAction.class);
 
+    /**
+     * Performs the transformation action when user selects it from the context menu.
+     *
+     * @param event the action event containing context
+     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -40,6 +52,15 @@ public class UMLetToEMFContextMenuAction extends AnAction {
         }
     }
 
+    /**
+     * Updates the visibility and availability of this action.
+     *
+     * <p>
+     * This method ensures that the action is only available when an UMLet file is selected.
+     * </p>
+     *
+     * @param event the action event containing context
+     */
     @Override
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -53,6 +74,15 @@ public class UMLetToEMFContextMenuAction extends AnAction {
         return ActionUpdateThread.BGT;
     }
 
+    /**
+     * Transforms provided UMLet File to an Ecore Model.
+     * Uses {@link ProgressIndicator} to show progress of the transformation
+     *
+     * @param project    the project context
+     * @param uxfPath    the UMLet file to be transformed to Ecore Model
+     * @param projectDir directory where the generated Ecore Model will be created
+     * @see UMLetToEcoreTransformer#transform(Path)
+     */
     private void transformUXF(@NotNull Project project, String uxfPath, String projectDir) {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
 

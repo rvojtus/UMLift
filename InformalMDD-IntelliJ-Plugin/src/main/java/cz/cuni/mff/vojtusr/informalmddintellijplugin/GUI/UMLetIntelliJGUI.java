@@ -16,6 +16,19 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 
+/**
+ * IntelliJ-specific implementation of UMLet's graphical user interface.
+ *
+ * <p>
+ * This class extends {@link BaseGUI} to provide a customized UMLet interface within IntelliJ IDEA.
+ * It integrates with IntelliJ's UI framework and handles various user interactions specific to the IntelliJ environment.<br>
+ * It is used to display and edit UML diagrams.
+ * </p>
+ *
+ * @see BaseGUI
+ * @see UMLetFileEditor
+ * @since 1.0
+ */
 public class UMLetIntelliJGUI extends BaseGUI {
 
     private UMLetFileEditor editor;
@@ -174,6 +187,15 @@ public class UMLetIntelliJGUI extends BaseGUI {
         this.editor = editor;
     }
 
+    /**
+     * Removes the active {@link UMLetFileEditor} editor, prepares {@link Config} configuration for saving.
+     *
+     * <p>
+     * Used in {@link UMLetFileEditor#dispose()}.
+     * </p>
+     *
+     * @param editor the editor to remove
+     */
     public void editorRemoved(UMLetFileEditor editor) {
         // Before removing the editor, we have to store the actual splitpositions and lastUsedPalette to variables so that a new editor has the same values
         Config.getInstance().setMain_split_position(editor.getMainSplitLocation());

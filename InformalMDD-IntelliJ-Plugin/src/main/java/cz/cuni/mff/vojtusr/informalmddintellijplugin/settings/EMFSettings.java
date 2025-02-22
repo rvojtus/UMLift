@@ -10,12 +10,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 
+/**
+ * Stores plugin configuration settings persistently.
+ * <p>
+ * This class is responsible for saving and loading user settings related to the UMLet2EMF plugin.
+ * The state {@link State} is stored in the IntelliJ configuration directory and is managed by the IntelliJ platform.
+ * </p>
+ * <p>
+ * Related classes: {@link EMFSettingsComponent} and {@link EMFSettingsConfigurable}
+ * </p>
+ *
+ * @see PersistentStateComponent
+ * @since 1.0
+ */
 @State(
         name = "cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings",
         storages = @Storage("EMFSettingsPlugin.xml")
 )
 public final class EMFSettings implements PersistentStateComponent<EMFSettings.State> {
 
+    /**
+     * Represents the persistent state of the plugin settings.
+     */
     public static class State {
         @NonNls
         // Ecore

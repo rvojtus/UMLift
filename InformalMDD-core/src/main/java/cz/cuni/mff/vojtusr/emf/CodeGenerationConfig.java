@@ -2,6 +2,36 @@ package cz.cuni.mff.vojtusr.emf;
 
 import java.nio.file.Path;
 
+/**
+ * Represents configuration for code generation. Is used in {@link JavaGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}.<br>
+ * Contains information about:
+ * <ul>
+ *     <li>UMLet file to be processed</li>
+ *     <li>Directory to output generated files to</li>
+ *     <li>Path for generated Ecore file</li>
+ *     <li>Path for generated GenModel file</li>
+ *     <li>Project Name</li>
+ *     <li>Project Namespace prefix</li>
+ *     <li>Project Namespace URI</li>
+ * </ul>
+ * <p>
+ * The code below shows example usage of this class:
+ * <p>
+ * {@snippet :
+ * CodeGenerationConfig config = CodeGenerationConfig.getInstance()
+ *     .setInputUMLetFile(Path.of("/path/to/UMLet/file/exampleUMLet.uxf"))
+ *     .setGeneratedFilesDir(Path.of("/path/to/directory"))
+ *     .setOutputEcoreFile(Path.of("ecore.ecore"))
+ *     .setOutputGenModelFile(Path.of("genmodel.genmodel"))
+ *     .setProjectName("exampleProjectName")
+ *     .setProjectNsPrefix("exampleProjectNsPrefix")
+ *     .setProjectNsURI("exampleProjectNsURI")
+ *     .build();
+ * Diagnostic diagnostic = generator.generateCodeFromUMLetFile(config);
+ *}
+ *
+ * @since 1.0
+ */
 public class CodeGenerationConfig {
     private Path inputUMLetFile;
     private Path outputEcoreFile;
@@ -82,7 +112,13 @@ public class CodeGenerationConfig {
         return projectNsURI;
     }
 
-    public CodeGenerationConfig build() {
+    /**
+     * Validates setting of required fields and returns an instance of {@link CodeGenerationConfig}.
+     *
+     * @return An instance of {@link CodeGenerationConfig} if all required fields have been set
+     * @throws IllegalStateException If not all required fields have been set
+     */
+    public CodeGenerationConfig build() throws IllegalStateException {
         if (inputUMLetFile == null || outputEcoreFile == null || outputGenModelFile == null) {
             throw new IllegalStateException("Code Generation Config incomplete.");
         }

@@ -18,7 +18,9 @@ import java.util.stream.Stream;
 import static cz.cuni.mff.vojtusr.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Tests functionality of {@link JavaGenerator}.
+ */
 public class JavaGeneratorTest {
     private JavaGenerator generator;
 
@@ -87,6 +89,13 @@ public class JavaGeneratorTest {
         assertTrue(generatedJavaFilesPresent(), "Generated Java files should be present in directory: " + tmpDir.toString());
     }
 
+    /**
+     * Tests that the code generation - {@link JavaGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}
+     * has successfully generated expected Java files in the expected directory {@link #tmpDir}
+     *
+     * @return {@code true} if at least 1 Java file has been found, {@code false} if no Java files are present in the expected directory
+     * @throws IOException if any IO error occurs, i.e. {@link #tmpDir} is invalid
+     */
     boolean generatedJavaFilesPresent() throws IOException {
         return Files.walk(tmpDir)
                 .filter(Files::isRegularFile)
