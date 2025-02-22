@@ -28,6 +28,9 @@ import java.nio.file.Path;
         storages = @Storage("EMFSettingsPlugin.xml")
 )
 public final class EMFSettings implements PersistentStateComponent<EMFSettings.State> {
+    public static final String ECORE_FILE_SUFFIX = "ecore";
+    public static final String GENMODEL_FILE_SUFFIX = "genmodel";
+    public static final String UMLET_FILE_SUFFIX = "uxf";
 
     /**
      * Represents the persistent state of the plugin settings.
@@ -43,7 +46,7 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         public String genModelFileName = "genmodel";
         // Generation
         public Path ecoreGenModelOutputDir = Path.of("resources");
-        public String generatedFilesOutputDir = projectName;
+        public String generatedFilesOutputDir = projectName + "Dir";
     }
 
     private State myState = new State();

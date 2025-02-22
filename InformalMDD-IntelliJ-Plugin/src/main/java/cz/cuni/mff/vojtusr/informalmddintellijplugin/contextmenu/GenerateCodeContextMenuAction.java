@@ -28,6 +28,8 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings.ECORE_FILE_SUFFIX;
+
 /**
  * A context menu action that provides code generation for Ecore Model files.
  *
@@ -77,7 +79,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
 
-        boolean isUxfFile = file != null && ("ecore".equalsIgnoreCase(file.getExtension()));
+        boolean isUxfFile = file != null && (ECORE_FILE_SUFFIX.equalsIgnoreCase(file.getExtension()));
         event.getPresentation().setEnabledAndVisible(isUxfFile);
     }
 

@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static cz.cuni.mff.vojtusr.emf.HelperUtil.saveGenModel;
+import static cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings.UMLET_FILE_SUFFIX;
+
 /**
  * A context menu action that provides transformation of UMLet Diagram files to Ecore Models.
  *
@@ -65,7 +68,7 @@ public class UMLetToEMFContextMenuAction extends AnAction {
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
 
-        boolean isUxfFile = file != null && "uxf".equalsIgnoreCase(file.getExtension());
+        boolean isUxfFile = file != null && UMLET_FILE_SUFFIX.equalsIgnoreCase(file.getExtension());
         event.getPresentation().setEnabledAndVisible(isUxfFile);
     }
 
@@ -120,7 +123,7 @@ public class UMLetToEMFContextMenuAction extends AnAction {
                 GenModel genModel = generator.generateGenModelFromEcore(inputEcoreFile);
                 final Path genmodelPath = Path.of(finalEcoreGenModelOutputDir + File.separator + state.genModelFileName);
                 try {
-                    generator.saveGenModel(genModel, genmodelPath);
+                    saveGenModel(genModel, genmodelPath);
                     LOG.info("Successfully saved GenModel: " + state.genModelFileName);
                 } catch (IOException e) {
                     LOG.error("Error saving GenModel: ", e);
