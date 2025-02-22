@@ -63,6 +63,7 @@ public class GenModelGenerator {
      */
     public GenModel generateGenModelFromEcore(Path inputEcorePath) {
         // Load the Ecore model
+        inputEcorePath = HelperUtil.addFileTypeSuffix(inputEcorePath, ".ecore");
         URI ecoreURI = URI.createFileURI(inputEcorePath.toAbsolutePath().toString());
         Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
         EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();

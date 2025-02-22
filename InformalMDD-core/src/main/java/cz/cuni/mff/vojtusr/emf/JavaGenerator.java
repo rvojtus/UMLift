@@ -64,13 +64,14 @@ public class JavaGenerator {
                 .setEPackageNsURI(config.getProjectNsURI())
                 .build();
         transformer.transform(config.getInputUMLetFile());
-        transformer.saveEcore(config.getOutputEcoreFile());
+        final Path ecoreOutPath = HelperUtil.addFileTypeSuffix(config.getOutputEcoreFile(), ".ecore");
+        transformer.saveEcore(ecoreOutPath);
 
         Files.createDirectories(config.getOutputEcoreFile().getParent());
 
         // Generate the GenModel based on the Ecore model
         GenModelGenerator genModelGenerator = new GenModelGenerator();
-        GenModel genModel = genModelGenerator.generateGenModelFromEcore(config.getOutputEcoreFile());
+        GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreOutPath);
 
         // Save the generated GenModel to the specified Path
         saveGenModel(genModel, config.getOutputGenModelFile());

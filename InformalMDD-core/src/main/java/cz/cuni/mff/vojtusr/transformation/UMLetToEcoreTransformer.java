@@ -152,7 +152,7 @@ public class UMLetToEcoreTransformer {
      */
     public void saveEcore(Path outputEcoreFile) throws IOException {
         // Save the transformed Ecore model to the specified file path
-        HelperUtil.saveEcoreModel(ePackage, outputEcoreFile);
+        HelperUtil.saveEcoreModel(ePackage, HelperUtil.addFileTypeSuffix(outputEcoreFile, ".ecore"));
     }
 
     /**

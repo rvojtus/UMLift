@@ -58,7 +58,7 @@ public class HelperUtil {
      * @throws IOException if an error occurs while saving the GenModel model
      */
     public static File saveGenModel(GenModel genModel, Path outputDir) throws IOException {
-        return saveGenModel(genModel, outputDir, "");
+        return saveGenModel(genModel, HelperUtil.addFileTypeSuffix(outputDir, ".genmodel"), "");
     }
 
     public static File saveGenModel(GenModel genModel, Path outputDir, String fileName) throws IOException {
@@ -69,6 +69,20 @@ public class HelperUtil {
         genModelResource.save(Collections.EMPTY_MAP);
         LOG.info("GenModel saved successfully to: " + genmodelURI.toString());
         return new File(genmodelURI.path());
+    }
+
+    /**
+     * Checks if the provided {@code filePath} contains the required {@code suffix} and if not, appends it
+     *
+     * @param filePath path to check
+     * @param suffix   to add
+     * @return original path if suffix is already present, modified path otherwise
+     */
+    public static Path addFileTypeSuffix(Path filePath, final String suffix) {
+        if (filePath.getFileName().toString().endsWith(suffix)) {
+            return filePath;
+        }
+        return filePath.resolveSibling(filePath.getFileName() + suffix);
     }
 
     /**
