@@ -65,6 +65,10 @@
                     class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.UMLetToEMFContextMenuAction"
                     text="Transform UMLet to EMF" description="Transforms UMLet File to EMF Ecore and GenModel files">
             </action>
+            <action id="UxfFile2CodeContextMenuAction"
+                    class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.UMLet2CodeContextMenuAction"
+                    text="Generate Code from UMLet" description="Generates Code and Artifacts from UMLet diagram file">
+            </action>
             <action id="GenerateCodeContextMenuAction"
                     class="cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.GenerateCodeContextMenuAction"
                     text="Generate Code from Ecore"
