@@ -23,7 +23,6 @@ import java.nio.file.Path;
  * and generates Java code.
  * </p>
  *
- * @goal generate-code-from-umlet
  * @see ModelToCodeGenerator
  * @since 1.0
  */

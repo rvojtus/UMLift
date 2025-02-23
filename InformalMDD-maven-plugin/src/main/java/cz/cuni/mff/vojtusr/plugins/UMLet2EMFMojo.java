@@ -24,7 +24,6 @@ import java.nio.file.Path;
  * This plugin processes UMLet's ".uxf" files, transforms them to EMF Ecore and GenModel.
  * </p>
  *
- * @goal generate-emf-from-umlet
  * @see ModelToCodeGenerator
  * @since 1.0
  */

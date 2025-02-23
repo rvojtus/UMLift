@@ -22,7 +22,6 @@ import java.nio.file.Path;
  * and generates Java code from it using Eclipse Modeling Framework libraries.
  * </p>
  *
- * @goal generate-code-from-ecore
  * @see ModelToCodeGenerator
  * @since 1.0
  */
