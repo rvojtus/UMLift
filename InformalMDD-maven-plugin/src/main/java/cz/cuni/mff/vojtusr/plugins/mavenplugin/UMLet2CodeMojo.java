@@ -1,4 +1,4 @@
-package cz.cuni.mff.vojtusr.mavenplugin;
+package cz.cuni.mff.vojtusr.plugins.mavenplugin;
 
 import cz.cuni.mff.vojtusr.emf.CodeGenerationConfig;
 import cz.cuni.mff.vojtusr.emf.ModelToCodeGenerator;
