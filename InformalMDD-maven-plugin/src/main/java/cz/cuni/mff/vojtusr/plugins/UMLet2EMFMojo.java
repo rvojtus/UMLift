@@ -13,8 +13,8 @@ import org.eclipse.emf.common.util.Diagnostic;
 import java.io.IOException;
 import java.nio.file.Path;
 
-@Mojo(name = "InformalMDD")
-public class InformalMDDMojo extends AbstractMojo {
+@Mojo(name = "UMLet2EMF")
+public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 

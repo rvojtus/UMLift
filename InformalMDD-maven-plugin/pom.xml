@@ -9,18 +9,63 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>InformalMDD-maven-plugin</artifactId>
+    <artifactId>UMLet2EMF-maven-plugin</artifactId>
 
     <packaging>maven-plugin</packaging>
 
-    <name>InformalMDD-maven-plugin Maven Mojo</name>
-    <url>http://maven.apache.org</url>
+    <name>UMLet2EMF-maven-plugin</name>
+    <description>
+        A custom Maven plugin providing support for Model-Driven Development.
+        Provides transformation of UMLet's Diagrams to Eclipse Modeling Framework (EMF) Models.
+        Provides code generation using EMF.
+    </description>
+
+    <licenses>
+        <license>
+            <name></name>
+            <url></url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Rastislav Vojtuš</name>
+            <email>rastislav.vojtus@gmail.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.13.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
