@@ -40,10 +40,10 @@ import static cz.cuni.mff.vojtusr.emf.HelperUtil.saveGenModel;
  * @see EPackage for more information about Ecore
  * @see GenModel for more information about GenModel
  */
-public class JavaGenerator {
-    private static final Logger LOG = Logger.getLogger(JavaGenerator.class.getName());
+public class ModelToCodeGenerator {
+    private static final Logger LOG = Logger.getLogger(ModelToCodeGenerator.class.getName());
 
-    public JavaGenerator() {
+    public ModelToCodeGenerator() {
     }
 
     /**

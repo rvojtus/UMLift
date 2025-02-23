@@ -3,7 +3,7 @@ package cz.cuni.mff.vojtusr.emf;
 import java.nio.file.Path;
 
 /**
- * Represents configuration for code generation. Is used in {@link JavaGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}.<br>
+ * Represents configuration for code generation. Is used in {@link ModelToCodeGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}.<br>
  * Contains information about:
  * <ul>
  *     <li>UMLet file to be processed</li>

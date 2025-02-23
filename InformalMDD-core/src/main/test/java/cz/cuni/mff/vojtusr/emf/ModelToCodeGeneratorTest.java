@@ -19,16 +19,16 @@ import static cz.cuni.mff.vojtusr.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests functionality of {@link JavaGenerator}.
+ * Tests functionality of {@link ModelToCodeGenerator}.
  */
-public class JavaGeneratorTest {
-    private JavaGenerator generator;
+public class ModelToCodeGeneratorTest {
+    private ModelToCodeGenerator generator;
 
     private Path tmpDir;
 
     @BeforeEach
     void setUp() throws IOException {
-        generator = new JavaGenerator();
+        generator = new ModelToCodeGenerator();
         tmpDir = Files.createTempDirectory("testing");
     }
 
@@ -90,7 +90,7 @@ public class JavaGeneratorTest {
     }
 
     /**
-     * Tests that the code generation - {@link JavaGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}
+     * Tests that the code generation - {@link ModelToCodeGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}
      * has successfully generated expected Java files in the expected directory {@link #tmpDir}
      *
      * @return {@code true} if at least 1 Java file has been found, {@code false} if no Java files are present in the expected directory

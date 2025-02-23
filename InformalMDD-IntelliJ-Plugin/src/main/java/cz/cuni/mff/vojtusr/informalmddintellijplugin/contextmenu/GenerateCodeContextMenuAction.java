@@ -16,7 +16,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import cz.cuni.mff.vojtusr.emf.JavaGenerator;
+import cz.cuni.mff.vojtusr.emf.ModelToCodeGenerator;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ import static cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings
  * </p>
  *
  * @see AnAction
- * @see JavaGenerator
+ * @see ModelToCodeGenerator
  * @since 1.0
  */
 public class GenerateCodeContextMenuAction extends AnAction {
@@ -89,16 +89,16 @@ public class GenerateCodeContextMenuAction extends AnAction {
     }
 
     /**
-     * Generates code using {@link JavaGenerator}. Uses {@link ProgressIndicator} to show progress of the generation.
+     * Generates code using {@link ModelToCodeGenerator}. Uses {@link ProgressIndicator} to show progress of the generation.
      *
      * @param project the current project context
      * @param file    the file to generate code from
      * @throws IOException if there is any file I/O related problem
-     * @see JavaGenerator#generateCodeFromEcore(Path, Path) for details about the generation
+     * @see ModelToCodeGenerator#generateCodeFromEcore(Path, Path) for details about the generation
      */
     private void generateCode(Project project, VirtualFile file) throws IOException {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
-        JavaGenerator generator = new JavaGenerator();
+        ModelToCodeGenerator generator = new ModelToCodeGenerator();
         String outputDir = state.generatedFilesOutputDir;
         if (!outputDir.startsWith("/")) {
             outputDir = project.getBasePath() + File.separator + outputDir;
