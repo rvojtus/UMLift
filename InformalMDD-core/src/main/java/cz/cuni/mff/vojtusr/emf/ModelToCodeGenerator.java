@@ -37,8 +37,8 @@ import static cz.cuni.mff.vojtusr.emf.HelperUtil.saveGenModel;
  * </ul>
  * </p>
  *
- * @see EPackage for more information about Ecore
- * @see GenModel for more information about GenModel
+ * @see EPackage
+ * @see GenModel
  */
 public class ModelToCodeGenerator {
     private static final Logger LOG = Logger.getLogger(ModelToCodeGenerator.class.getName());
