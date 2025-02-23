@@ -1,9 +1,5 @@
 package cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -15,7 +11,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import cz.cuni.mff.vojtusr.emf.ModelToCodeGenerator;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -23,11 +18,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.ContextUtils.*;
 import static cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings.ECORE_FILE_SUFFIX;
 
 /**
@@ -112,67 +107,25 @@ public class GenerateCodeContextMenuAction extends AnAction {
                 progressIndicator.setIndeterminate(true);
                 progressIndicator.setText("Generating code from Ecore file...");
                 try {
-                    PrintStream printStream = new PrintStream(new ProgressOutputStream(progressIndicator));
+                    PrintStream printStream = new PrintStream(new ContextUtils.ProgressOutputStream(progressIndicator));
                     System.setOut(printStream);
                     Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(file.getPath()), Path.of(finalOutputDir));
 
                     if (diagnostic.getSeverity() == Diagnostic.ERROR) {
-                        notifyFailure(diagnostic);
+                        LOG.error("Error when generating code from Ecore file: " + diagnostic);
+                        notifyFailure(project, "Error generating code from Ecore file.");
                     } else {
                         progressIndicator.setText("Code generation finished successfully.");
-                        notifySuccess(project);
-                        refreshFiles();
+                        notifySuccess(project, "Code generation finished successfully.");
                     }
-
                 } catch (IOException e) {
                     LOG.error("Error when generating code from Ecore file: " + e);
                 } finally {
+                    refreshFiles();
                     System.setOut(originalStream);
+                    progressIndicator.setIndeterminate(false);
                 }
-                progressIndicator.setIndeterminate(false);
             }
         });
-    }
-
-    private static class ProgressOutputStream extends OutputStream {
-        private final ProgressIndicator progressIndicator;
-
-        public ProgressOutputStream(ProgressIndicator progressIndicator) {
-            this.progressIndicator = progressIndicator;
-        }
-
-        @Override
-        public void write(int b) {
-            String output = String.valueOf((char) b);
-            if (progressIndicator != null) {
-                progressIndicator.setText(progressIndicator.getText() + output);
-            }
-        }
-    }
-
-    private static void notifySuccess(@NotNull Project project) {
-        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.vojtusr.notificationgroup")
-                .createNotification("Code generation finished successfully", NotificationType.INFORMATION)
-                .notify(project);
-    }
-
-    private static void notifyFailure(Diagnostic diagnostic) {
-        final String message = "Code Generation Failed: " + diagnostic.getMessage();
-
-        // Log error
-        LOG.error(message);
-
-        // Show error notification
-        Notification notification = new Notification(
-                "cz.cuni.mff.vojtusr.notificationgroup", "Error", message, NotificationType.ERROR
-        );
-        Notifications.Bus.notify(notification);
-
-        // Show error dialog
-        Messages.showErrorDialog(message, "Code Generation Error");
-    }
-
-    private static void refreshFiles() {
-        VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
     }
 }
