@@ -1,7 +1,5 @@
 package cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu;
 
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -13,7 +11,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import cz.cuni.mff.vojtusr.emf.GenModelGenerator;
 import cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings;
 import cz.cuni.mff.vojtusr.transformation.UMLetToEcoreTransformer;
@@ -27,6 +24,7 @@ import java.util.Objects;
 
 import static cz.cuni.mff.vojtusr.emf.HelperUtil.saveGenModel;
 import static cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings.UMLET_FILE_SUFFIX;
+import static cz.cuni.mff.vojtusr.informalmddintellijplugin.contextmenu.ContextUtils.*;
 
 /**
  * A context menu action that provides transformation of UMLet Diagram files to Ecore Models.
@@ -145,19 +143,5 @@ public class UMLetToEMFContextMenuAction extends AnAction {
         });
     }
 
-    private static void notifySuccess(@NotNull Project project, final String message) {
-        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.vojtusr.notificationgroup")
-                .createNotification(message, NotificationType.INFORMATION)
-                .notify(project);
-    }
 
-    private static void notifyFailure(@NotNull Project project, final String message) {
-        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.vojtusr.notificationgroup")
-                .createNotification(message, NotificationType.ERROR)
-                .notify(project);
-    }
-
-    private static void refreshFiles() {
-        VirtualFileManager.getInstance().refreshWithoutFileWatcher(true);
-    }
 }
