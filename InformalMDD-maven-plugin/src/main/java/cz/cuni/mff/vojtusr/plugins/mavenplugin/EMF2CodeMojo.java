@@ -31,7 +31,7 @@ public class EMF2CodeMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
-    @Parameter(property = "outputDir")
+    @Parameter(property = "outputDir", defaultValue = "src-gen/")
     private String outputDir;
 
     @Parameter(property = "ecoreFile", required = true, readonly = true)
