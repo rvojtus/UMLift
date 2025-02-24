@@ -1,17 +1,21 @@
 # UMLet2EMF
 
----
-
 A project providing support for Informal Model-Driven Development.
 
 ## Table of Contents
 
+- [About The Project](#about-the-project)
 - [Overview](#overview)
 - [Standalone UMLet](#standalone-umlet-gui)
 - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
 - [Maven Plugin](#maven-plugin)
 
 ## About The Project
+
+This project came from the need to have a lightweight and informal way to engage in the world of Model-Driven
+Development and its meta-model creation. The current standard for MDD is Eclipse Modeling Framework (EMF). It doesn't
+support such informal design approach. Moreover, the EMF usage is tightly integrated with the Eclipse IDE, which is
+limiting.
 
 ## Overview
 
@@ -56,7 +60,7 @@ For more information about the installation, setup & usage: [Maven Mojo](Informa
 ## External Tools & Libraries
 
 This project relies on the following external tools and libraries. These tools are developed and maintained by their
-respective organizations; this project does not own them, it simply uses them to enable key features.
+respective organizations; **this project does not own them**, it simply uses them to enable key features.
 
 - [UMLet](https://github.com/umlet/umlet) - A lightweight UML tool for creating UML diagrams.
 - [Eclipse Modeling Framework (EMF)](https://projects.eclipse.org/projects/modeling.emf.emf) - A modeling framework and
