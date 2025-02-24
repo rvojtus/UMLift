@@ -11,6 +11,8 @@ A project providing support for Informal Model-Driven Development.
 - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
 - [Maven Plugin](#maven-plugin)
 
+## About The Project
+
 ## Overview
 
 This project provides support for Informal Model-Driven Development by integrating Eclipse Modeling Framework (EMF) with
@@ -65,3 +67,8 @@ respective organizations; this project does not own them, it simply uses them to
 
 ## License
 
+Distributed under the GNU General Public License v3.0. See [LICENSE](LICENSE.txt) for more information.
+
+## Contact
+
+Rastislav Vojtuš - [email me]()
