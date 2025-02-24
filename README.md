@@ -12,10 +12,9 @@ A project providing support for Informal Model-Driven Development.
 
 ## About The Project
 
-This project came from the need to have a lightweight and informal way to engage in the world of Model-Driven
-Development and its meta-model creation. The current standard for MDD is Eclipse Modeling Framework (EMF). It doesn't
-support such informal design approach. Moreover, the EMF usage is tightly integrated with the Eclipse IDE, which is
-limiting.
+This project was born out of the need for a lightweight and informal approach to Model-Driven Development (MDD) and
+meta-model creation. The current standard, the Eclipse Modeling Framework (EMF), does not support such an informal
+design process. Additionally, EMF is tightly integrated with the Eclipse IDE, which can be restrictive.
 
 ## Overview
 
