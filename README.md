@@ -9,6 +9,9 @@ A project providing support for Informal Model-Driven Development.
 - [Standalone UMLet](#standalone-umlet-gui)
 - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
 - [Maven Plugin](#maven-plugin)
+- [External Tools & Libraries](#external-tools--libraries)
+- [License](#license)
+- [Contact](#contact)
 
 ## About The Project
 
