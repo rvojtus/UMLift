@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  *                .build();
  *}
  *
- * @see EPackage for more information about Ecore Models
+ * @see EPackage
  */
 public class UMLetToEcoreTransformer {
     private static final Logger LOG = Logger.getLogger(UMLetToEcoreTransformer.class.getName());
