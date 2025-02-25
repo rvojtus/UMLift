@@ -6,9 +6,10 @@ A project providing support for Informal Model-Driven Development.
 
 - [About The Project](#about-the-project)
 - [Overview](#overview)
-- [Standalone UMLet](#standalone-umlet-gui)
-- [IntelliJ IDEA Plugin](#intellij-idea-plugin)
-- [Maven Plugin](#maven-plugin)
+- [Installation & Setup](#installation--setup)
+    - [Standalone UMLet](#standalone-umlet-gui)
+    - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
+    - [Maven Plugin](#maven-plugin)
 - [External Tools & Libraries](#external-tools--libraries)
 - [License](#license)
 - [Contact](#contact)
@@ -37,7 +38,11 @@ supporting model-driven development workflows.
 
 ## Installation & Setup
 
-They are a few ways how to use UMLet2EMF:
+### Requirements
+
+- Maven
+- Java 21+
+- macOS/Linux, should work on Windows - not tested
 
 ### Standalone UMLet GUI
 
@@ -58,6 +63,12 @@ A Mojo plugin for Maven. Integrates functionality to be used as a part of a Mave
 various "maven goals", to transform UMLet Diagram files - `.uxf`, to EMF Models - `Ecore` & `GenModel`, and to
 consequently generate Java source code & artifacts from those models.<br>
 For more information about the installation, setup & usage: [Maven Mojo](InformalMDD-maven-plugin/README.md)
+
+## Documentation
+
+Generating Javadoc:
+
+1. aa
 
 ## External Tools & Libraries
 
