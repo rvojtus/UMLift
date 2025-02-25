@@ -1,9 +1,7 @@
 package cz.cuni.mff.vojtusr.gui;
 
-import com.baselet.diagram.DrawPanel;
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
-import cz.cuni.mff.vojtusr.emf.JavaGenerator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +10,6 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -200,11 +197,12 @@ public class GUI {
     }
 
     private static void startCodeGeneration() {
+        /*
         try {
             DrawPanel currDrawPanel = CurrentGui.getInstance().getGui().getCurrentDiagram();
             String currUMLetFilePath = currDrawPanel.getHandler().getFileHandler().getFullPathName();
             JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.generateCodeFromUMLetFile(currUMLetFilePath, projectDirTextField.getText(), projectNameTextField.getText(), "testPrefix", "testURI");
+            //javaGenerator.generateCodeFromUMLetFile(currUMLetFilePath, projectDirTextField.getText(), projectNameTextField.getText(), "testPrefix", "testURI");//todo fix
             File projectDir = new File(projectDirTextField.getText());
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
@@ -219,6 +217,8 @@ public class GUI {
         } catch (IOException e) {// todo better error display
             System.err.println("IOException occurred: " + e);
         }
+
+         */
     }
 
     private static boolean validateStartUMLet() {
