@@ -23,6 +23,12 @@
     <dependencyManagement>
         <dependencies>
             <!-- Shared dependencies can be managed here -->
+            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
+            <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -95,7 +101,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.11.2</version>
+                    <configuration>
+                        <author>true</author>
+                        <version>true</version>
+                        <failOnError>false</failOnError>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
