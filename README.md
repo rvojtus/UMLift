@@ -68,7 +68,9 @@ For more information about the installation, setup & usage: [Maven Mojo](Informa
 
 Generating Javadoc:
 
-1. aa
+```bash
+  mvn javadoc:javadoc
+```
 
 ## External Tools & Libraries
 
