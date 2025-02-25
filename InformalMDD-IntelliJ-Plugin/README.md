@@ -50,6 +50,23 @@ Steps to install the plugin manually:
 
 ## Usage
 
+### Opening UMLet Diagram File - `.uxf`
+
+Simply double-click on any UMLet Diagram file - `.uxf`, and a custom File Editor open:<br>
+![FileEditor](src/main/resources/pictures/fileEditorPicWholeIDE.png)
+
+### Using Context Menu Actions
+
+#### UMLet Files
+
+Right-clicking on an UMLet file - `.uxf` will open a Context Menu, where two actions will be available.<br>
+![UMLetContextMenuAction](src/main/resources/pictures/contextMenuPic.png)
+
+#### EMF Files
+
+Right-clicking on an EMF Ecore file - `.ecore` will open a Context Menu.<br>
+![EMFContextMenuAction](src/main/resources/pictures/contextMenuEMF.png)
+
 ## License
 
 Distributed under the GNU General Public License v3.0. See [LICENSE](./../LICENSE.txt) for more information.
