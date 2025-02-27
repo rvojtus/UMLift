@@ -37,10 +37,15 @@ public class CodeGenerationConfig {
     private Path outputEcoreFile;
     private Path outputGenModelFile;
     private Path generatedFilesDir;
+    private Path ecoreGenModelDir;
 
     private String projectName;
     private String projectNsPrefix;
     private String projectNsURI;
+
+    private String ecoreFileName;
+    private String genModelFileName;
+
 
     private CodeGenerationConfig() {
     }
@@ -112,6 +117,24 @@ public class CodeGenerationConfig {
         return projectNsURI;
     }
 
+    public CodeGenerationConfig setEcoreFileName(String ecoreFileName) {
+        this.ecoreFileName = ecoreFileName;
+        return this;
+    }
+
+    public String getEcoreFileName() {
+        return ecoreFileName;
+    }
+
+    public CodeGenerationConfig setGenModelFileName(String genModelFileName) {
+        this.genModelFileName = genModelFileName;
+        return this;
+    }
+
+    public String getGenModelFileName() {
+        return genModelFileName;
+    }
+
     /**
      * Validates setting of required fields and returns an instance of {@link CodeGenerationConfig}.
      *
@@ -119,9 +142,20 @@ public class CodeGenerationConfig {
      * @throws IllegalStateException If not all required fields have been set
      */
     public CodeGenerationConfig build() throws IllegalStateException {
+        /*
         if (inputUMLetFile == null || outputEcoreFile == null || outputGenModelFile == null) {
             throw new IllegalStateException("Code Generation Config incomplete.");
         }
+         */
+        return this;
+    }
+
+    public Path getEcoreGenModelDir() {
+        return ecoreGenModelDir;
+    }
+
+    public CodeGenerationConfig setEcoreGenModelDir(Path ecoreGenModelDir) {
+        this.ecoreGenModelDir = ecoreGenModelDir;
         return this;
     }
 }

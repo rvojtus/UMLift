@@ -18,6 +18,7 @@
         <module>umlet-15.1</module>
         <module>InformalMDD-core</module>
         <module>InformalMDD-maven-plugin</module>
+        <module>InformalMDD-Standalone</module>
     </modules>
 
     <dependencyManagement>
@@ -74,10 +75,10 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <executable>java</executable>
-                        <mainClass>cz.cuni.mff.vojtusr.MainCore</mainClass>
+                        <mainClass>cz.cuni.mff.imdd.IMDDMainStandalone</mainClass>
                         <classpathScope>compile</classpathScope>
                     </configuration>
                 </plugin>
