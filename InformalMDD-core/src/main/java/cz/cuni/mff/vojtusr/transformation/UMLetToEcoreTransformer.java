@@ -274,8 +274,10 @@ public class UMLetToEcoreTransformer {
         Collection<PointDoubleIndexed> points = relation.getStickablePoints();
 
         // If there are no points, exit early as there’s nothing to process
-        if (points == null)
+        if (points == null) {
+            LOG.warning("No stickable points found for relation: " + relation);
             return;
+        }
 
         PointDoubleIndexed startCoordPoit = null;
         PointDoubleIndexed endCoordPoint = null;
@@ -293,6 +295,7 @@ public class UMLetToEcoreTransformer {
 
         // If either start or end point is missing, exit as the relation can't be processed fully
         if (startCoordPoit == null || endCoordPoint == null) {
+            LOG.warning("No points found for relation: " + relation);
             return;
         }
 
@@ -575,6 +578,7 @@ public class UMLetToEcoreTransformer {
         // Create a new EReference instance
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
+        eRef.setName(childClass.getName());
 
         // Check if only one attribute is provided (indicating no cardinality specified)
         if (attributes.size() == 1) {
@@ -587,37 +591,16 @@ public class UMLetToEcoreTransformer {
         final String cardinalityRegEx = "[0-9]+\\.\\.[*n0-9]$";
         final int attributeIndex = Integer.parseInt(String.valueOf(delimiter.charAt(1)));
 
-        String relationName = getRelationName(attributes, attributeIndex);
-        if (relationName == null)
-            relationName = childClass.getName();
-        eRef.setName(relationName);
 
         // Iterate through attributes to find cardinality specifications
         for (String attribute : attributes) {
             if (attribute.matches("^" + delimiter + cardinalityRegEx)) {
                 processCardinality(eRef, attribute, delimiter);
             } else if (attribute.matches("^r" + attributeIndex + "=" + cardinalityRegEx)) {
-                processCardinality(eRef, attribute, "r" + attributeIndex + "=");
+                //processCardinality(eRef, attribute, "r" + attributeIndex + "=");
             }
         }
         return eRef; // Return the configured EReference
-    }
-
-    /**
-     * Retrieves the name of a relation from a list of attributes based on its position.
-     *
-     * @param attributes a list of attributes to search for the relation name
-     * @param position   the position of the relation to match
-     * @return the name of the relation if found; {@code null} otherwise
-     */
-
-    private String getRelationName(final List<String> attributes, int position) {
-        final String relationRegex = "^r" + position + "=.+$";
-        for (String attribute : attributes) {
-            if (attribute.trim().matches(relationRegex))
-                return attribute.trim().split("r" + position + "=")[1];
-        }
-        return null;
     }
 
     /**
@@ -664,11 +647,7 @@ public class UMLetToEcoreTransformer {
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
         eRef.setContainment(containment);
-
-        String relationName = getRelationName(attributes, 2); // check pos
-        if (relationName == null)
-            relationName = childClass.getName();
-        eRef.setName(relationName);
+        eRef.setName(childClass.getName());
 
         // Check if only one attribute is provided, indicating a default implicit relation
         if (attributes.size() == 1) {
