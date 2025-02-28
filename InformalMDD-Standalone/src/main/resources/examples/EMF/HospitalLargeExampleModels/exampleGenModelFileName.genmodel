@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="exampleProject" modelName="exampleProject" complianceLevel="22.0" copyrightFields="false">
+  <genPackages prefix="ExampleProject" disposableProviderFactory="true">
+    <ecorePackage href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#/"/>
+    <genEnums typeSafeEnumCompatible="false">
+      <ecoreEnum href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Allergy"/>
+    </genEnums>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Hospital"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Hospital/Department"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Hospital/Building"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Hospital/AdminDepartment"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Department"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Department/Staff"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Building"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Building/Floor"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Building/Hospital"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Floor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Floor/PatientRoom"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Staff"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Staff/TimeSlot"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Nurse"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Nurse/Patient"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Receptionist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Technician"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Janitor"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Security"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//IT"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/Doctor"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/Nurse"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/EmergencyContact"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/MedicalRecord"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/Prescription"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/Appointment"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/Billing"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/Insurance"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Patient/PatientRoom"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//EmergencyContact"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//MedicalRecord"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//MedicalRecord/LabReport"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//MedicalRecord/Doctor"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//MedicalRecord/Diagnosis"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//MedicalRecord/Allergy"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//MedicalRecord/Treatment"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Prescription"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Prescription/Medication"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//LabReport"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Diagnosis"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Treatment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Appointment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Schedule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Schedule/TimeSlot"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//TimeSlot"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//TimeSlot/Staff"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Billing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Billing/Payment"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Billing/Patient"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Insurance"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Insurance/Patient"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Payment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//PatientRoom"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//PatientRoom/Equipment"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//PatientRoom/Patient"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//PatientRoom/Floor"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Equipment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Inventory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Inventory/Medication"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Inventory/Equipment"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Inventory/Supplies"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Medication"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Supplies"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Doctor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Doctor/Patient"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Doctor/TreatmentRoom"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Surgeon"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Anesthesiologist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Radiologist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Pharmacist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//OperatingRoom"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//ICU"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//GeneralRoom"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Laboratory"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//HR"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Finance"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Legal"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Records"/>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//AdminDepartment"/>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//TreatmentRoom"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//TreatmentRoom/Doctor"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/resources/exampleEcoreFileName.ecore#//Radiology"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
