@@ -11,13 +11,13 @@ import java.io.OutputStream;
 
 public class ContextUtils {
     static void notifySuccess(@NotNull Project project, final String message) {
-        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.vojtusr.notificationgroup")
+        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.umlift.plugin.intellij.notificationgroup")
                 .createNotification(message, NotificationType.INFORMATION)
                 .notify(project);
     }
 
     static void notifyFailure(@NotNull Project project, final String message) {
-        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.vojtusr.notificationgroup")
+        NotificationGroupManager.getInstance().getNotificationGroup("cz.cuni.mff.umlift.plugin.intellij.notificationgroup")
                 .createNotification(message, NotificationType.ERROR)
                 .notify(project);
     }

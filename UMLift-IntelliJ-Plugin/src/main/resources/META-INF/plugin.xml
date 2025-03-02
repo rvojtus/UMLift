@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>cz.cuni.mff.vojtusr.InformalMDD-UMLet2EMF</id>
+    <id>cz.cuni.mff.umlift.plugin.intellij</id>
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>UMLet2EMF</name>
+    <name>UMLift</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="rastislav.vojtus@gmail.com">Rastislav Vojtuš</vendor>
@@ -45,8 +45,8 @@
                 parentId="tools"
                 instance="cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettingsConfigurable"
                 id="cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettingsConfigurable"
-                displayName="UMLet2EMF"/>
-        <notificationGroup displayType="BALLOON" id="cz.cuni.mff.vojtusr.notificationgroup"/>
+                displayName="UMLift"/>
+        <notificationGroup displayType="BALLOON" id="cz.cuni.mff.umlift.plugin.intellij.notificationgroup"/>
     </extensions>
 
     <applicationListeners>
@@ -55,9 +55,9 @@
     </applicationListeners>
 
     <actions>
-        <group id="InformalMDDActionGroup"
+        <group id="cz.cuni.mff.umlift.plugin.intellij.actions.MainGroup"
                class="cz.cuni.mff.umlift.plugin.intellij.contextmenu.InformalMDDActionGroup"
-               popup="true" text="UMLet2EMF"
+               popup="true" text="UMLift"
                description="Contains actions for processing UMLet and Eclipse Modeling Framework files">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
             <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
