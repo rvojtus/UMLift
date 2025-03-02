@@ -56,7 +56,7 @@
 
     <actions>
         <group id="cz.cuni.mff.umlift.plugin.intellij.actions.MainGroup"
-               class="cz.cuni.mff.umlift.plugin.intellij.contextmenu.InformalMDDActionGroup"
+               class="cz.cuni.mff.umlift.plugin.intellij.contextmenu.UMLiftActionGroup"
                popup="true" text="UMLift"
                description="Contains actions for processing UMLet and Eclipse Modeling Framework files">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>

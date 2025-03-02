@@ -1,4 +1,4 @@
-# UMLet2EMF
+# UMLift
 
 A project providing support for Informal Model-Driven Development.
 

@@ -13,7 +13,7 @@ import java.nio.file.Path;
 /**
  * Stores plugin configuration settings persistently.
  * <p>
- * This class is responsible for saving and loading user settings related to the UMLet2EMF plugin.
+ * This class is responsible for saving and loading user settings related to the UMLift plugin.
  * The state {@link State} is stored in the IntelliJ configuration directory and is managed by the IntelliJ platform.
  * </p>
  * <p>
@@ -24,8 +24,8 @@ import java.nio.file.Path;
  * @since 1.0
  */
 @State(
-        name = "cz.cuni.mff.vojtusr.informalmddintellijplugin.settings.EMFSettings",
-        storages = @Storage("EMFSettingsPlugin.xml")
+        name = "cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings",
+        storages = @Storage("UMLiftSettingsPlugin.xml")
 )
 public final class EMFSettings implements PersistentStateComponent<EMFSettings.State> {
     public static final String ECORE_FILE_SUFFIX = "ecore";

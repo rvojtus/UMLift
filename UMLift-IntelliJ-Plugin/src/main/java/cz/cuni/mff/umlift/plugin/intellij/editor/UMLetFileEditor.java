@@ -67,7 +67,7 @@ import java.util.jar.JarFile;
  * @since 1.0
  */
 public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
-    private static final String PLUGIN_ID = "cz.cuni.mff.vojtusr.InformalMDD-IntelliJ-Plugin";
+    private static final String PLUGIN_ID = "cz.cuni.mff.umlift.plugin.intellij";
     private static final Logger LOG = Logger.getInstance(UMLetFileEditor.class);
 
     private JBPanel<?> embeddedPanel;
@@ -237,7 +237,7 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     }
 
     /**
-     * Extracts palette files from the InformalMDD-core's dependency JAR file
+     * Extracts palette files from the UMLift-core's dependency JAR file
      * and saves them to this plugin's top directory.
      *
      * <p>This method checks if the palette files have already been extracted to the home program directory.

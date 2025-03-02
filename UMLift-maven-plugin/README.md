@@ -1,4 +1,4 @@
-# UMLet2EMF - Maven Plugin
+# UMLift - Maven Plugin
 
 This is a plugin for Apache Maven. It provides facilities and tools for Informal Model-Driven Development (
 MDD).
@@ -68,8 +68,8 @@ Add the Plugin to Your Project's `pom.xml`:
 <build>
     <plugins>
         <plugin>
-            <groupId>cz.cuni.mff.vojtusr</groupId>
-            <artifactId>UMLet2EMF-maven-plugin</artifactId>
+            <groupId>cz.cuni.mff</groupId>
+            <artifactId>UMLift-maven-plugin</artifactId>
             <version>1.0-SNAPSHOT</version>
         </plugin>
     </plugins>
@@ -83,7 +83,7 @@ Add the Plugin to Your Project's `pom.xml`:
 Example for `generate-emf-from-umlet` goal:
 
 ```bash
-  mvn cz.cuni.mff.vojtusr:UMLet2EMF-maven-plugin:1.0-SNAPSHOT:generate-emf-from-umlet 
+  mvn cz.cuni.mff.vojtusr:UMLift-maven-plugin:1.0-SNAPSHOT:generate-emf-from-umlet 
       -DumletFile=/path/to/umlet/file.uxf -DprojectName=NewProject
 ```
 
@@ -96,8 +96,8 @@ Example for `generate-code-from-umlet` goal:
 <build>
     <plugins>
         <plugin>
-            <groupId>cz.cuni.mff.vojtusr</groupId>
-            <artifactId>UMLet2EMF-maven-plugin</artifactId>
+            <groupId>cz.cuni.mff</groupId>
+            <artifactId>UMLift-maven-plugin</artifactId>
             <version>1.0-SNAPSHOT</version>
             <executions>
                 <execution>

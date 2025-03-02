@@ -1,4 +1,4 @@
-# UMLet2EMF - IntelliJ Plugin
+# UMLift - IntelliJ Plugin
 
 This is a plugin for JetBrains IntelliJ IDEA. It provides facilities and tools for Informal Model-Driven Development (
 MDD).
@@ -35,9 +35,9 @@ WIP
 Steps to install the plugin manually:
 
 1. Run `mvn clean install` in the root of the project.
-2. Go to the plugin's directory - `cd InformalMDD-IntelliJ-Plugin/`.
+2. Go to the plugin's directory - `cd UMLift-IntelliJ-Plugin/`.
 3. Run `./gradlew buildPlugin`.
-4. Find the generated file at `build/distributions/InformalMDD-IntelliJ-Plugin-VERSION.zip`.
+4. Find the generated file at `build/distributions/UMLift-IntelliJ-Plugin-VERSION.zip`.
 5. Open **Settings** and then select **Plugins**.
 6. On the **Plugins** page,
    click ![](https://resources.jetbrains.com/help/img/idea/2024.3/app.expui.general.settings_dark.svg)
