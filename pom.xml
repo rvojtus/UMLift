@@ -20,29 +20,7 @@
         <module>UMLift-maven-plugin</module>
         <module>UMLift-Standalone</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- Shared dependencies can be managed here -->
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
-            <dependency>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>eclipse-releases</id>
-            <url>https://repo.eclipse.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>eclipse-snapshots</id>
-            <url>https://repo.eclipse.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
+    
     <build>
         <pluginManagement>
             <plugins>
