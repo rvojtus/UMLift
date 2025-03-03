@@ -40,15 +40,8 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
-                    <mainClass>cz.cuni.mff.imdd.UMLiftMainStandalone</mainClass>
+                    <mainClass>cz.cuni.mff.umlift.standalone.UMLiftMainStandalone</mainClass>
                 </configuration>
             </plugin>
         </plugins>

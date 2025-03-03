@@ -53,11 +53,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>3.5.0</version>
-                    <configuration>
-                        <executable>java</executable>
-                        <mainClass>cz.cuni.mff.imdd.UMLiftMainStandalone</mainClass>
-                        <classpathScope>compile</classpathScope>
-                    </configuration>
                 </plugin>
 
                 <plugin>
