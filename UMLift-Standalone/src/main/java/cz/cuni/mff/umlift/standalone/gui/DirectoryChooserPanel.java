@@ -1,4 +1,4 @@
-package cz.cuni.mff.imdd.gui;
+package cz.cuni.mff.umlift.standalone.gui;
 
 import javax.swing.*;
 import java.awt.*;

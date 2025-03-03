@@ -1,7 +1,7 @@
-package cz.cuni.mff.imdd.gui;
+package cz.cuni.mff.umlift.standalone.gui;
 
 
-import cz.cuni.mff.imdd.UMLiftMainStandalone;
+import cz.cuni.mff.umlift.standalone.UMLiftMainStandalone;
 import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 
 import javax.swing.*;

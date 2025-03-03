@@ -1,8 +1,8 @@
-package cz.cuni.mff.imdd;
+package cz.cuni.mff.umlift.standalone;
 
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
-import cz.cuni.mff.imdd.gui.ConfigDialog;
+import cz.cuni.mff.umlift.standalone.gui.ConfigDialog;
 import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 
