@@ -85,7 +85,7 @@ For more information about the installation, setup & usage: [Maven Mojo](UMLift-
 Generating Javadoc:
 
 ```bash
-  mvn javadoc:javadoc
+mvn javadoc:javadoc
 ```
 
 ## External Tools & Libraries

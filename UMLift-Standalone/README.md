@@ -38,7 +38,7 @@ Follow these steps to install and run the program from the command line:
 Run the following command in the root of the project:
 
 ```shell
-  mvn clean install
+mvn clean install
 ```
 
 #### 2. Run the program
@@ -48,13 +48,13 @@ After building, you can run the program using one of the following methods:
 - From the root directory:
 
 ```shell
-    mvn exec:java -pl UMLift-Standalone
+mvn exec:java -pl UMLift-Standalone
 ```
 
 - From inside the `UMLift-Standalone` directory:
 
 ```shell
-    mvn exec:java
+mvn exec:java
 ```
 
 ## Usage
