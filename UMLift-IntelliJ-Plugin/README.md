@@ -60,12 +60,18 @@ Simply double-click on any UMLet Diagram file - `.uxf`, and a custom File Editor
 #### UMLet Files
 
 Right-clicking on an UMLet file - `.uxf` will open a Context Menu, where two actions will be available.<br>
-![UMLetContextMenuAction](src/main/resources/pictures/contextMenuPic.png)
+![UMLetContextMenuAction](src/main/resources/pictures/contextMenuUMLiftUMLetFile.png)
 
 #### EMF Files
 
 Right-clicking on an EMF Ecore file - `.ecore` will open a Context Menu.<br>
-![EMFContextMenuAction](src/main/resources/pictures/contextMenuEMF.png)
+![EMFContextMenuAction](src/main/resources/pictures/contextMenuUMLiftEMF.png)
+
+#### Settings
+
+UMLift's transformation and generation can be configured through IntelliJ's in-built Settings dialog. It can be found
+under the `Tools` section. The changes are persistent, and can be Reverted back to the defaults.
+![SettingsDialog](src/main/resources/pictures/settingsComponentUMLift.png)
 
 ## License
 

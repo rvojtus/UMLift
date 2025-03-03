@@ -83,7 +83,7 @@ Add the Plugin to Your Project's `pom.xml`:
 Example for `generate-emf-from-umlet` goal:
 
 ```bash
-  mvn cz.cuni.mff.vojtusr:UMLift-maven-plugin:1.0-SNAPSHOT:generate-emf-from-umlet 
+  mvn cz.cuni.mff:UMLift-maven-plugin:1.0-SNAPSHOT:generate-emf-from-umlet 
       -DumletFile=/path/to/umlet/file.uxf -DprojectName=NewProject
 ```
 

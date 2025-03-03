@@ -6,6 +6,8 @@ A project providing support for Informal Model-Driven Development.
 
 - [About The Project](#about-the-project)
 - [Overview](#overview)
+- [Features](#features)
+- [Project Structure](#project-structure)
 - [Installation & Setup](#installation--setup)
     - [Standalone UMLet](#standalone-umlet-gui)
     - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
@@ -36,12 +38,25 @@ supporting model-driven development workflows.
 - Maven support - a plugin for Maven that provides transformation and artifact generation functionality for Maven
   projects
 
+## Project Structure
+
+UMLift Project is structured according to Maven conventions. It is composed of a top-level parent module - `UMLift`,
+having groupID of `cz.cuni.mff`. <br>
+There are several submodules:
+
+- `umlet-15.1` - contains UMLet project files
+- `UMLift-core` - provides transformation and generation functionality
+- `UMLift-maven-plugin` - provides Maven plugin
+- `UMLift-Standalone` - a standalone version, runnable from CLI
+
+There is also an IntelliJ Plugin that uses Gradle instead of Maven.
+
 ## Installation & Setup
 
 ### Requirements
 
 - Maven
-- Java 21+
+- Java 22+
 - macOS/Linux, should work on Windows - not tested
 
 ### Standalone UMLet GUI
