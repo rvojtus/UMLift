@@ -9,7 +9,7 @@ A project providing support for Informal Model-Driven Development.
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Installation & Setup](#installation--setup)
-    - [Standalone UMLet](#standalone-umlet-gui)
+    - [Standalone](#standalone)
     - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
     - [Maven Plugin](#maven-plugin)
 - [External Tools & Libraries](#external-tools--libraries)
@@ -33,6 +33,7 @@ supporting model-driven development workflows.
 
 - UMLet GUI - a way to create UML diagrams
 - UMLet to EMF model transformation - creates Ecore and GenModel resources from UMLet diagrams
+- Adds custom palette - `EMF Palette`, provides all necessary elements for IMDD
 - Java Code Generation - produces corresponding Java classes using EMF
 - IntelliJ IDEA support - a plugin that provides all the functionality inside the IDE
 - Maven support - a plugin for Maven that provides transformation and artifact generation functionality for Maven
@@ -59,25 +60,25 @@ There is also an IntelliJ Plugin that uses Gradle instead of Maven.
 - Java 22+
 - macOS/Linux, should work on Windows - not tested
 
-### Standalone UMLet GUI
+### Standalone
 
-A standalone GUI from the UMLet project, with an added support to transform the currently open UML Diagram to EMF
-Models, and to generate code and artifacts from it.<br>
-For more information about the installation, setup & usage: [Standalone](InformalMDD-core/README.md)
+A standalone application using GUI from the UMLet project, with an added support to transform the currently open UML
+Diagram to EMF Models, and to generate code and artifacts from it.<br>
+For more information about the installation, setup & usage: [Standalone](UMLift-Standalone/README.md)
 
 ### IntelliJ IDEA Plugin
 
 A plugin for JetBrains IntelliJ IDEA. Integrated UMLet GUI to a File Editor, to enable seamless creation and editing of
 UMLet Diagram files - `.uxf`. Custom Settings Dialog Panel, to configure and customize the transformation and generation
 process. New Context Menu Actions, to enable quick and easy start of the artifact generation & transformation.<br>
-For more information about the installation, setup & usage: [IntelliJ Plugin](InformalMDD-IntelliJ-Plugin/README.md)
+For more information about the installation, setup & usage: [IntelliJ Plugin](UMLift-IntelliJ-Plugin/README.md)
 
 ### Maven Plugin
 
 A Mojo plugin for Maven. Integrates functionality to be used as a part of a Maven lifecycle. Offers configuration and
 various "maven goals", to transform UMLet Diagram files - `.uxf`, to EMF Models - `Ecore` & `GenModel`, and to
 consequently generate Java source code & artifacts from those models.<br>
-For more information about the installation, setup & usage: [Maven Mojo](InformalMDD-maven-plugin/README.md)
+For more information about the installation, setup & usage: [Maven Mojo](UMLift-maven-plugin/README.md)
 
 ## Documentation
 
