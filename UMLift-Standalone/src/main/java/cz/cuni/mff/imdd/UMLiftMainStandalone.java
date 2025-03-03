@@ -15,15 +15,15 @@ import java.nio.file.Path;
 import java.util.logging.Logger;
 
 /**
- * Main Class that launches UMLet's {@link MainStandalone#main(String[])}, and adds IMDD functionality.
+ * Main Class that launches UMLet's {@link MainStandalone#main(String[])}, and adds UMLift-core functionality.
  *
  * @since 1.0
  */
-public class IMDDMainStandalone {
-    private static final Logger LOG = Logger.getLogger(IMDDMainStandalone.class.getName());
+public class UMLiftMainStandalone {
+    private static final Logger LOG = Logger.getLogger(UMLiftMainStandalone.class.getName());
 
     public static void main(String[] args) {
-        LOG.info("Starting IMDDMainStandalone...");
+        LOG.info("Starting UMLift Standalone...");
         startUMLetStandalone();
     }
 
@@ -41,14 +41,14 @@ public class IMDDMainStandalone {
         }
 
         ConfigDialog configDialog = new ConfigDialog(mainFrame);
-        JMenu generateMenu = getIMDDMenu(configDialog);
+        JMenu generateMenu = getUMLiftMenu(configDialog);
 
         menuBar.add(generateMenu, 3);
         SwingUtilities.updateComponentTreeUI(mainFrame);
     }
 
-    private static JMenu getIMDDMenu(ConfigDialog configDialog) {
-        JMenu generateMenu = new JMenu("IMDD");
+    private static JMenu getUMLiftMenu(ConfigDialog configDialog) {
+        JMenu generateMenu = new JMenu("UMLift");
         generateMenu.setToolTipText("Generate Code from Diagram");
 
         JMenuItem generateCodeItem = new JMenuItem("Generate Code");
@@ -56,7 +56,7 @@ public class IMDDMainStandalone {
         generateCodeItem.addActionListener(e -> startCodeGeneration(e, configDialog.getCodeGenerationConfig()));
         generateMenu.add(generateCodeItem);
 
-        JMenuItem configOptionsMenuItem = new JMenuItem("EMF Options...");
+        JMenuItem configOptionsMenuItem = new JMenuItem("Options...");
         configOptionsMenuItem.addActionListener(_ -> configDialog.setVisible(true));
         generateMenu.add(configOptionsMenuItem);
         return generateMenu;

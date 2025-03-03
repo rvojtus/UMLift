@@ -48,7 +48,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>cz.cuni.mff.imdd.IMDDMainStandalone</mainClass>
+                    <mainClass>cz.cuni.mff.imdd.UMLiftMainStandalone</mainClass>
                 </configuration>
             </plugin>
         </plugins>

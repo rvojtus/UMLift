@@ -20,7 +20,7 @@
         <module>UMLift-maven-plugin</module>
         <module>UMLift-Standalone</module>
     </modules>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -56,7 +56,7 @@
                     <version>3.5.0</version>
                     <configuration>
                         <executable>java</executable>
-                        <mainClass>cz.cuni.mff.imdd.IMDDMainStandalone</mainClass>
+                        <mainClass>cz.cuni.mff.imdd.UMLiftMainStandalone</mainClass>
                         <classpathScope>compile</classpathScope>
                     </configuration>
                 </plugin>

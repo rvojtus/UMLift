@@ -1,6 +1,7 @@
 package cz.cuni.mff.imdd.gui;
 
 
+import cz.cuni.mff.imdd.UMLiftMainStandalone;
 import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.util.prefs.Preferences;
 /**
  * JDialog representing configuration, used for core features - transformation, artifact generation, by the main program.
  *
- * @see cz.cuni.mff.imdd.IMDDMainStandalone
+ * @see UMLiftMainStandalone
  * @since 1.0
  */
 public class ConfigDialog extends JDialog {
