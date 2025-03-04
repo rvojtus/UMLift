@@ -9,6 +9,7 @@ transformation and artifact generation using Eclipse Modeling Framework (EMF) li
 - [Features](#features)
 - [License](#license)
 - [Contact](#contact)
+- [Back to Main Page](../README.md)
 
 ## Overview
 

@@ -12,6 +12,7 @@ A project providing support for Informal Model-Driven Development.
     - [Standalone](#standalone)
     - [IntelliJ IDEA Plugin](#intellij-idea-plugin)
     - [Maven Plugin](#maven-plugin)
+- [Documentation](#documentation)
 - [External Tools & Libraries](#external-tools--libraries)
 - [License](#license)
 - [Contact](#contact)
@@ -81,6 +82,13 @@ consequently generate Java source code & artifacts from those models.<br>
 For more information about the installation, setup & usage: [Maven Mojo](UMLift-maven-plugin/README.md)
 
 ## Documentation
+
+Here's a list of all available README files:
+
+- [UMLift Core](UMLift-core/README.md)
+- [UMLift Standalone](UMLift-Standalone/README.md)
+- [UMLift Maven Plugin](UMLift-maven-plugin/README.md)
+- [UMLift IntelliJ Plugin](UMLift-IntelliJ-Plugin/README.md)
 
 Generating Javadoc:
 
