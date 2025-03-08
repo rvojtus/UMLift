@@ -125,7 +125,7 @@
                             <target>
                                 <copy todir="${settings.localRepository}/cz/cuni/mff/${project.artifactId}/${project.version}/palettes">
                                     <fileset
-                                            dir="/Users/rastislav.vojtus/Documents/Java_PRG/2324/2024-vojtus/umlet-15.1/umlet-res/src/main/resources/palettes"/>
+                                            dir="../umlet-15.1/umlet-res/src/main/resources/palettes"/>
                                 </copy>
                             </target>
                         </configuration>
