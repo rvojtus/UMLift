@@ -47,6 +47,16 @@
                 id="cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettingsConfigurable"
                 displayName="UMLift"/>
         <notificationGroup displayType="BALLOON" id="cz.cuni.mff.umlift.plugin.intellij.notificationgroup"/>
+        <fileType name="Ecore File"
+                  implementationClass="cz.cuni.mff.umlift.plugin.intellij.filetypes.EcoreFileType"
+                  fieldName="INSTANCE"
+                  language="XML"
+                  extensions="ecore"/>
+        <fileType name="GenModel File"
+                  implementationClass="cz.cuni.mff.umlift.plugin.intellij.filetypes.GenModelFileType"
+                  fieldName="INSTANCE"
+                  language="XML"
+                  extensions="genmodel"/>
     </extensions>
 
     <applicationListeners>
