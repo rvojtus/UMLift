@@ -24,12 +24,12 @@ import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.PathUtil;
+import com.intellij.openapi.diagnostic.Logger;
 import cz.cuni.mff.umlift.plugin.intellij.GUI.UMLetIntelliJGUI;
 import cz.cuni.mff.umlift.plugin.intellij.GUI.UMLetIntelliJPluginGUIBuilder;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.diagnostic.Logger;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -170,14 +170,14 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     private void createControl() {
         getGui().setCurrentEditor(this);
         try {
-            if (Files.size(openedFile.toPath()) != 0) {
-                handler = new DiagramHandler(openedFile);
-            } else {
-                handler = new DiagramHandler(null);
+            if (Files.size(openedFile.toPath()) == 0) {
+                initEmptyUXF();
             }
         } catch (IOException e) {
-            handler = new DiagramHandler(null);
+            LOG.error("Could not open file: " + openedFile.getPath(), e);
         }
+
+        handler = new DiagramHandler(openedFile);
         getGui().registerEditorForDiagramHandler(this, handler);
         getGui().setCurrentDiagramHandler(handler);
         open(handler);
@@ -347,9 +347,12 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     }
 
     public void askSave() {
-        if (handler != null) {
-            handler.doSave();
+        if (handler == null || openedFile == null) {
+            LOG.error("Can't save the file because there is no opened file!");
+            return;
         }
+
+        handler.doSave();
     }
 
     @Override
@@ -480,6 +483,18 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
 
     private UMLetIntelliJGUI getGui() {
         return (UMLetIntelliJGUI) CurrentGui.getInstance().getGui();
+    }
+
+    private void initEmptyUXF() throws IOException {
+        final String content =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
+                        "<diagram program=\"umlet\" version=\"15.1\">\n" +
+                        "    <zoom_level>10</zoom_level>\n" +
+                        "</diagram>\n";
+
+        byte[] bytes = content.getBytes();
+
+        Files.write(java.nio.file.Path.of(openedFile.getPath()), bytes);
     }
 
 }
