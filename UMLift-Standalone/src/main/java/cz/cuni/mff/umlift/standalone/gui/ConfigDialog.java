@@ -98,7 +98,7 @@ public class ConfigDialog extends JDialog {
         buttonPanel.add(saveButton);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(_ -> dispose());
+        cancelButton.addActionListener(e -> dispose());
         buttonPanel.add(cancelButton);
 
         return buttonPanel;

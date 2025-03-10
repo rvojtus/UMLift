@@ -57,7 +57,7 @@ public class UMLiftMainStandalone {
         generateMenu.add(generateCodeItem);
 
         JMenuItem configOptionsMenuItem = new JMenuItem("Options...");
-        configOptionsMenuItem.addActionListener(_ -> configDialog.setVisible(true));
+        configOptionsMenuItem.addActionListener(e -> configDialog.setVisible(true));
         generateMenu.add(configOptionsMenuItem);
         return generateMenu;
     }

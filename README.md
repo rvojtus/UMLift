@@ -58,7 +58,7 @@ There is also an IntelliJ Plugin that uses Gradle instead of Maven.
 ### Requirements
 
 - Maven
-- Java 22+
+- Java 21+
 - macOS/Linux, should work on Windows - not tested
 
 ### Standalone
