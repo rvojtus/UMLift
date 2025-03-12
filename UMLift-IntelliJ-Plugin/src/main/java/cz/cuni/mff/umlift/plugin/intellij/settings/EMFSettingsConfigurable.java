@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * {@link Configurable} implementation for integrating settings into IntelliJ.
@@ -27,7 +28,7 @@ final class EMFSettingsConfigurable implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "EMF Settings";
+        return "UMLift Settings";
     }
 
     @Override
@@ -55,13 +56,14 @@ final class EMFSettingsConfigurable implements Configurable {
     @Override
     public boolean isModified() {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
-        return !emfSettingsComponent.getProjectName().equals(state.projectName) ||
-                !emfSettingsComponent.getNsURI().equals(state.NsURI) ||
-                !emfSettingsComponent.getNsPrefix().equals(state.NsPrefix) ||
-                !emfSettingsComponent.getEcoreFileName().equals(state.ecoreFileName) ||
-                !emfSettingsComponent.getGenModelFileName().equals(state.genModelFileName) ||
-                !emfSettingsComponent.getEcoreGenModelDestination().equals(state.ecoreGenModelOutputDir) ||
-                !emfSettingsComponent.getGeneratedFilesOutputDir().equals(state.generatedFilesOutputDir);
+        return Stream.of(!emfSettingsComponent.getProjectName().equals(state.projectName),
+                !emfSettingsComponent.getNsURI().equals(state.NsURI),
+                !emfSettingsComponent.getNsPrefix().equals(state.NsPrefix),
+                !emfSettingsComponent.getEcoreFileName().equals(state.ecoreFileName),
+                !emfSettingsComponent.getBasePackage().equals(state.basePackage),
+                !emfSettingsComponent.getGenModelFileName().equals(state.genModelFileName),
+                !emfSettingsComponent.getEcoreGenModelDestination().equals(state.ecoreGenModelOutputDir.toString()),
+                !emfSettingsComponent.getGeneratedFilesOutputDir().equals(state.generatedFilesOutputDir)).anyMatch(Boolean::booleanValue);
     }
 
     /**
@@ -82,6 +84,7 @@ final class EMFSettingsConfigurable implements Configurable {
         state.ecoreGenModelOutputDir = Path.of(emfSettingsComponent.getEcoreGenModelDestination());
 
         // GenModel
+        state.basePackage = emfSettingsComponent.getBasePackage();
         state.genModelFileName = emfSettingsComponent.getGenModelFileName();
 
         // Generation
@@ -102,6 +105,7 @@ final class EMFSettingsConfigurable implements Configurable {
         emfSettingsComponent.setEcoreFileName(state.ecoreFileName);
 
         // GenModel
+        emfSettingsComponent.setBasePackage(state.basePackage);
         emfSettingsComponent.setGenModelFileName(state.genModelFileName);
 
         // Generation

@@ -34,6 +34,7 @@ public class EMFSettingsComponent {
 
     // GenModel settings
     private final JBTextField genModelFileNameTextField = new JBTextField();
+    private final JBTextField basePackageTextField = new JBTextField();
 
     // Generation settings
     private final TextFieldWithBrowseButton ecoreGenModelOutputDirBrowse = new TextFieldWithBrowseButton();
@@ -56,6 +57,7 @@ public class EMFSettingsComponent {
                 .addComponent(new JBLabel())
                 .addComponent(new JBLabel("GenModel settings"))
                 .addSeparator()
+                .addLabeledComponent(new JBLabel("Package name:"), basePackageTextField, 1, false)
                 .addLabeledComponent("GenModel file name:", genModelFileNameTextField, 1, false)
                 .addComponent(new JBLabel())
                 .addComponent(new JBLabel("Generation settings"))
@@ -131,6 +133,15 @@ public class EMFSettingsComponent {
 
     public void setGenModelFileName(@NotNull String genModelFileName) {
         genModelFileNameTextField.setText(genModelFileName);
+    }
+
+    @NotNull
+    public String getBasePackage() {
+        return basePackageTextField.getText();
+    }
+
+    public void setBasePackage(@NotNull String basePackage) {
+        basePackageTextField.setText(basePackage);
     }
 
     @NotNull

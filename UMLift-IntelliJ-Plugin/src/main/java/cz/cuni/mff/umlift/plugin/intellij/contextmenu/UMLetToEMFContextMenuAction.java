@@ -119,6 +119,7 @@ public class UMLetToEMFContextMenuAction extends AnAction {
             private void generateGenmodel(Path inputEcoreFile) {
                 GenModelGenerator generator = new GenModelGenerator();
                 GenModel genModel = generator.generateGenModelFromEcore(inputEcoreFile);
+                generator.setBasePackage(genModel, state.basePackage);
                 final Path genmodelPath = Path.of(finalEcoreGenModelOutputDir + File.separator + state.genModelFileName);
                 try {
                     saveGenModel(genModel, genmodelPath);

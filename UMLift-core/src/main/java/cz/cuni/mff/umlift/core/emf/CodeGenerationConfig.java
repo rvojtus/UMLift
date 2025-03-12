@@ -26,6 +26,7 @@ import java.nio.file.Path;
  *     .setProjectName("exampleProjectName")
  *     .setProjectNsPrefix("exampleProjectNsPrefix")
  *     .setProjectNsURI("exampleProjectNsURI")
+ *     .setBasePackage("com.example")
  *     .build();
  * Diagnostic diagnostic = generator.generateCodeFromUMLetFile(config);
  *}
@@ -42,6 +43,7 @@ public class CodeGenerationConfig {
     private String projectName;
     private String projectNsPrefix;
     private String projectNsURI;
+    private String basePackage;
 
     private String ecoreFileName;
     private String genModelFileName;
@@ -156,6 +158,15 @@ public class CodeGenerationConfig {
 
     public CodeGenerationConfig setEcoreGenModelDir(Path ecoreGenModelDir) {
         this.ecoreGenModelDir = ecoreGenModelDir;
+        return this;
+    }
+
+    public String getBasePackage() {
+        return basePackage;
+    }
+
+    public CodeGenerationConfig setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
         return this;
     }
 }

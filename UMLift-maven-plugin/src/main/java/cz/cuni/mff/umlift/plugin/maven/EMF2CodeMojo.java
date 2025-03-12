@@ -31,11 +31,14 @@ public class EMF2CodeMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
-    @Parameter(property = "outputDir", defaultValue = "src-gen/")
+    @Parameter(property = "outputDir", defaultValue = "src/main/java")
     private String outputDir;
 
     @Parameter(property = "ecoreFile", required = true, readonly = true)
     private String inputEcoreFile;
+
+    @Parameter(property = "package", defaultValue = "org.example")
+    private String basePackage;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -51,7 +54,7 @@ public class EMF2CodeMojo extends AbstractMojo {
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 
         try {
-            Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(inputEcoreFile), Path.of(outputDir));
+            Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(inputEcoreFile), Path.of(outputDir), basePackage);
             if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                 throw new MojoFailureException
                         ("Generation failed for Ecore file: " + inputEcoreFile + "\n" + diagnostic.getMessage());

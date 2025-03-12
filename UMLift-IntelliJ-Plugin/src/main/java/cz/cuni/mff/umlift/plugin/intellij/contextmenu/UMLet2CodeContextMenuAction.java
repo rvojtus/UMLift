@@ -126,6 +126,7 @@ public class UMLet2CodeContextMenuAction extends AnAction {
                         .setProjectName(state.projectName)
                         .setProjectNsPrefix(state.NsPrefix)
                         .setProjectNsURI(state.NsURI)
+                        .setBasePackage(state.basePackage)
                         .build();
             }
         });

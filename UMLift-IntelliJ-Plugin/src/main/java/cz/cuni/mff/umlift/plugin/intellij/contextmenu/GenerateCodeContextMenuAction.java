@@ -89,7 +89,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
      * @param project the current project context
      * @param file    the file to generate code from
      * @throws IOException if there is any file I/O related problem
-     * @see ModelToCodeGenerator#generateCodeFromEcore(Path, Path) for details about the generation
+     * @see ModelToCodeGenerator#generateCodeFromEcore(Path, Path, String) for details about the generation
      */
     private void generateCode(Project project, VirtualFile file) throws IOException {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
@@ -109,7 +109,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
                 try {
                     PrintStream printStream = new PrintStream(new ContextUtils.ProgressOutputStream(progressIndicator));
                     System.setOut(printStream);
-                    Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(file.getPath()), Path.of(finalOutputDir));
+                    Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(file.getPath()), Path.of(finalOutputDir), state.basePackage);
 
                     if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                         LOG.error("Error when generating code from Ecore file: " + diagnostic);

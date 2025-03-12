@@ -53,6 +53,9 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(property = "genmodelFileName", defaultValue = "genmodel")
     private String genmodelFileName;
 
+    @Parameter(property = "package", defaultValue = "org.example")
+    private String basePackage;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("Transforming " + inputUMLetFile + "...\n" +
@@ -88,6 +91,7 @@ public class UMLet2EMFMojo extends AbstractMojo {
             throw new MojoExecutionException("Could not generate GenModel");
         }
 
+        genModelGenerator.setBasePackage(genModel, basePackage);
         final Path genmodelFilePath = Path.of(modelDir + File.separator + genmodelFileName);
 
         try {

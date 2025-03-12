@@ -1,6 +1,7 @@
 package cz.cuni.mff.umlift.core.emf;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
+import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -67,12 +68,23 @@ public class GenModelGenerator {
         // Create a GenModel instance
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
         genModel.setModelName(ecorePackage.getName());
-        genModel.setModelDirectory(ecorePackage.getName()); // todo needs proper documentation
+        genModel.setModelDirectory("src"); // todo needs proper documentation
         genModel.setComplianceLevel(GenJDKLevel.JDK220_LITERAL); // todo make it configurable
+
+        GenPackage genPackage = GenModelFactory.eINSTANCE.createGenPackage();
+        genPackage.setEcorePackage(ecorePackage);
+        genPackage.setGenModel(genModel);
+
+        genModel.getGenPackages().add(genPackage);
         genModel.initialize(Collections.singleton(ecorePackage));
+
 
         LOG.info("GenModel created successfully for Ecore: " + inputEcorePath.toAbsolutePath());
         return genModel;
+    }
+
+    public void setBasePackage(GenModel genModel, String basePackage) {
+        genModel.getGenPackages().getFirst().setBasePackage(basePackage);
     }
 
 }

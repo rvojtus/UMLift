@@ -44,9 +44,10 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         public String ecoreFileName = "ecore";
         // GenModel
         public String genModelFileName = "genmodel";
+        public String basePackage = "org.example";
         // Generation
-        public Path ecoreGenModelOutputDir = Path.of("resources");
-        public String generatedFilesOutputDir = projectName + "Dir";
+        public Path ecoreGenModelOutputDir = Path.of("src/main/resources/EMFModels");
+        public String generatedFilesOutputDir = "src/main/java";
     }
 
     private State myState = new State();

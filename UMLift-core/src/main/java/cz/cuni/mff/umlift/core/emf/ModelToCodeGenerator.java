@@ -72,6 +72,7 @@ public class ModelToCodeGenerator {
         // Generate the GenModel based on the Ecore model
         GenModelGenerator genModelGenerator = new GenModelGenerator();
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreOutPath);
+        genModelGenerator.setBasePackage(genModel, config.getBasePackage());
 
         // Save the generated GenModel to the specified Path
         saveGenModel(genModel, config.getOutputGenModelFile());
@@ -95,7 +96,7 @@ public class ModelToCodeGenerator {
      * @param generatedFilesDir the directory where generated files will be saved
      * @throws IOException if an error occurs during file operations
      */
-    public Diagnostic generateCodeFromEcore(Path inputEcorePath, Path generatedFilesDir) throws IOException {
+    public Diagnostic generateCodeFromEcore(Path inputEcorePath, Path generatedFilesDir, String basePackage) throws IOException {
         // Register the GenModel resource factory to handle .genmodel files
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("genmodel", new XMIResourceFactoryImpl());
 
@@ -110,6 +111,7 @@ public class ModelToCodeGenerator {
         // Generate the GenModel based on the Ecore model
         GenModelGenerator genModelGenerator = new GenModelGenerator();
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(inputEcorePath);
+        genModelGenerator.setBasePackage(genModel, basePackage);
 
         // Save the generated GenModel to the resources
         //genModelGenerator.saveGenModel(genModel, generatedFilesDir); // todo maybe allow it?
@@ -178,7 +180,7 @@ public class ModelToCodeGenerator {
         genModel.setForceOverwrite(true);
 
         // Map the GenModel's root container to the specified root path
-        final String rootContainer = genModel.getModelName();
+        final String rootContainer = "src";
         EcorePlugin.getPlatformResourceMap().put(rootContainer, URI.createFileURI(generatedFilesDir.toAbsolutePath().toString() + "/"));//todo
         LOG.info("Generating code to " + generatedFilesDir.toAbsolutePath());
 
