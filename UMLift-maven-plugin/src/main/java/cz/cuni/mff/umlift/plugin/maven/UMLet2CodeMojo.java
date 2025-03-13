@@ -8,7 +8,10 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,6 +31,8 @@ import java.nio.file.Path;
  */
 @Mojo(name = "generate-code-from-umlet")
 public class UMLet2CodeMojo extends AbstractMojo {
+    private static final Logger LOG = LoggerFactory.getLogger(UMLet2CodeMojo.class);
+
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
@@ -55,20 +60,20 @@ public class UMLet2CodeMojo extends AbstractMojo {
     @Parameter(property = "genmodelFileName", defaultValue = "genmodel")
     private String genmodelFileName;
 
+    @Parameter(property = "package", defaultValue = "org.example")
+    private String basePackage;
+
+    @Parameter(property = "jdkLevel", defaultValue = "17") // GenJDKLevel.JDK210
+    private String genJDKLevel;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("Generating code from " + inputUMLetFile);
+        LOG.info("Generating code from UMLet {}", inputUMLetFile);
         generateCode();
+        LOG.info("Generation complete.");
     }
 
     private void generateCode() throws MojoExecutionException, MojoFailureException {
-        ModelToCodeGenerator generator = new ModelToCodeGenerator();
-
-        PrintStream originalStream = System.out;
-        // Silence STDOUT, to not see output of Code Generation's EMF Generator
-        System.setOut(new PrintStream(OutputStream.nullOutputStream()));
-
-        // Run code generation
         CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance()
                 .setInputUMLetFile(Path.of(inputUMLetFile))
                 .setGeneratedFilesDir(Path.of(outputDir))
@@ -77,9 +82,19 @@ public class UMLet2CodeMojo extends AbstractMojo {
                 .setProjectName(projectName)
                 .setProjectNsPrefix(NsPrefix)
                 .setProjectNsURI(NsURI)
+                .setBasePackage(basePackage)
+                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel))
                 .build();
+
+
+        PrintStream originalStream = System.out;
+        // Silence STDOUT, to not see output of Code Generation's EMF Generator
+        System.setOut(new PrintStream(OutputStream.nullOutputStream()));
+
+        // Run code generation
+        ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
         try {
-            Diagnostic diagnostic = generator.generateCodeFromUMLetFile(codeGenerationConfig);
+            Diagnostic diagnostic = generator.generateCodeFromUMLetFile(Path.of(inputUMLetFile));
             if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                 throw new MojoFailureException
                         ("Generation failed for UMLet file: " + inputUMLetFile + "\n" + diagnostic.getMessage());

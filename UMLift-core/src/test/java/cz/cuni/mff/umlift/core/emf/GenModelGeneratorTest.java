@@ -1,6 +1,7 @@
 package cz.cuni.mff.umlift.core.emf;
 
 import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EPackage;
@@ -27,15 +28,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GenModelGeneratorTest {
     private GenModelGenerator genModelGenerator;
     private static Path tmpDir;
+    private static CodeGenerationConfig config;
 
     @BeforeAll
     static void setUpBeforeAll() throws IOException {
         tmpDir = Files.createTempDirectory("testing");
+        config = CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.JDK210_LITERAL).build();
     }
 
     @BeforeEach
     void setUpBeforeEach() {
-        genModelGenerator = new GenModelGenerator();
+        genModelGenerator = new GenModelGenerator(config);
     }
 
 
@@ -90,7 +93,7 @@ public class GenModelGeneratorTest {
 
         // Validate existence of Ecore file
         assertTrue(file.exists(), "Ecore: " + file.getAbsolutePath() + " does not exist");
-
+        
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(file.toPath());
 
         assertNotNull(genModel, "GenModel should not be null");

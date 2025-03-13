@@ -2,6 +2,7 @@ package cz.cuni.mff.umlift.core.emf;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,12 +25,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ModelToCodeGeneratorTest {
     private ModelToCodeGenerator generator;
 
-    private Path tmpDir;
+    private static Path tmpDir;
 
     @BeforeEach
     void setUp() throws IOException {
-        generator = new ModelToCodeGenerator();
         tmpDir = Files.createTempDirectory("testing");
+        CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance()
+                .setGeneratedFilesDir(tmpDir)
+                .setOutputEcoreFile(Path.of(tmpDir.toString() + "/ecore.ecore"))
+                .setOutputGenModelFile(Path.of(tmpDir.toString() + "/genmodel.genmodel"))
+                .setProjectName(projectName)
+                .setProjectNsPrefix(projectNsPrefix)
+                .setProjectNsURI(projectNsUri)
+                .build();
+        generator = new ModelToCodeGenerator(codeGenerationConfig);
     }
 
     @AfterEach
@@ -68,16 +77,7 @@ public class ModelToCodeGeneratorTest {
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 
         // Run code generation
-        CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance()
-                .setInputUMLetFile(inputFile)
-                .setGeneratedFilesDir(tmpDir)
-                .setOutputEcoreFile(Path.of(tmpDir.toString() + "/ecore.ecore"))
-                .setOutputGenModelFile(Path.of(tmpDir.toString() + "/genmodel.genmodel"))
-                .setProjectName(projectName)
-                .setProjectNsPrefix(projectNsPrefix)
-                .setProjectNsURI(projectNsUri)
-                .build();
-        Diagnostic diagnostic = generator.generateCodeFromUMLetFile(codeGenerationConfig);
+        Diagnostic diagnostic = generator.generateCodeFromUMLetFile(inputFile);
 
         // Restore default PrintStream
         System.setOut(originalStream);
@@ -86,14 +86,16 @@ public class ModelToCodeGeneratorTest {
         assertEquals(Diagnostic.OK, diagnostic.getSeverity(), "Diagnostic should be OK");
 
         // Assert Java Files have been generated
-        assertTrue(generatedJavaFilesPresent(), "Generated Java files should be present in directory: " + tmpDir.toString());
+        assertTrue(generatedJavaFilesPresent(),
+                "Generated Java files should be present in directory: " + tmpDir.toString());
     }
 
     /**
-     * Tests that the code generation - {@link ModelToCodeGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}
+     * Tests that the code generation - {@link ModelToCodeGenerator#generateCodeFromUMLetFile(Path)}
      * has successfully generated expected Java files in the expected directory {@link #tmpDir}
      *
-     * @return {@code true} if at least 1 Java file has been found, {@code false} if no Java files are present in the expected directory
+     * @return {@code true} if at least 1 Java file has been found, {@code false} if no Java files are present in the
+     * expected directory
      * @throws IOException if any IO error occurs, i.e. {@link #tmpDir} is invalid
      */
     boolean generatedJavaFilesPresent() throws IOException {

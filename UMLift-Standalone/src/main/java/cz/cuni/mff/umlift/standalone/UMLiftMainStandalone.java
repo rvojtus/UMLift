@@ -63,12 +63,14 @@ public class UMLiftMainStandalone {
     }
 
     private static void startCodeGeneration(ActionEvent event, CodeGenerationConfig config) {
-        ModelToCodeGenerator generator = new ModelToCodeGenerator();
-        String currUMLetFile = CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
-        config.setInputUMLetFile(Path.of(currUMLetFile));
+        ModelToCodeGenerator generator = new ModelToCodeGenerator(config);
+        String currUMLetFile =
+                CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
+        final Path inputUMLetFilePath = Path.of(currUMLetFile);
+        config.setInputUMLetFile(inputUMLetFilePath);
         // todo maybe make the output dir relative to the dir of the umlet file
         try {
-            generator.generateCodeFromUMLetFile(config);
+            generator.generateCodeFromUMLetFile(inputUMLetFilePath);
             openDesktop(config.getGeneratedFilesDir().toFile());
         } catch (IOException e) {
             displayErrorDialog("Code Generation Error", "An error occurred while generating code from UMLet file.");
@@ -76,7 +78,8 @@ public class UMLiftMainStandalone {
     }
 
     private static void displayErrorDialog(String title, String message) {
-        JOptionPane.showMessageDialog(CurrentGui.getInstance().getGui().getMainFrame(), message, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(CurrentGui.getInstance().getGui().getMainFrame(), message, title,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private static void openDesktop(File projectDirFile) {

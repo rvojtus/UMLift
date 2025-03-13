@@ -1,5 +1,6 @@
 package cz.cuni.mff.umlift.plugin.maven;
 
+import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.GenModelGenerator;
 import cz.cuni.mff.umlift.core.emf.HelperUtil;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
@@ -10,8 +11,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.ecore.EPackage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +33,8 @@ import java.nio.file.Path;
  */
 @Mojo(name = "generate-emf-from-umlet")
 public class UMLet2EMFMojo extends AbstractMojo {
+    private static final Logger LOG = LoggerFactory.getLogger(UMLet2EMFMojo.class);
+
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
@@ -56,14 +62,18 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(property = "package", defaultValue = "org.example")
     private String basePackage;
 
+    @Parameter(property = "jdkLevel", defaultValue = "17") // GenJDKLevel.JDK210
+    private String genJDKLevel;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("Transforming " + inputUMLetFile + "...\n" +
-                "Model Directory: " + modelDir + "\n" +
-                "Project Name: " + projectName + ", NsPrefix: " + NsPrefix + ", NsURI: " + NsURI + "\n" +
-                "Ecore File Name: " + ecoreFileName + ", GenModel File Name: " + genmodelFileName
-        );
+        LOG.info("Transforming {}...\n" +
+                        "Model Directory: {}\n" +
+                        "Project Name: {}, NsPrefix: {}, NsURI: {}\n" +
+                        "Ecore File " + "Name: {}, GenModel File Name: {}",
+                inputUMLetFile, modelDir, projectName, NsPrefix, NsURI, ecoreFileName, genmodelFileName);
         transformUMLetFile();
+        LOG.info("Transformation complete.");
     }
 
     private void transformUMLetFile() throws MojoExecutionException, MojoFailureException {
@@ -84,14 +94,15 @@ public class UMLet2EMFMojo extends AbstractMojo {
             throw new MojoExecutionException("Could not save EcoreModel", e);
         }
 
-        GenModelGenerator genModelGenerator = new GenModelGenerator();
+        CodeGenerationConfig codeGenerationConfig =
+                CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
+        GenModelGenerator genModelGenerator = new GenModelGenerator(codeGenerationConfig);
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreFilePath);
 
         if (genModel == null) {
             throw new MojoExecutionException("Could not generate GenModel");
         }
 
-        genModelGenerator.setBasePackage(genModel, basePackage);
         final Path genmodelFilePath = Path.of(modelDir + File.separator + genmodelFileName);
 
         try {
