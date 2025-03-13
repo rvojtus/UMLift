@@ -2,14 +2,18 @@ package cz.cuni.mff.umlift.plugin.intellij.settings;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.components.JBComboBoxLabel;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Objects;
 
 /**
  * Supports creating and managing a {@link JPanel} for the UI Settings Dialog.
@@ -17,7 +21,8 @@ import javax.swing.*;
  * <p>
  * This class provides UI to specify various settings needed for code generation and transformation.
  * Uses {@link FormBuilder} to build the GUI.
- * Contains default values for all fields. Supports {@link TextFieldWithBrowseButton} for selecting files and directories.
+ * Contains default values for all fields. Supports {@link TextFieldWithBrowseButton} for selecting files and
+ * directories.
  * </p>
  *
  * @see EMFSettings
@@ -35,6 +40,7 @@ public class EMFSettingsComponent {
     // GenModel settings
     private final JBTextField genModelFileNameTextField = new JBTextField();
     private final JBTextField basePackageTextField = new JBTextField();
+    private final ComboBox<GenJDKLevel> genJDKLevelComboBox = new ComboBox<>(GenJDKLevel.values());
 
     // Generation settings
     private final TextFieldWithBrowseButton ecoreGenModelOutputDirBrowse = new TextFieldWithBrowseButton();
@@ -58,6 +64,7 @@ public class EMFSettingsComponent {
                 .addComponent(new JBLabel("GenModel settings"))
                 .addSeparator()
                 .addLabeledComponent(new JBLabel("Package name:"), basePackageTextField, 1, false)
+                .addLabeledComponent(new JBLabel("GenJDK level:"), genJDKLevelComboBox, 1, false)
                 .addLabeledComponent("GenModel file name:", genModelFileNameTextField, 1, false)
                 .addComponent(new JBLabel())
                 .addComponent(new JBLabel("Generation settings"))
@@ -160,5 +167,14 @@ public class EMFSettingsComponent {
 
     public void setGeneratedFilesOutputDir(@NotNull String modelDir) {
         generatedFilesOutputDirBrowseButton.setText(modelDir);
+    }
+
+    @NotNull
+    public GenJDKLevel getGenJDKLevel() {
+        return (GenJDKLevel) Objects.requireNonNull(genJDKLevelComboBox.getSelectedItem());
+    }
+
+    public void setGenJDKLevel(@NotNull GenJDKLevel genJDKLevel) {
+        genJDKLevelComboBox.setSelectedItem(genJDKLevel);
     }
 }

@@ -61,6 +61,7 @@ final class EMFSettingsConfigurable implements Configurable {
                 !emfSettingsComponent.getNsPrefix().equals(state.NsPrefix),
                 !emfSettingsComponent.getEcoreFileName().equals(state.ecoreFileName),
                 !emfSettingsComponent.getBasePackage().equals(state.basePackage),
+                !emfSettingsComponent.getGenJDKLevel().equals(state.genJDKLevel),
                 !emfSettingsComponent.getGenModelFileName().equals(state.genModelFileName),
                 !emfSettingsComponent.getEcoreGenModelDestination().equals(state.ecoreGenModelOutputDir.toString()),
                 !emfSettingsComponent.getGeneratedFilesOutputDir().equals(state.generatedFilesOutputDir)).anyMatch(Boolean::booleanValue);
@@ -85,6 +86,7 @@ final class EMFSettingsConfigurable implements Configurable {
 
         // GenModel
         state.basePackage = emfSettingsComponent.getBasePackage();
+        state.genJDKLevel = emfSettingsComponent.getGenJDKLevel();
         state.genModelFileName = emfSettingsComponent.getGenModelFileName();
 
         // Generation
@@ -106,6 +108,7 @@ final class EMFSettingsConfigurable implements Configurable {
 
         // GenModel
         emfSettingsComponent.setBasePackage(state.basePackage);
+        emfSettingsComponent.setGenJDKLevel(state.genJDKLevel);
         emfSettingsComponent.setGenModelFileName(state.genModelFileName);
 
         // Generation

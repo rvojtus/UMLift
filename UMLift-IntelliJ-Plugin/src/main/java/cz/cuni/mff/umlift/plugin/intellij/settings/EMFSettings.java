@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,9 +46,12 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         // GenModel
         public String genModelFileName = "genmodel";
         public String basePackage = "org.example";
+        public GenJDKLevel genJDKLevel = GenJDKLevel.JDK210_LITERAL;
         // Generation
         public Path ecoreGenModelOutputDir = Path.of("src/main/resources/EMFModels");
         public String generatedFilesOutputDir = "src/main/java";
+        // Maven POM
+
     }
 
     private State myState = new State();
