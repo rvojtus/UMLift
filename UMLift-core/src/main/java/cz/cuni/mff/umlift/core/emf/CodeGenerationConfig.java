@@ -1,9 +1,12 @@
 package cz.cuni.mff.umlift.core.emf;
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
+
 import java.nio.file.Path;
 
 /**
- * Represents configuration for code generation. Is used in {@link ModelToCodeGenerator#generateCodeFromUMLetFile(CodeGenerationConfig)}.<br>
+ * Represents configuration for code generation. Is used in
+ * {@link ModelToCodeGenerator#generateCodeFromUMLetFile(Path)}.<br>
  * Contains information about:
  * <ul>
  *     <li>UMLet file to be processed</li>
@@ -27,6 +30,7 @@ import java.nio.file.Path;
  *     .setProjectNsPrefix("exampleProjectNsPrefix")
  *     .setProjectNsURI("exampleProjectNsURI")
  *     .setBasePackage("com.example")
+ *     .setGenJDKLevel(GenJDKLevel.JDK210_LITERAL)
  *     .build();
  * Diagnostic diagnostic = generator.generateCodeFromUMLetFile(config);
  *}
@@ -44,6 +48,7 @@ public class CodeGenerationConfig {
     private String projectNsPrefix;
     private String projectNsURI;
     private String basePackage;
+    private GenJDKLevel genJDKLevel;
 
     private String ecoreFileName;
     private String genModelFileName;
@@ -167,6 +172,15 @@ public class CodeGenerationConfig {
 
     public CodeGenerationConfig setBasePackage(String basePackage) {
         this.basePackage = basePackage;
+        return this;
+    }
+
+    public GenJDKLevel getGenJDKLevel() {
+        return genJDKLevel;
+    }
+
+    public CodeGenerationConfig setGenJDKLevel(GenJDKLevel genJDKLevel) {
+        this.genJDKLevel = genJDKLevel;
         return this;
     }
 }
