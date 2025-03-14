@@ -11,7 +11,6 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 import cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -95,9 +94,8 @@ public class GenerateCodeContextMenuAction extends AnAction {
      */
     private void generateCode(Project project, VirtualFile file) throws IOException {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
-        CodeGenerationConfig codeGenerationConfig =
-                CodeGenerationConfig.getInstance().setGenJDKLevel(state.genJDKLevel).setBasePackage(state.basePackage);
-        ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
+        populateCodeGenConfig(project, "");
+        ModelToCodeGenerator generator = new ModelToCodeGenerator();
         String outputDir = state.generatedFilesOutputDir;
         if (!outputDir.startsWith("/")) {
             outputDir = project.getBasePath() + File.separator + outputDir;
@@ -108,7 +106,7 @@ public class GenerateCodeContextMenuAction extends AnAction {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 generateCode(progressIndicator);
-                ContextUtils.createPom(project, state);
+                ContextUtils.createPom(project);
             }
 
             private void generateCode(@NotNull ProgressIndicator progressIndicator) {

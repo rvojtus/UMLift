@@ -43,13 +43,9 @@ import static cz.cuni.mff.umlift.core.emf.HelperUtil.saveGenModel;
 public class ModelToCodeGenerator {
     private static final Logger LOG = Logger.getLogger(ModelToCodeGenerator.class.getName());
 
-    private final CodeGenerationConfig codeGenerationConfig;
+    private final CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance();
 
-    /**
-     * @param codeGenerationConfig represent a configuration, see {@link CodeGenerationConfig} for details
-     */
-    public ModelToCodeGenerator(CodeGenerationConfig codeGenerationConfig) {
-        this.codeGenerationConfig = codeGenerationConfig;
+    public ModelToCodeGenerator() {
     }
 
     /**
@@ -75,7 +71,7 @@ public class ModelToCodeGenerator {
         Files.createDirectories(codeGenerationConfig.getOutputEcoreFile().getParent());
 
         // Generate the GenModel based on the Ecore model
-        GenModelGenerator genModelGenerator = new GenModelGenerator(codeGenerationConfig);
+        GenModelGenerator genModelGenerator = new GenModelGenerator();
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreOutPath);
 
         // Save the generated GenModel to the specified Path
@@ -114,7 +110,7 @@ public class ModelToCodeGenerator {
         );
 
         // Generate the GenModel based on the Ecore model
-        GenModelGenerator genModelGenerator = new GenModelGenerator(codeGenerationConfig);
+        GenModelGenerator genModelGenerator = new GenModelGenerator();
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(inputEcorePath);
 
         // Save the generated GenModel to the resources

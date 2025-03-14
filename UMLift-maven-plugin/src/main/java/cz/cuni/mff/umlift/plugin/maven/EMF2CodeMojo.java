@@ -56,9 +56,8 @@ public class EMF2CodeMojo extends AbstractMojo {
     }
 
     private void generateCode() throws MojoExecutionException, MojoFailureException {
-        CodeGenerationConfig codeGenerationConfig =
-                CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
-        ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
+        CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
+        ModelToCodeGenerator generator = new ModelToCodeGenerator();
 
         PrintStream originalStream = System.out;
         // Silence STDOUT, to not see output of Code Generation's EMF Generator

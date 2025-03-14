@@ -13,15 +13,11 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
-import cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Path;
-import java.util.Objects;
 
 import static cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings.UMLET_FILE_SUFFIX;
 import static cz.cuni.mff.umlift.plugin.intellij.contextmenu.ContextUtils.*;
@@ -43,7 +39,7 @@ public class UMLet2CodeContextMenuAction extends AnAction {
 
 
         if (file != null && project != null) {
-            generateCode(project, file.getPath(), project.getBasePath());
+            generateCode(project, file.getPath());
         } else {
             Messages.showMessageDialog(event.getProject(), "File not found", "Error", Messages.getInformationIcon());
         }
@@ -62,21 +58,8 @@ public class UMLet2CodeContextMenuAction extends AnAction {
         return ActionUpdateThread.BGT;
     }
 
-    private void generateCode(@NotNull Project project, String inputUMLetFile, String projectDir) {
-        EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
+    private void generateCode(@NotNull Project project, String inputUMLetFile) {
 
-        Path ecoreGenModelOutputDir = state.ecoreGenModelOutputDir;
-        if (!ecoreGenModelOutputDir.startsWith("/")) {
-            ecoreGenModelOutputDir = Path.of(projectDir + File.separator + ecoreGenModelOutputDir);
-        }
-        final Path finalEcoreGenModelOutputDir = ecoreGenModelOutputDir;
-
-        String outputDir = state.generatedFilesOutputDir;
-        if (!outputDir.startsWith("/")) {
-            outputDir = project.getBasePath() + File.separator + outputDir;
-        }
-
-        final Path finalOutputDir = Path.of(outputDir);
 
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "Generating code for UXF file...", false) {
             @Override
@@ -89,20 +72,20 @@ public class UMLet2CodeContextMenuAction extends AnAction {
                 // Redirect STDOUT to ProgressOutputStream
                 System.setOut(new PrintStream(new ProgressOutputStream(progressIndicator)));
 
-                final CodeGenerationConfig codeGenerationConfig = getCodeGenerationConfig();
-                ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
+                populateCodeGenConfig(project, inputUMLetFile);
+                ModelToCodeGenerator generator = new ModelToCodeGenerator();
 
-                runCodeGeneration(progressIndicator, generator, codeGenerationConfig, originalStream);
-                ContextUtils.createPom(project, state);
+                runCodeGeneration(progressIndicator, generator, originalStream);
+                ContextUtils.createPom(project);
             }
 
             private void runCodeGeneration(@NotNull ProgressIndicator progressIndicator,
-                                           ModelToCodeGenerator generator, CodeGenerationConfig codeGenerationConfig,
+                                           ModelToCodeGenerator generator,
                                            PrintStream originalStream) {
                 // Run code generation
                 try {
                     Diagnostic diagnostic =
-                            generator.generateCodeFromUMLetFile(codeGenerationConfig.getInputUMLetFile());
+                            generator.generateCodeFromUMLetFile(CodeGenerationConfig.getInstance().getInputUMLetFile());
                     if (diagnostic.getSeverity() == Diagnostic.OK) {
                         LOG.info("Generated code for UXF file: " + inputUMLetFile);
                         notifySuccess(project, "Successfully generated code for UXF file: " + inputUMLetFile);
@@ -118,21 +101,6 @@ public class UMLet2CodeContextMenuAction extends AnAction {
                     progressIndicator.setIndeterminate(false);
                     refreshFiles();
                 }
-            }
-
-            private CodeGenerationConfig getCodeGenerationConfig() {
-                // Setup configuration for code generation
-                return CodeGenerationConfig.getInstance()
-                        .setInputUMLetFile(Path.of(inputUMLetFile))
-                        .setGeneratedFilesDir(finalOutputDir)
-                        .setOutputEcoreFile(Path.of(finalEcoreGenModelOutputDir + File.separator + state.ecoreFileName))
-                        .setOutputGenModelFile(Path.of(finalEcoreGenModelOutputDir + File.separator + state.genModelFileName))
-                        .setProjectName(state.projectName)
-                        .setProjectNsPrefix(state.NsPrefix)
-                        .setProjectNsURI(state.NsURI)
-                        .setBasePackage(state.basePackage)
-                        .setGenJDKLevel(state.genJDKLevel)
-                        .build();
             }
         });
     }

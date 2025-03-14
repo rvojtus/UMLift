@@ -152,6 +152,7 @@ public class ConfigDialog extends JDialog {
         prefs.put("ecoreGenModelOutputDir", ecoreGenModelOutputDirFileChooser.getSelectedDirectory());
         prefs.put("generatedFilesOutputDir", generatedFilesOutputDirFileChooser.getSelectedDirectory());
 
+        populateCodeGenConfig();
         JOptionPane.showMessageDialog(this, "Configuration saved.");
         dispose();
     }
@@ -170,11 +171,11 @@ public class ConfigDialog extends JDialog {
         ecoreGenModelOutputDirFileChooser.setSelectedDirectory(prefs.get("ecoreGenModelOutputDir", "src/main/java" +
                 "/resources/"));
         generatedFilesOutputDirFileChooser.setSelectedDirectory(prefs.get("generatedFilesOutputDir", "src/main/java"));
+        populateCodeGenConfig();
     }
 
-    public CodeGenerationConfig getCodeGenerationConfig() {
-
-        return CodeGenerationConfig.getInstance()
+    public void populateCodeGenConfig() {
+        CodeGenerationConfig.getInstance()
                 .setProjectName(projectNameTextField.getText())
                 .setProjectNsURI(nsURITextField.getText())
                 .setProjectNsPrefix(nsPrefixTextField.getText())
@@ -185,8 +186,7 @@ public class ConfigDialog extends JDialog {
                 .setEcoreGenModelDir(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory()))
                 .setGeneratedFilesDir(Path.of(generatedFilesOutputDirFileChooser.getSelectedDirectory()))
                 .setOutputEcoreFile(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory() + File.separator + ecoreFileNameTextField.getText()))
-                .setOutputGenModelFile(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory() + File.separator + genModelFileNameTextField.getText()))
-                .build();
+                .setOutputGenModelFile(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory() + File.separator + genModelFileNameTextField.getText()));
     }
 
 }

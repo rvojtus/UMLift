@@ -1,12 +1,15 @@
 package cz.cuni.mff.umlift.core.pom;
 
+import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -17,20 +20,28 @@ import java.util.logging.Logger;
  */
 public class PomGenerator {
     private static final Logger LOG = Logger.getLogger(PomGenerator.class.getName());
-    private final PomConfiguration config;
+    private final PomConfiguration pomConfig;
+    private final CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance();
 
     private String mavenCompilerPluginVersion = "3.14.0";
 
-    public PomGenerator(PomConfiguration config) {
-        this.config = config;
+    public PomGenerator(PomConfiguration pomConfig) {
+        this.pomConfig = pomConfig;
     }
 
     public Model createPom() {
         Model model = new Model();
         setUpModel(model);
         setUpModelProperties(model);
-        addCompilerPlugin(model);
         addDependency(model, "org.eclipse.emf", "org.eclipse.emf.ecore", "2.38.0");
+
+        // Create Plugins
+        Plugin compilerPlugin = getCompilerPlugin();
+        Plugin umliftPlugin = getUMLiftMavenPlugin();
+
+        Build build = new Build();
+        build.setPlugins(List.of(compilerPlugin, umliftPlugin));
+        model.setBuild(build);
 
         return model;
     }
@@ -82,23 +93,86 @@ public class PomGenerator {
         return model;
     }
 
+    private Plugin getUMLiftMavenPlugin() {
+        Plugin plugin = new Plugin();
+
+        plugin.setGroupId("cz.cuni.mff");
+        plugin.setArtifactId("UMLift-maven-plugin");
+        plugin.setVersion("1.0-SNAPSHOT");
+
+        PluginExecution emfFromUMLetExecution = getEmfFromUMLetExecution();
+
+        plugin.setExecutions(Collections.singletonList(emfFromUMLetExecution));
+
+        return plugin;
+    }
+
+    private PluginExecution getEmfFromUMLetExecution() {
+        PluginExecution execution = new PluginExecution();
+        execution.setId("emf-from-umlet");
+        //execution.setPhase("compile");
+        execution.getGoals().add("generate-emf-from-umlet");
+
+        Xpp3Dom configuration = new Xpp3Dom("configuration");
+
+        Xpp3Dom modelDir = new Xpp3Dom("modelDir");
+        modelDir.setValue(codeGenerationConfig.getEcoreGenModelDir().toString());
+
+        Xpp3Dom umletFile = new Xpp3Dom("umletFile");
+        umletFile.setValue(codeGenerationConfig.getInputUMLetFile().toString());
+
+        Xpp3Dom projectName = new Xpp3Dom("projectName");
+        projectName.setValue(codeGenerationConfig.getProjectName());
+
+        Xpp3Dom NsPrefix = new Xpp3Dom("NsPrefix");
+        NsPrefix.setValue(codeGenerationConfig.getProjectNsPrefix());
+
+        Xpp3Dom NsURI = new Xpp3Dom("NsURI");
+        NsURI.setValue(codeGenerationConfig.getProjectNsURI());
+
+        Xpp3Dom ecoreFileName = new Xpp3Dom("ecoreFileName");
+        ecoreFileName.setValue(codeGenerationConfig.getEcoreFileName());
+
+        Xpp3Dom genModelFileName = new Xpp3Dom("genModelFileName");
+        genModelFileName.setValue(codeGenerationConfig.getGenModelFileName());
+
+        Xpp3Dom basePackage = new Xpp3Dom("basePackage");
+        basePackage.setValue(codeGenerationConfig.getBasePackage());
+
+        Xpp3Dom genJDKLevel = new Xpp3Dom("genJDKLevel");
+        genJDKLevel.setValue(codeGenerationConfig.getGenJDKLevel().toString());
+
+        configuration.addChild(modelDir);
+        configuration.addChild(umletFile);
+        configuration.addChild(projectName);
+        configuration.addChild(NsPrefix);
+        configuration.addChild(NsURI);
+        configuration.addChild(ecoreFileName);
+        configuration.addChild(genModelFileName);
+        configuration.addChild(basePackage);
+        configuration.addChild(genJDKLevel);
+
+        execution.setConfiguration(configuration);
+        return execution;
+    }
+
     private void setUpModel(Model model) {
-        model.setModelVersion(config.modelVersion());
-        model.setGroupId(config.groupId());
-        model.setArtifactId(config.artifactId());
-        model.setVersion(config.version());
-        model.setPackaging(config.packaging().getValue());
+        model.setModelVersion(pomConfig.modelVersion());
+        model.setGroupId(pomConfig.groupId());
+        model.setArtifactId(pomConfig.artifactId());
+        model.setVersion(pomConfig.version());
+        model.setPackaging(pomConfig.packaging().getValue());
 
     }
 
     private void setUpModelProperties(Model model) {
         Properties properties = new Properties();
         properties.setProperty("project.build.sourceEncoding", "UTF-8");
-        properties.setProperty("maven.compiler.release", config.genJDKLevel().getLiteral().split("\\.")[0]);
+        properties.setProperty("maven.compiler.release", pomConfig.genJDKLevel().getLiteral().split("\\.")[0]);
         model.setProperties(properties);
     }
 
-    private void addCompilerPlugin(Model model) {
+    private Plugin getCompilerPlugin() {
         Plugin plugin = new Plugin();
         plugin.setGroupId("org.apache.maven.plugins");
         plugin.setArtifactId("maven-compiler-plugin");
@@ -109,9 +183,7 @@ public class PomGenerator {
         execution.setGoals(Collections.singletonList("compile"));
         plugin.setExecutions(Collections.singletonList(execution));
 
-        Build build = new Build();
-        build.setPlugins(Collections.singletonList(plugin));
-        model.setBuild(build);
+        return plugin;
     }
 
     private void saveModel(Model model, File outputFile) throws IOException {

@@ -38,6 +38,9 @@ import java.nio.file.Path;
  * @since 1.0
  */
 public class CodeGenerationConfig {
+    private static final CodeGenerationConfig INSTANCE = new CodeGenerationConfig();
+
+
     private Path inputUMLetFile;
     private Path outputEcoreFile;
     private Path outputGenModelFile;
@@ -58,7 +61,7 @@ public class CodeGenerationConfig {
     }
 
     public static CodeGenerationConfig getInstance() {
-        return new CodeGenerationConfig();
+        return INSTANCE;
     }
 
     public CodeGenerationConfig setInputUMLetFile(Path inputUMLetFile) {
@@ -140,21 +143,6 @@ public class CodeGenerationConfig {
 
     public String getGenModelFileName() {
         return genModelFileName;
-    }
-
-    /**
-     * Validates setting of required fields and returns an instance of {@link CodeGenerationConfig}.
-     *
-     * @return An instance of {@link CodeGenerationConfig} if all required fields have been set
-     * @throws IllegalStateException If not all required fields have been set
-     */
-    public CodeGenerationConfig build() throws IllegalStateException {
-        /*
-        if (inputUMLetFile == null || outputEcoreFile == null || outputGenModelFile == null) {
-            throw new IllegalStateException("Code Generation Config incomplete.");
-        }
-         */
-        return this;
     }
 
     public Path getEcoreGenModelDir() {

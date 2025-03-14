@@ -74,7 +74,7 @@ public class UMLet2CodeMojo extends AbstractMojo {
     }
 
     private void generateCode() throws MojoExecutionException, MojoFailureException {
-        CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance()
+        CodeGenerationConfig.getInstance()
                 .setInputUMLetFile(Path.of(inputUMLetFile))
                 .setGeneratedFilesDir(Path.of(outputDir))
                 .setOutputEcoreFile(Path.of(modelDir + ecoreFileName))
@@ -83,8 +83,7 @@ public class UMLet2CodeMojo extends AbstractMojo {
                 .setProjectNsPrefix(NsPrefix)
                 .setProjectNsURI(NsURI)
                 .setBasePackage(basePackage)
-                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel))
-                .build();
+                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel));
 
 
         PrintStream originalStream = System.out;
@@ -92,7 +91,7 @@ public class UMLet2CodeMojo extends AbstractMojo {
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 
         // Run code generation
-        ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
+        ModelToCodeGenerator generator = new ModelToCodeGenerator();
         try {
             Diagnostic diagnostic = generator.generateCodeFromUMLetFile(Path.of(inputUMLetFile));
             if (diagnostic.getSeverity() == Diagnostic.ERROR) {

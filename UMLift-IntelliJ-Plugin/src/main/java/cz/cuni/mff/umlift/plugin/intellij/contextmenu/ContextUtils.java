@@ -6,6 +6,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.pom.MavenPackaging;
 import cz.cuni.mff.umlift.core.pom.PomConfiguration;
 import cz.cuni.mff.umlift.core.pom.PomGenerator;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class ContextUtils {
@@ -61,12 +63,13 @@ public class ContextUtils {
         generator.savePom(model, outputFile);
     }
 
-    static void createPom(@NotNull Project project, @NotNull EMFSettings.State state) {
+    static void createPom(@NotNull Project project) {
         try {
             File pomFile = new File(Objects.requireNonNull(project.getBasePath()) + File.separator + "pom.xml");
-            PomConfiguration pomConfig = new PomConfiguration("4.0.0", state.basePackage,
-                    state.projectName,
-                    "1.0.0", MavenPackaging.POM, state.genJDKLevel);
+            PomConfiguration pomConfig = new PomConfiguration("4.0.0",
+                    CodeGenerationConfig.getInstance().getBasePackage(),
+                    CodeGenerationConfig.getInstance().getProjectName(),
+                    "1.0.0", MavenPackaging.POM, CodeGenerationConfig.getInstance().getGenJDKLevel());
             ContextUtils.generatePom(pomFile, pomConfig);
             LOG.info("Generated POM for Project " + project.getBasePath());
             notifySuccess(project, "Successfully created POM for Project " + project.getBasePath());
@@ -74,5 +77,37 @@ public class ContextUtils {
             LOG.error("Error saving POM to: " + project.getBasePath(), e);
             notifyFailure(project, "Failed to create POM for Project " + project);
         }
+    }
+
+    static void populateCodeGenConfig(@NotNull Project project,
+                                      String inputUMLetFile) {
+        EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
+
+        Path ecoreGenModelOutputDir = state.ecoreGenModelOutputDir;
+        if (!ecoreGenModelOutputDir.startsWith("/")) {
+            ecoreGenModelOutputDir = Path.of(project.getBasePath() + File.separator + ecoreGenModelOutputDir);
+        }
+        final Path finalEcoreGenModelOutputDir = ecoreGenModelOutputDir;
+
+        String outputDir = state.generatedFilesOutputDir;
+        if (!outputDir.startsWith("/")) {
+            outputDir = project.getBasePath() + File.separator + outputDir;
+        }
+
+        final Path finalOutputDir = Path.of(outputDir);
+        // Setup configuration for code generation
+        CodeGenerationConfig.getInstance()
+                .setInputUMLetFile(Path.of(inputUMLetFile))
+                .setGeneratedFilesDir(finalOutputDir)
+                .setEcoreGenModelDir(finalEcoreGenModelOutputDir)
+                .setOutputEcoreFile(Path.of(finalEcoreGenModelOutputDir + File.separator + state.ecoreFileName))
+                .setOutputGenModelFile(Path.of(finalEcoreGenModelOutputDir + File.separator + state.genModelFileName))
+                .setEcoreFileName(state.ecoreFileName)
+                .setGenModelFileName(state.genModelFileName)
+                .setProjectName(state.projectName)
+                .setProjectNsPrefix(state.NsPrefix)
+                .setProjectNsURI(state.NsURI)
+                .setBasePackage(state.basePackage)
+                .setGenJDKLevel(state.genJDKLevel);
     }
 }

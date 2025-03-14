@@ -28,17 +28,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GenModelGeneratorTest {
     private GenModelGenerator genModelGenerator;
     private static Path tmpDir;
-    private static CodeGenerationConfig config;
+    private static final CodeGenerationConfig config = CodeGenerationConfig.getInstance();
 
     @BeforeAll
     static void setUpBeforeAll() throws IOException {
         tmpDir = Files.createTempDirectory("testing");
-        config = CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.JDK210_LITERAL).build();
+        config.setGenJDKLevel(GenJDKLevel.JDK210_LITERAL);
     }
 
     @BeforeEach
     void setUpBeforeEach() {
-        genModelGenerator = new GenModelGenerator(config);
+        genModelGenerator = new GenModelGenerator();
     }
 
 
@@ -93,7 +93,7 @@ public class GenModelGeneratorTest {
 
         // Validate existence of Ecore file
         assertTrue(file.exists(), "Ecore: " + file.getAbsolutePath() + " does not exist");
-        
+
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(file.toPath());
 
         assertNotNull(genModel, "GenModel should not be null");

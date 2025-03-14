@@ -26,16 +26,15 @@ public class GenModelGenerator {
     private static final Logger LOG = Logger.getLogger(GenModelGenerator.class.getName());
 
     private ResourceSet resourceSet;
-    private final CodeGenerationConfig codeGenerationConfig;
+    private final CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance();
 
     /**
      * Initializes a new {@link GenModelGenerator} instance and sets up the resource set.
      *
      * <p>This constructor initializes the {@link ResourceSet} used to load Ecore models.</p>
      */
-    public GenModelGenerator(CodeGenerationConfig codeGenerationConfig) {
+    public GenModelGenerator() {
         initializeResourceSet();
-        this.codeGenerationConfig = codeGenerationConfig;
     }
 
     /**

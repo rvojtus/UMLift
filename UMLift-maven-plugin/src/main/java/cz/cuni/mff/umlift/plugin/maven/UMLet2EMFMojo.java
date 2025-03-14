@@ -35,14 +35,14 @@ import java.nio.file.Path;
 public class UMLet2EMFMojo extends AbstractMojo {
     private static final Logger LOG = LoggerFactory.getLogger(UMLet2EMFMojo.class);
 
-    @Parameter(defaultValue = "${project}", required = true, readonly = true)
+    @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
     @Parameter(property = "modelDir", defaultValue = "resources/")
     private String modelDir;
 
     @Parameter(property = "umletFile", required = true, readonly = true)
-    private String inputUMLetFile;
+    private String umletFile;
 
     @Parameter(property = "projectName", defaultValue = "exampleProjectName")
     private String projectName;
@@ -56,22 +56,23 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(property = "ecoreFileName", defaultValue = "ecore")
     private String ecoreFileName;
 
-    @Parameter(property = "genmodelFileName", defaultValue = "genmodel")
-    private String genmodelFileName;
+    @Parameter(property = "genModelFileName", defaultValue = "genmodel")
+    private String genModelFileName;
 
-    @Parameter(property = "package", defaultValue = "org.example")
+    @Parameter(property = "basePackage", defaultValue = "org.example")
     private String basePackage;
 
-    @Parameter(property = "jdkLevel", defaultValue = "17") // GenJDKLevel.JDK210
+    @Parameter(property = "genJDKLevel", defaultValue = "17") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        LOG.info("Transforming {}...\n" +
-                        "Model Directory: {}\n" +
-                        "Project Name: {}, NsPrefix: {}, NsURI: {}\n" +
-                        "Ecore File " + "Name: {}, GenModel File Name: {}",
-                inputUMLetFile, modelDir, projectName, NsPrefix, NsURI, ecoreFileName, genmodelFileName);
+        LOG.info("""
+                        Transforming {}...
+                        Model Directory: {}
+                        Project Name: {}, NsPrefix: {}, NsURI: {}
+                        Ecore File Name: {}, GenModel File Name: {}""",
+                umletFile, modelDir, projectName, NsPrefix, NsURI, ecoreFileName, genModelFileName);
         transformUMLetFile();
         LOG.info("Transformation complete.");
     }
@@ -83,9 +84,9 @@ public class UMLet2EMFMojo extends AbstractMojo {
                 .setEPackageNsURI(NsURI)
                 .build();
 
-        EPackage ePackage = transformer.transform(Path.of(inputUMLetFile));
+        EPackage ePackage = transformer.transform(Path.of(umletFile));
         if (ePackage == null) {
-            throw new MojoExecutionException("Could not transform UMLet file: " + inputUMLetFile);
+            throw new MojoExecutionException("Could not transform UMLet file: " + umletFile);
         }
         final Path ecoreFilePath = Path.of(modelDir + File.separator + ecoreFileName);
         try {
@@ -93,17 +94,16 @@ public class UMLet2EMFMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException("Could not save EcoreModel", e);
         }
-
-        CodeGenerationConfig codeGenerationConfig =
-                CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
-        GenModelGenerator genModelGenerator = new GenModelGenerator(codeGenerationConfig);
+        
+        CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
+        GenModelGenerator genModelGenerator = new GenModelGenerator();
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreFilePath);
 
         if (genModel == null) {
             throw new MojoExecutionException("Could not generate GenModel");
         }
 
-        final Path genmodelFilePath = Path.of(modelDir + File.separator + genmodelFileName);
+        final Path genmodelFilePath = Path.of(modelDir + File.separator + genModelFileName);
 
         try {
             HelperUtil.saveGenModel(genModel, genmodelFilePath);

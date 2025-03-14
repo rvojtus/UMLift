@@ -30,15 +30,14 @@ public class ModelToCodeGeneratorTest {
     @BeforeEach
     void setUp() throws IOException {
         tmpDir = Files.createTempDirectory("testing");
-        CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance()
+        CodeGenerationConfig.getInstance()
                 .setGeneratedFilesDir(tmpDir)
                 .setOutputEcoreFile(Path.of(tmpDir.toString() + "/ecore.ecore"))
                 .setOutputGenModelFile(Path.of(tmpDir.toString() + "/genmodel.genmodel"))
                 .setProjectName(projectName)
                 .setProjectNsPrefix(projectNsPrefix)
-                .setProjectNsURI(projectNsUri)
-                .build();
-        generator = new ModelToCodeGenerator(codeGenerationConfig);
+                .setProjectNsURI(projectNsUri);
+        generator = new ModelToCodeGenerator();
     }
 
     @AfterEach
