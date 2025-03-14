@@ -11,6 +11,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 import cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -84,16 +85,19 @@ public class GenerateCodeContextMenuAction extends AnAction {
     }
 
     /**
-     * Generates code using {@link ModelToCodeGenerator}. Uses {@link ProgressIndicator} to show progress of the generation.
+     * Generates code using {@link ModelToCodeGenerator}. Uses {@link ProgressIndicator} to show progress of the
+     * generation.
      *
      * @param project the current project context
      * @param file    the file to generate code from
      * @throws IOException if there is any file I/O related problem
-     * @see ModelToCodeGenerator#generateCodeFromEcore(Path, Path, String) for details about the generation
+     * @see ModelToCodeGenerator#generateCodeFromEcore(Path, Path) for details about the generation
      */
     private void generateCode(Project project, VirtualFile file) throws IOException {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
-        ModelToCodeGenerator generator = new ModelToCodeGenerator();
+        CodeGenerationConfig codeGenerationConfig =
+                CodeGenerationConfig.getInstance().setGenJDKLevel(state.genJDKLevel).setBasePackage(state.basePackage);
+        ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
         String outputDir = state.generatedFilesOutputDir;
         if (!outputDir.startsWith("/")) {
             outputDir = project.getBasePath() + File.separator + outputDir;
@@ -103,13 +107,19 @@ public class GenerateCodeContextMenuAction extends AnAction {
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "Generating code from Ecore file...", true) {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
+                generateCode(progressIndicator);
+                ContextUtils.createPom(project, state);
+            }
+
+            private void generateCode(@NotNull ProgressIndicator progressIndicator) {
                 PrintStream originalStream = System.out;
                 progressIndicator.setIndeterminate(true);
                 progressIndicator.setText("Generating code from Ecore file...");
                 try {
-                    PrintStream printStream = new PrintStream(new ContextUtils.ProgressOutputStream(progressIndicator));
+                    PrintStream printStream = new PrintStream(new ProgressOutputStream(progressIndicator));
                     System.setOut(printStream);
-                    Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(file.getPath()), Path.of(finalOutputDir), state.basePackage);
+                    Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(file.getPath()),
+                            Path.of(finalOutputDir));
 
                     if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                         LOG.error("Error when generating code from Ecore file: " + diagnostic);

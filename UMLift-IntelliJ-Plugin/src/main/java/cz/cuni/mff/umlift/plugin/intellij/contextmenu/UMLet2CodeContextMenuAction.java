@@ -84,21 +84,25 @@ public class UMLet2CodeContextMenuAction extends AnAction {
                 progressIndicator.setIndeterminate(true);
                 progressIndicator.setText("Generating code for UXF file:" + inputUMLetFile);
 
-                ModelToCodeGenerator generator = new ModelToCodeGenerator();
 
                 PrintStream originalStream = System.out;
                 // Redirect STDOUT to ProgressOutputStream
                 System.setOut(new PrintStream(new ProgressOutputStream(progressIndicator)));
 
                 final CodeGenerationConfig codeGenerationConfig = getCodeGenerationConfig();
+                ModelToCodeGenerator generator = new ModelToCodeGenerator(codeGenerationConfig);
 
                 runCodeGeneration(progressIndicator, generator, codeGenerationConfig, originalStream);
+                ContextUtils.createPom(project, state);
             }
 
-            private void runCodeGeneration(@NotNull ProgressIndicator progressIndicator, ModelToCodeGenerator generator, CodeGenerationConfig codeGenerationConfig, PrintStream originalStream) {
+            private void runCodeGeneration(@NotNull ProgressIndicator progressIndicator,
+                                           ModelToCodeGenerator generator, CodeGenerationConfig codeGenerationConfig,
+                                           PrintStream originalStream) {
                 // Run code generation
                 try {
-                    Diagnostic diagnostic = generator.generateCodeFromUMLetFile(codeGenerationConfig);
+                    Diagnostic diagnostic =
+                            generator.generateCodeFromUMLetFile(codeGenerationConfig.getInputUMLetFile());
                     if (diagnostic.getSeverity() == Diagnostic.OK) {
                         LOG.info("Generated code for UXF file: " + inputUMLetFile);
                         notifySuccess(project, "Successfully generated code for UXF file: " + inputUMLetFile);
@@ -127,6 +131,7 @@ public class UMLet2CodeContextMenuAction extends AnAction {
                         .setProjectNsPrefix(state.NsPrefix)
                         .setProjectNsURI(state.NsURI)
                         .setBasePackage(state.basePackage)
+                        .setGenJDKLevel(state.genJDKLevel)
                         .build();
             }
         });
