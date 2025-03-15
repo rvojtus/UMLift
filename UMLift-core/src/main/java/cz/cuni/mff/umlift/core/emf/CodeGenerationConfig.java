@@ -40,12 +40,12 @@ import java.nio.file.Path;
 public class CodeGenerationConfig {
     private static final CodeGenerationConfig INSTANCE = new CodeGenerationConfig();
 
-
     private Path inputUMLetFile;
     private Path outputEcoreFile;
     private Path outputGenModelFile;
     private Path generatedFilesDir;
     private Path ecoreGenModelDir;
+    private Path projectRootDir;
 
     private String projectName;
     private String projectNsPrefix;
@@ -169,6 +169,15 @@ public class CodeGenerationConfig {
 
     public CodeGenerationConfig setGenJDKLevel(GenJDKLevel genJDKLevel) {
         this.genJDKLevel = genJDKLevel;
+        return this;
+    }
+
+    public Path getProjectRootDir() {
+        return projectRootDir;
+    }
+
+    public CodeGenerationConfig setProjectRootDir(Path projectRootDir) {
+        this.projectRootDir = projectRootDir;
         return this;
     }
 }

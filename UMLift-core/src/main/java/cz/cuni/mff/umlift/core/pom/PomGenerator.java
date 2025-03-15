@@ -50,6 +50,10 @@ public class PomGenerator {
         saveModel(model, outputFile);
     }
 
+    public void createAndSavePom(File outputFile) throws IOException {
+        savePom(createPom(), outputFile);
+    }
+
     public String getMavenCompilerPluginVersion() {
         return mavenCompilerPluginVersion;
     }

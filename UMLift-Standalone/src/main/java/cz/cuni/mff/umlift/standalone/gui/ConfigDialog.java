@@ -6,6 +6,7 @@ import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.prefs.Preferences;
 public class ConfigDialog extends JDialog {
     private static final int DIALOG_WIDTH = 800;
     private static final Preferences prefs = Preferences.userNodeForPackage(ConfigDialog.class);
+    private final Path systemDocumentsPath = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 
     // Ecore
     private final JTextField projectNameTextField;
@@ -37,8 +39,7 @@ public class ConfigDialog extends JDialog {
     private final JTextField genModelFileNameTextField;
 
     // Generation
-    private final DirectoryChooserPanel ecoreGenModelOutputDirFileChooser;
-    private final DirectoryChooserPanel generatedFilesOutputDirFileChooser;
+    private final DirectoryChooserPanel projectRootDirectoryChooser;
 
     public ConfigDialog(Frame owner) {
         super(owner, "Config", true);
@@ -83,15 +84,10 @@ public class ConfigDialog extends JDialog {
         add(genModelFileNameLabel);
         add(genModelFileNameTextField);
 
-        JLabel ecoreGenModelOutputDirLabel = new JLabel("EMF models output directory:");
-        ecoreGenModelOutputDirFileChooser = new DirectoryChooserPanel(null);
-        add(ecoreGenModelOutputDirLabel);
-        add(ecoreGenModelOutputDirFileChooser);
-
-        JLabel generatedFilesOutputDirLabel = new JLabel("Generated files output directory:");
-        generatedFilesOutputDirFileChooser = new DirectoryChooserPanel(null);
-        add(generatedFilesOutputDirLabel);
-        add(generatedFilesOutputDirFileChooser);
+        JLabel projectRootDirectoryLabel = new JLabel("Project root directory:");
+        projectRootDirectoryChooser = new DirectoryChooserPanel(null);
+        add(projectRootDirectoryLabel);
+        add(projectRootDirectoryChooser);
 
         // Empty cell
         add(new JPanel());
@@ -149,8 +145,7 @@ public class ConfigDialog extends JDialog {
         prefs.put("genJDKLevel", Objects.requireNonNull(genJDKLevelComboBox.getSelectedItem()).toString());
         prefs.put("genModelFileName", genModelFileNameTextField.getText());
 
-        prefs.put("ecoreGenModelOutputDir", ecoreGenModelOutputDirFileChooser.getSelectedDirectory());
-        prefs.put("generatedFilesOutputDir", generatedFilesOutputDirFileChooser.getSelectedDirectory());
+        prefs.put("projectRootDirectory", projectRootDirectoryChooser.getSelectedDirectory());
 
         populateCodeGenConfig();
         JOptionPane.showMessageDialog(this, "Configuration saved.");
@@ -158,6 +153,9 @@ public class ConfigDialog extends JDialog {
     }
 
     private void loadConfig() {
+        final Path projectPath =
+                Path.of(systemDocumentsPath + File.separator + "UMLiftProjects" + File.separator + projectNameTextField.getText());
+
         projectNameTextField.setText(prefs.get("projectName", "exampleProject"));
         nsURITextField.setText(prefs.get("nsURI", "exampleNSURI"));
         nsPrefixTextField.setText(prefs.get("nsPrefix", "exampleNSPrefix"));
@@ -167,14 +165,15 @@ public class ConfigDialog extends JDialog {
         genJDKLevelComboBox.setSelectedItem(GenJDKLevel.get(prefs.get("genJDKLevel",
                 GenJDKLevel.JDK210_LITERAL.toString())));
         genModelFileNameTextField.setText(prefs.get("genModelFileName", "genmodel"));
-
-        ecoreGenModelOutputDirFileChooser.setSelectedDirectory(prefs.get("ecoreGenModelOutputDir", "src/main/java" +
-                "/resources/"));
-        generatedFilesOutputDirFileChooser.setSelectedDirectory(prefs.get("generatedFilesOutputDir", "src/main/java"));
+        projectRootDirectoryChooser.setSelectedDirectory(prefs.get("projectRootDirectory", projectPath.toString()));
         populateCodeGenConfig();
     }
 
     public void populateCodeGenConfig() {
+        final Path generatedFilesDir = Path.of(projectRootDirectoryChooser.getSelectedDirectory() + File.separator +
+                "src/main/java");
+        final Path resourcesDir = Path.of(projectRootDirectoryChooser.getSelectedDirectory() + File.separator + "src" +
+                "/main/java/resources/EMFModels");
         CodeGenerationConfig.getInstance()
                 .setProjectName(projectNameTextField.getText())
                 .setProjectNsURI(nsURITextField.getText())
@@ -183,10 +182,11 @@ public class ConfigDialog extends JDialog {
                 .setGenModelFileName(genModelFileNameTextField.getText())
                 .setBasePackage(packageNameTextField.getText())
                 .setGenJDKLevel((GenJDKLevel) genJDKLevelComboBox.getSelectedItem())
-                .setEcoreGenModelDir(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory()))
-                .setGeneratedFilesDir(Path.of(generatedFilesOutputDirFileChooser.getSelectedDirectory()))
-                .setOutputEcoreFile(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory() + File.separator + ecoreFileNameTextField.getText()))
-                .setOutputGenModelFile(Path.of(ecoreGenModelOutputDirFileChooser.getSelectedDirectory() + File.separator + genModelFileNameTextField.getText()));
+                .setEcoreGenModelDir(resourcesDir)
+                .setGeneratedFilesDir(generatedFilesDir)
+                .setOutputEcoreFile(Path.of(resourcesDir + File.separator + ecoreFileNameTextField.getText()))
+                .setOutputGenModelFile(Path.of(resourcesDir + File.separator + genModelFileNameTextField.getText()))
+                .setProjectRootDir(Path.of(projectRootDirectoryChooser.getSelectedDirectory()));
     }
 
 }

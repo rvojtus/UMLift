@@ -2,9 +2,13 @@ package cz.cuni.mff.umlift.standalone;
 
 import com.baselet.gui.CurrentGui;
 import com.baselet.standalone.MainStandalone;
+import cz.cuni.mff.umlift.core.pom.MavenPackaging;
+import cz.cuni.mff.umlift.core.pom.PomConfiguration;
+import cz.cuni.mff.umlift.core.pom.PomGenerator;
 import cz.cuni.mff.umlift.standalone.gui.ConfigDialog;
 import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
+import org.apache.maven.model.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,9 +72,19 @@ public class UMLiftMainStandalone {
                 CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
         final Path inputUMLetFilePath = Path.of(currUMLetFile);
         CodeGenerationConfig.getInstance().setInputUMLetFile(inputUMLetFilePath);
-        // todo maybe make the output dir relative to the dir of the umlet file
+
         try {
             generator.generateCodeFromUMLetFile(inputUMLetFilePath);
+            PomConfiguration pomConfig = new PomConfiguration("4.0.0",
+                    CodeGenerationConfig.getInstance().getBasePackage(),
+                    CodeGenerationConfig.getInstance().getProjectName(),
+                    "1.0.0", MavenPackaging.POM, CodeGenerationConfig.getInstance().getGenJDKLevel());
+            PomGenerator pomGenerator = new PomGenerator(pomConfig);
+            File pomFile =
+                    new File(CodeGenerationConfig.getInstance().getProjectRootDir().toString() + File.separator +
+                            "pom.xml");
+            pomGenerator.createAndSavePom(pomFile);
+
             openDesktop(CodeGenerationConfig.getInstance().getGeneratedFilesDir().toFile());
         } catch (IOException e) {
             displayErrorDialog("Code Generation Error", "An error occurred while generating code from UMLet file.");
