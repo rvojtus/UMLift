@@ -57,6 +57,9 @@
                   fieldName="INSTANCE"
                   language="XML"
                   extensions="genmodel"/>
+        <fileTypeUsageSchemaDescriptor schema="ecore"
+                                       implementationClass="cz.cuni.mff.umlift.plugin.intellij.schemaproviders.EcoreFileTypeUsageSchemaDescriptor"/>
+        <xml.schemaProvider implementation="cz.cuni.mff.umlift.plugin.intellij.schemaproviders.EcoreSchemaProvider"/>
     </extensions>
 
     <applicationListeners>
