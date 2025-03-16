@@ -88,6 +88,35 @@
                     description="Generates Code and Artifacts from EMF Ecore and GenModel files">
             </action>
         </group>
+        <group id="cz.cuni.mff.umlift.plugin.intellij.actions.UMLetActions"
+               text="UMLet Editor Actions"
+               description="Custom actions for UXF files"
+               popup="true">
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.UndoAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.UndoAction"
+                    text="Undo" use-shortcut-of="$Undo"/>
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.RedoAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.RedoAction"
+                    text="Redo" use-shortcut-of="$Redo"/>
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.CopyAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.CopyAction"
+                    text="Copy" use-shortcut-of="$Copy"/>
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.CutAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.CutAction"
+                    text="Cut" use-shortcut-of="$Cut"/>
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.PasteAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.PasteAction"
+                    text="Paste" use-shortcut-of="$Paste"/>
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.DeleteAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.DeleteAction"
+                    text="Delete" use-shortcut-of="$Delete"/>
+            <action id="cz.cuni.mff.umlift.plugin.intellij.actions.GroupAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.actions.GroupAction"
+                    text="Group">
+                <keyboard-shortcut keymap="$default" first-keystroke="control" second-keystroke="G"/>
+            </action>
+        </group>
+
     </actions>
 
 </idea-plugin>
