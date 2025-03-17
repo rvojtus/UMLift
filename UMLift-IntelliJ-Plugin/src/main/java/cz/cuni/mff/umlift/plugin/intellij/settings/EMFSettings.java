@@ -51,7 +51,7 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         public Path ecoreGenModelOutputDir = Path.of("src/main/resources/EMFModels");
         public String generatedFilesOutputDir = "src/main/java";
         // Maven POM
-
+        public boolean generatePom = true;
     }
 
     private State myState = new State();

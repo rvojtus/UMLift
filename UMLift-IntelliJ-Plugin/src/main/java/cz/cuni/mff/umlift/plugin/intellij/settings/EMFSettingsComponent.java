@@ -5,7 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.components.JBComboBoxLabel;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.FormBuilder;
@@ -46,6 +46,9 @@ public class EMFSettingsComponent {
     private final TextFieldWithBrowseButton ecoreGenModelOutputDirBrowse = new TextFieldWithBrowseButton();
     private final TextFieldWithBrowseButton generatedFilesOutputDirBrowseButton = new TextFieldWithBrowseButton();
 
+    // POM settings
+    private final JBCheckBox generatePomCheckBox = new JBCheckBox();
+
     /**
      * Creates a new settings panel using {@link FormBuilder}
      */
@@ -71,6 +74,7 @@ public class EMFSettingsComponent {
                 .addSeparator()
                 .addLabeledComponent("Ecore + GenModel destination:", ecoreGenModelOutputDirBrowse, 1, false)
                 .addLabeledComponent("Generated files output directory:", generatedFilesOutputDirBrowseButton, 1, false)
+                .addLabeledComponent("Generate POM with the Project:", generatePomCheckBox, 1, false)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
     }
@@ -176,5 +180,13 @@ public class EMFSettingsComponent {
 
     public void setGenJDKLevel(@NotNull GenJDKLevel genJDKLevel) {
         genJDKLevelComboBox.setSelectedItem(genJDKLevel);
+    }
+
+    public boolean getGeneratePom() {
+        return generatePomCheckBox.isSelected();
+    }
+
+    public void setGeneratePom(boolean generate) {
+        generatePomCheckBox.setSelected(generate);
     }
 }

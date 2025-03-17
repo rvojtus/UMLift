@@ -64,6 +64,7 @@ final class EMFSettingsConfigurable implements Configurable {
                 !emfSettingsComponent.getGenJDKLevel().equals(state.genJDKLevel),
                 !emfSettingsComponent.getGenModelFileName().equals(state.genModelFileName),
                 !emfSettingsComponent.getEcoreGenModelDestination().equals(state.ecoreGenModelOutputDir.toString()),
+                !(emfSettingsComponent.getGeneratePom() == state.generatePom),
                 !emfSettingsComponent.getGeneratedFilesOutputDir().equals(state.generatedFilesOutputDir)).anyMatch(Boolean::booleanValue);
     }
 
@@ -92,6 +93,9 @@ final class EMFSettingsConfigurable implements Configurable {
         // Generation
         state.ecoreGenModelOutputDir = Path.of(emfSettingsComponent.getEcoreGenModelDestination());
         state.generatedFilesOutputDir = emfSettingsComponent.getGeneratedFilesOutputDir();
+
+        // POM
+        state.generatePom = emfSettingsComponent.getGeneratePom();
     }
 
     /**
@@ -114,6 +118,9 @@ final class EMFSettingsConfigurable implements Configurable {
         // Generation
         emfSettingsComponent.setEcoreGenModelDestination(String.valueOf(state.ecoreGenModelOutputDir));
         emfSettingsComponent.setGeneratedFilesOutputDir(state.generatedFilesOutputDir);
+
+        // POM
+        emfSettingsComponent.setGeneratePom(state.generatePom);
     }
 
     /**
