@@ -113,7 +113,7 @@
             <action id="cz.cuni.mff.umlift.plugin.intellij.actions.GroupAction"
                     class="cz.cuni.mff.umlift.plugin.intellij.actions.GroupAction"
                     text="Group">
-                <keyboard-shortcut keymap="$default" first-keystroke="control" second-keystroke="G"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl G"/>
             </action>
         </group>
 
