@@ -36,8 +36,8 @@ import static cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings.ECORE_FILE
  * @see ModelToCodeGenerator
  * @since 1.0
  */
-public class GenerateCodeContextMenuAction extends AnAction {
-    private static final Logger LOG = Logger.getInstance(GenerateCodeContextMenuAction.class);
+public class EMF2CodeContextMenuAction extends AnAction {
+    private static final Logger LOG = Logger.getInstance(EMF2CodeContextMenuAction.class);
 
     /**
      * Performs the code generation action when user selects it from the context menu.

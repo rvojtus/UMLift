@@ -83,7 +83,7 @@
                     text="Generate Code from UMLet" description="Generates Code and Artifacts from UMLet diagram file">
             </action>
             <action id="GenerateCodeContextMenuAction"
-                    class="cz.cuni.mff.umlift.plugin.intellij.contextmenu.GenerateCodeContextMenuAction"
+                    class="cz.cuni.mff.umlift.plugin.intellij.contextmenu.EMF2CodeContextMenuAction"
                     text="Generate Code from Ecore"
                     description="Generates Code and Artifacts from EMF Ecore and GenModel files">
             </action>

@@ -15,8 +15,9 @@ import java.util.Arrays;
  * </p>
  *
  * @see DefaultActionGroup
- * @see GenerateCodeContextMenuAction
+ * @see EMF2CodeContextMenuAction
  * @see UMLetToEMFContextMenuAction
+ * @see UMLet2CodeContextMenuAction
  */
 public class UMLiftActionGroup extends DefaultActionGroup {
     private final static String[] supportedExtensions = {"uxf", "ecore", "genmodel"};
@@ -25,7 +26,8 @@ public class UMLiftActionGroup extends DefaultActionGroup {
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
 
-        boolean isSupportedFile = file != null && Arrays.stream(supportedExtensions).anyMatch(x -> x.equalsIgnoreCase(file.getExtension()));
+        boolean isSupportedFile =
+                file != null && Arrays.stream(supportedExtensions).anyMatch(x -> x.equalsIgnoreCase(file.getExtension()));
         event.getPresentation().setEnabledAndVisible(isSupportedFile);
     }
 
