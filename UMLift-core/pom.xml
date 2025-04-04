@@ -140,7 +140,7 @@
                             <target>
                                 <copy todir="${settings.localRepository}/cz/cuni/mff/${project.artifactId}/${project.version}/palettes">
                                     <fileset
-                                            dir="../umlet-15.1/umlet-res/src/main/resources/palettes"/>
+                                            dir="src/main/resources/palettes"/>
                                 </copy>
                             </target>
                         </configuration>
