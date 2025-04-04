@@ -14,7 +14,6 @@
     </properties>
 
     <modules>
-        <module>umlet-15.1</module>
         <module>UMLift-core</module>
         <module>UMLift-maven-plugin</module>
         <module>UMLift-Standalone</module>
@@ -59,6 +58,78 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.3.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.4</version>
+                    <inherited>false</inherited>
+                    <executions>
+                        <execution>
+                            <id>install-pom-parent</id>
+                            <goals>
+                                <goal>install-file</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <groupId>com.umlet</groupId>
+                                <artifactId>umlet-parent</artifactId>
+                                <version>15.1</version>
+                                <packaging>pom</packaging>
+                                <file>dependencies/umlet-parent/umlet-parent-15.1.pom</file>
+                                <generatePom>false</generatePom>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>install-jar-standalone</id>
+                            <goals>
+                                <goal>install-file</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <groupId>com.umlet</groupId>
+                                <artifactId>umlet-standalone</artifactId>
+                                <version>15.1</version>
+                                <packaging>jar</packaging>
+                                <file>dependencies/umlet-standalone/umlet-standalone-15.1.jar</file>
+                                <generatePom>false</generatePom>
+                                <pomFile>dependencies/umlet-standalone/umlet-standalone-15.1.pom</pomFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>install-jar-swing</id>
+                            <goals>
+                                <goal>install-file</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <groupId>com.umlet</groupId>
+                                <artifactId>umlet-swing</artifactId>
+                                <version>15.1</version>
+                                <packaging>jar</packaging>
+                                <file>dependencies/umlet-swing/umlet-swing-15.1.jar</file>
+                                <generatePom>false</generatePom>
+                                <pomFile>dependencies/umlet-swing/umlet-swing-15.1.pom</pomFile>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>install-jar-elements</id>
+                            <goals>
+                                <goal>install-file</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <groupId>com.umlet</groupId>
+                                <artifactId>umlet-elements</artifactId>
+                                <version>15.1</version>
+                                <packaging>jar</packaging>
+                                <file>dependencies/umlet-elements/umlet-elements-15.1.jar</file>
+                                <generatePom>false</generatePom>
+                                <pomFile>dependencies/umlet-elements/umlet-elements-15.1.pom</pomFile>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>   <!-- three plugins below to generate documentation (javadoc via mvn javadoc:javadoc) -->

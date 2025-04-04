@@ -12,6 +12,8 @@
 
 # Package Files #
 *.jar
+# Keep JARs of dependencies
+!dependencies/**/*.jar
 *.war
 *.nar
 *.ear
