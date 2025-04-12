@@ -188,14 +188,18 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
      *
      * <p>This method reads the build information using {@link Utils#readBuildInfo()} and initializes
      * the program with the specified version from the build information. The initialization sets the
-     * runtime type to {@link RuntimeType#STANDALONE}.</p>
+     * runtime type to {@link RuntimeType#ECLIPSE_PLUGIN}. It is done due to the inability set the config file. The
+     * {@link RuntimeType#STANDALONE} uses the same config file, so there would be a conflict between these
+     * configurations. If user were to use the standalone version and this plugin, without removing the config file,
+     * the same configuration parameters would be used, which can result in weird glitches, inconsistencies etc.
+     * </p>
      *
      * <p>This process ensures that the program is properly configured with the correct version
      * information at startup.</p>
      */
     private void readBuildInfoAndInitVersion() {
         Utils.BuildInfo buildInfo = Utils.readBuildInfo();
-        Program.init(buildInfo.version, RuntimeType.STANDALONE);
+        Program.init(buildInfo.version, RuntimeType.ECLIPSE_PLUGIN); // to have separate config files
     }
 
     /**
@@ -203,13 +207,15 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
      *
      * <p>This method performs a series of initialization tasks to set up the environment:
      * <ul>
-     *   <li>Reads the build information and initializes the program version via {@link #readBuildInfoAndInitVersion()}.</li>
+     *   <li>Reads the build information and initializes the program version via
+     *   {@link #readBuildInfoAndInitVersion()}.</li>
      *   <li>Initializes the program's home directory path through {@link #initHomeProgramPath()}.</li>
      *   <li>Loads the configuration settings using {@link ConfigHandler#loadConfig()}.</li>
      * </ul>
      * </p>
      *
-     * <p>The method ensures that all essential program components are properly initialized before the program starts.</p>
+     * <p>The method ensures that all essential program components are properly initialized before the program starts
+     * .</p>
      */
     private void initAll() {
         readBuildInfoAndInitVersion();
@@ -340,7 +346,8 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
     private void refreshPalette() {
         if (guiComponents.getPalettePanel().getComponentCount() == 0) {
             for (PaletteHandler paletteHandler : Main.getInstance().getPalettes().values()) {
-                guiComponents.getPalettePanel().add(paletteHandler.getDrawPanel().getScrollPane(), paletteHandler.getName());
+                guiComponents.getPalettePanel().add(paletteHandler.getDrawPanel().getScrollPane(),
+                        paletteHandler.getName());
                 paletteHandler.getDrawPanel().getScrollPane().invalidate();
             }
         }
