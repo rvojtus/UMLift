@@ -8,7 +8,6 @@ import cz.cuni.mff.umlift.core.pom.PomGenerator;
 import cz.cuni.mff.umlift.standalone.gui.ConfigDialog;
 import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
-import org.apache.maven.model.Model;
 
 import javax.swing.*;
 import java.awt.*;
