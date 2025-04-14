@@ -37,10 +37,9 @@ public class PomGenerator {
 
         // Create Plugins
         Plugin compilerPlugin = getCompilerPlugin();
-        Plugin umliftPlugin = getUMLiftMavenPlugin();
 
         Build build = new Build();
-        build.setPlugins(List.of(compilerPlugin, umliftPlugin));
+        build.setPlugins(Collections.singletonList(compilerPlugin));
         model.setBuild(build);
 
         return model;
