@@ -41,7 +41,7 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(property = "modelDir", defaultValue = "resources/")
     private String modelDir;
 
-    @Parameter(property = "umletFile", required = true, readonly = true)
+    @Parameter(property = "umletFile", required = true)
     private String umletFile;
 
     @Parameter(property = "projectName", defaultValue = "exampleProjectName")
@@ -59,10 +59,10 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(property = "genModelFileName", defaultValue = "genmodel")
     private String genModelFileName;
 
-    @Parameter(property = "basePackage", defaultValue = "org.example")
-    private String basePackage;
+    @Parameter(property = "basePackageName", defaultValue = "org.example")
+    private String basePackageName;
 
-    @Parameter(property = "genJDKLevel", defaultValue = "17") // GenJDKLevel.JDK210
+    @Parameter(property = "genJDKLevel", defaultValue = "JDK210") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
     @Override
@@ -94,8 +94,10 @@ public class UMLet2EMFMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException("Could not save EcoreModel", e);
         }
-        
-        CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
+
+        CodeGenerationConfig.getInstance()
+                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel + "_LITERAL"))
+                .setBasePackage(basePackageName);
         GenModelGenerator genModelGenerator = new GenModelGenerator();
         GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreFilePath);
 

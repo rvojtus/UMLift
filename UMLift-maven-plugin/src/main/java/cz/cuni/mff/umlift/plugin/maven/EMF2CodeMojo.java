@@ -39,24 +39,26 @@ public class EMF2CodeMojo extends AbstractMojo {
     @Parameter(property = "outputDir", defaultValue = "src/main/java")
     private String outputDir;
 
-    @Parameter(property = "ecoreFile", required = true, readonly = true)
-    private String inputEcoreFile;
+    @Parameter(property = "ecoreFile", required = true)
+    private String ecoreFile;
 
-    @Parameter(property = "package", defaultValue = "org.example")
-    private String basePackage;
+    @Parameter(property = "basePackageName", defaultValue = "org.example")
+    private String basePackageName;
 
-    @Parameter(property = "jdkLevel", defaultValue = "17") // GenJDKLevel.JDK210
+    @Parameter(property = "genJDKLevel", defaultValue = "JDK210") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        LOG.info("Generating code from Ecore {}", inputEcoreFile);
+        LOG.info("Generating code from Ecore {}", ecoreFile);
         generateCode();
         LOG.info("Generation complete.");
     }
 
     private void generateCode() throws MojoExecutionException, MojoFailureException {
-        CodeGenerationConfig.getInstance().setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel)).setBasePackage(basePackage);
+        CodeGenerationConfig.getInstance()
+                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel + "_LITERAL"))
+                .setBasePackage(basePackageName);
         ModelToCodeGenerator generator = new ModelToCodeGenerator();
 
         PrintStream originalStream = System.out;
@@ -64,10 +66,10 @@ public class EMF2CodeMojo extends AbstractMojo {
         System.setOut(new PrintStream(OutputStream.nullOutputStream()));
 
         try {
-            Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(inputEcoreFile), Path.of(outputDir));
+            Diagnostic diagnostic = generator.generateCodeFromEcore(Path.of(ecoreFile), Path.of(outputDir));
             if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                 throw new MojoFailureException
-                        ("Generation failed for Ecore file: " + inputEcoreFile + "\n" + diagnostic.getMessage());
+                        ("Generation failed for Ecore file: " + ecoreFile + "\n" + diagnostic.getMessage());
             }
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);

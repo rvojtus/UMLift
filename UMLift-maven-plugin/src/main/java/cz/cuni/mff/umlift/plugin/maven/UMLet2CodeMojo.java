@@ -33,7 +33,7 @@ import java.nio.file.Path;
 public class UMLet2CodeMojo extends AbstractMojo {
     private static final Logger LOG = LoggerFactory.getLogger(UMLet2CodeMojo.class);
 
-    @Parameter(defaultValue = "${project}", required = true, readonly = true)
+    @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
     @Parameter(property = "outputDir", defaultValue = "src-gen/")
@@ -42,8 +42,8 @@ public class UMLet2CodeMojo extends AbstractMojo {
     @Parameter(property = "modelDir", defaultValue = "resources/")
     private String modelDir;
 
-    @Parameter(property = "umletFile", required = true, readonly = true)
-    private String inputUMLetFile;
+    @Parameter(property = "umletFile", required = true)
+    private String umletFile;
 
     @Parameter(property = "projectName", defaultValue = "exampleProjectName")
     private String projectName;
@@ -60,30 +60,30 @@ public class UMLet2CodeMojo extends AbstractMojo {
     @Parameter(property = "genmodelFileName", defaultValue = "genmodel")
     private String genmodelFileName;
 
-    @Parameter(property = "package", defaultValue = "org.example")
-    private String basePackage;
+    @Parameter(property = "basePackageName", defaultValue = "org.example")
+    private String basePackageName;
 
-    @Parameter(property = "jdkLevel", defaultValue = "17") // GenJDKLevel.JDK210
+    @Parameter(property = "genJDKLevel", defaultValue = "JDK210") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        LOG.info("Generating code from UMLet {}", inputUMLetFile);
+        LOG.info("Generating code from UMLet {}", umletFile);
         generateCode();
         LOG.info("Generation complete.");
     }
 
     private void generateCode() throws MojoExecutionException, MojoFailureException {
         CodeGenerationConfig.getInstance()
-                .setInputUMLetFile(Path.of(inputUMLetFile))
+                .setInputUMLetFile(Path.of(umletFile))
                 .setGeneratedFilesDir(Path.of(outputDir))
                 .setOutputEcoreFile(Path.of(modelDir + ecoreFileName))
                 .setOutputGenModelFile(Path.of(modelDir + genmodelFileName))
                 .setProjectName(projectName)
                 .setProjectNsPrefix(NsPrefix)
                 .setProjectNsURI(NsURI)
-                .setBasePackage(basePackage)
-                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel));
+                .setBasePackage(basePackageName)
+                .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel + "_LITERAL"));
 
 
         PrintStream originalStream = System.out;
@@ -93,10 +93,10 @@ public class UMLet2CodeMojo extends AbstractMojo {
         // Run code generation
         ModelToCodeGenerator generator = new ModelToCodeGenerator();
         try {
-            Diagnostic diagnostic = generator.generateCodeFromUMLetFile(Path.of(inputUMLetFile));
+            Diagnostic diagnostic = generator.generateCodeFromUMLetFile(Path.of(umletFile));
             if (diagnostic.getSeverity() == Diagnostic.ERROR) {
                 throw new MojoFailureException
-                        ("Generation failed for UMLet file: " + inputUMLetFile + "\n" + diagnostic.getMessage());
+                        ("Generation failed for UMLet file: " + umletFile + "\n" + diagnostic.getMessage());
             }
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
