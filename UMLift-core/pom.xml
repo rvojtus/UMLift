@@ -12,6 +12,13 @@
 
     <artifactId>UMLift-core</artifactId>
 
+    <licenses>
+        <license>
+            <name>GPL-3.0-or-later</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+        </license>
+    </licenses>
+
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
