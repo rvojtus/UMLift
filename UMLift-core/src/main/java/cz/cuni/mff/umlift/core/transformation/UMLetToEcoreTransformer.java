@@ -58,7 +58,8 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * Represents a configuration for the transformation process in {@link UMLetToEcoreTransformer#transform(Path)}. Includes information for the final Ecore Model.
+     * Represents a configuration for the transformation process in {@link UMLetToEcoreTransformer#transform(Path)}.
+     * Includes information for the final Ecore Model.
      * Needs to be initialized using {@link #build()} method.
      */
     public static class EcoreConfigBuilder {
@@ -118,7 +119,8 @@ public class UMLetToEcoreTransformer {
      * Transforms a UMLet diagram file into an Ecore model file, and closes or keeps background program running.
      *
      * @param inputUMLetFile the path to the UMLet file
-     * @param keepOpen       specifies whether the running UMLet backend program, used for transformation, stays open or closes
+     * @param keepOpen       specifies whether the running UMLet backend program, used for transformation, stays open
+     *                       or closes
      * @return {@link EPackage} representing transformed UMLet Model
      * @see #transform(Path)
      */
@@ -204,32 +206,36 @@ public class UMLetToEcoreTransformer {
         classes.add(UMLClass);
 
         // Create a new EClass in the Ecore model to represent the UML class
-        EClass umlClass = EcoreFactory.eINSTANCE.createEClass();
+        EClass eClass = EcoreFactory.eINSTANCE.createEClass();
 
         // Get the name of the UML class and set it in the EClass
         String name = getUMLetClassName(UMLClass);
-        umlClass.setName(name);
+        eClass.setName(name);
 
         // Check if the class is an interface by matching its attributes against the interface regex
         if (UMLClass.getPanelAttributesAsList().getFirst().matches(interfaceRegex)) {
             // Mark the EClass as an interface and abstract if it matches the interface pattern
-            umlClass.setInterface(true);
-            umlClass.setAbstract(true);
-            ePackage.getEClassifiers().add(umlClass);
+            eClass.setInterface(true);
+            eClass.setAbstract(true);
+            ePackage.getEClassifiers().add(eClass);
         }
         // Check if the class is an enumeration by matching its attributes against the enum regex
         else if (UMLClass.getPanelAttributesAsList().getFirst().matches(enumRegex)) {
             EEnum eEnum = EcoreFactory.eINSTANCE.createEEnum();
             eEnum.setName(name);
+            populateEEnum(UMLClass, eEnum);
             ePackage.getEClassifiers().add(eEnum);
         } else { // Process as a standard (non-interface, non-enum) class
             // Trim the class name attribute and check if it is abstract (indicated by enclosing slashes)
             String classNameAttribute = UMLClass.getPanelAttributesAsList().getFirst().trim();
             if (classNameAttribute.matches("/.+/")) {
-                umlClass.setAbstract(true);
-                umlClass.setName(name.substring(1, name.length() - 1));
+                eClass.setAbstract(true);
+                eClass.setName(name.substring(1, name.length() - 1));
             }
-            ePackage.getEClassifiers().add(umlClass);
+
+            // Parse and add all specified attributes and fields
+            parseAttributes(UMLClass, eClass);
+            ePackage.getEClassifiers().add(eClass);
         }
     }
 
@@ -418,7 +424,8 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * Processes an enumeration relationship for a UMLet class. If the start class is an enum and the relation is a directed
+     * Processes an enumeration relationship for a UMLet class. If the start class is an enum and the relation is a
+     * directed
      * association, it adds an attribute of the enum type to the end class.
      *
      * @param startRelationClass the class that is the start of the relation
@@ -427,7 +434,8 @@ public class UMLetToEcoreTransformer {
      * @param endClassName       the name of the ending class
      * @return true if the relation is processed as an enum, false otherwise
      */
-    private boolean processUMLetEnum(Class startRelationClass, UMLClassRelations classRelation, String startClassName, String endClassName) {
+    private boolean processUMLetEnum(Class startRelationClass, UMLClassRelations classRelation, String startClassName
+            , String endClassName) {
         // Check if the starting class is an enumeration
         if (isUMLetClassEnum(startRelationClass)) {
             // Retrieve the EEnum object for the starting class from the Ecore package
@@ -481,19 +489,19 @@ public class UMLetToEcoreTransformer {
     /**
      * Retrieves the name of the given UMLet class based on its attributes.
      *
-     * @param clazz the UMLet class from which to get the name
+     * @param umletClazz the UMLet class from which to get the name
      * @return the name of the class or "DefaultName" if it is an enum or interface with one attribute,
      * or an empty string if there are no attributes
      */
-    private String getUMLetClassName(Class clazz) {
+    private String getUMLetClassName(Class umletClazz) {
         // Retrieve the list of panel attributes for the UMLet class
-        List<String> panelAttributes = clazz.getPanelAttributesAsList();
+        List<String> panelAttributes = umletClazz.getPanelAttributesAsList();
 
         if (panelAttributes.isEmpty())
             return "";
 
         // Check if the class is either an enum or an interface
-        if (isUMLetClassEnum(clazz) || isUMLetClassInterface(clazz)) {
+        if (isUMLetClassEnum(umletClazz) || isUMLetClassInterface(umletClazz)) {
             // If there's only one attribute, return a default name
             if (panelAttributes.size() == 1)
                 return "DefaultName";
@@ -505,6 +513,77 @@ public class UMLetToEcoreTransformer {
         return panelAttributes.getFirst().trim();
     }
 
+    private void parseAttributes(Class umletClazz, EClass eClass) {
+        // Retrieve the list of panel attributes for the UMLet class
+        List<String> panelAttributes = umletClazz.getPanelAttributesAsList();
+
+        if (panelAttributes.isEmpty())
+            return;
+
+        for (String attr : panelAttributes) {
+            if (attr.equals("--")) // panel_attributes delimiter, we skip this
+                continue;
+            if (attr.startsWith("-")) {
+                addAttributeEClass(eClass, attr);
+            }
+        }
+    }
+
+    private void populateEEnum(Class umletClazz, EEnum eNum) {
+        // Retrieve the list of panel attributes for the UMLet class
+        List<String> panelAttributes = umletClazz.getPanelAttributesAsList();
+
+        final int umletEnumHeaderSize = 3;
+
+        if (panelAttributes.isEmpty() || panelAttributes.size() <= umletEnumHeaderSize)
+            return;
+
+        for (int i = umletEnumHeaderSize; i < panelAttributes.size(); i++) {
+            String attr = panelAttributes.get(i).trim();
+            if (attr.startsWith("-"))
+                attr = attr.substring(1).trim();
+            EEnumLiteral eEnumLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+            eEnumLiteral.setName(attr);
+            eEnumLiteral.setValue(i - umletEnumHeaderSize);
+            eEnumLiteral.setLiteral(attr);
+            eNum.getELiterals().add(eEnumLiteral);
+        }
+    }
+
+    private void addAttributeEClass(EClass eClass, String attr) {
+        attr = attr.trim().substring(1); // remove the "-" prefix for the attribute name
+        EDataType dataType = EcorePackage.eINSTANCE.getEString();
+        EAttribute eAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+        String name;
+        if (attr.contains(":")) { // default, not specified data type -> EString
+            String[] split = attr.split(":");
+            if (split.length != 2)
+                return;
+
+            dataType = switch (split[1].trim()) {
+                case "int", "integer", "Integer":
+                    yield EcorePackage.eINSTANCE.getEInt();
+                case "boolean", "Boolean":
+                    yield EcorePackage.eINSTANCE.getEBoolean();
+                case "float", "Float":
+                    yield EcorePackage.eINSTANCE.getEFloat();
+                case "double", "Double":
+                    yield EcorePackage.eINSTANCE.getEDouble();
+                case "date", "Date":
+                    yield EcorePackage.eINSTANCE.getEDate();
+                default:
+                    yield EcorePackage.eINSTANCE.getEString();
+            };
+            name = split[0].trim();
+        } else
+            name = attr.trim();
+
+
+        eAttribute.setEType(dataType);
+        eAttribute.setName(name);
+        eClass.getEStructuralFeatures().add(eAttribute);
+    }
+
     /**
      * Adds a relationship between two EClasses in the Ecore model based on the type of UML class relation.
      *
@@ -513,7 +592,8 @@ public class UMLetToEcoreTransformer {
      * @param eClassEnd     the ending EClass of the relation
      * @param attributes    additional attributes related to the relation (if any)
      */
-    private void addEMFClassRelation(final UMLClassRelations classRelation, EClass eClassStart, EClass eClassEnd, final List<String> attributes) {
+    private void addEMFClassRelation(final UMLClassRelations classRelation, EClass eClassStart, EClass eClassEnd,
+                                     final List<String> attributes) {
         // Switch based on the type of UML class relation
         switch (classRelation) {
             case INHERITANCE -> addInheritanceRelation(eClassEnd, eClassStart);
@@ -574,7 +654,8 @@ public class UMLetToEcoreTransformer {
      * @param delimiter  a string that helps identify cardinality attributes in the list
      * @return the created EReference with set properties
      */
-    private EReference directedAssociationRelationHelper(EClass childClass, final List<String> attributes, final String delimiter) {
+    private EReference directedAssociationRelationHelper(EClass childClass, final List<String> attributes,
+                                                         final String delimiter) {
         // Create a new EReference instance
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
@@ -642,7 +723,8 @@ public class UMLetToEcoreTransformer {
      * @param attributes  a list of attributes that may define cardinalities for the relationship
      * @param containment boolean indicating whether the relationship is a containment relationship
      */
-    private void aggregationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes, final boolean containment) {
+    private void aggregationRelationHelper(EClass parentClass, EClass childClass, List<String> attributes,
+                                           final boolean containment) {
         // Create a new EReference for the aggregation relationship
         EReference eRef = EcoreFactory.eINSTANCE.createEReference();
         eRef.setEType(childClass);
@@ -698,7 +780,8 @@ public class UMLetToEcoreTransformer {
      * @param cardinalityAttribute       the string attribute containing the cardinality information
      * @param UMLetCardinalityIdentifier the identifier used to parse the cardinality from the attribute
      */
-    private void processCardinality(EReference eRef, final String cardinalityAttribute, final String UMLetCardinalityIdentifier) {
+    private void processCardinality(EReference eRef, final String cardinalityAttribute,
+                                    final String UMLetCardinalityIdentifier) {
         // Split the cardinality attribute to extract the child cardinality
         final String cardinalityChild = cardinalityAttribute.split(UMLetCardinalityIdentifier)[1];
 
