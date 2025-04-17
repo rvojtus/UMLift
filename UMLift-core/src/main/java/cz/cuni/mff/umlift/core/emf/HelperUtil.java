@@ -31,8 +31,10 @@ public class HelperUtil {
      */
     public static void saveEcoreModel(EPackage ePackage, Path outputEcoreFile) throws IOException {
         // Register the XMI resource factory for handling Ecore models
-        Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
+        Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION,
+                new XMIResourceFactoryImpl());
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION
+                , new XMIResourceFactoryImpl());
 
         // Create a resource set for managing resources
         ResourceSet resourceSet = new ResourceSetImpl();
@@ -114,6 +116,10 @@ public class HelperUtil {
                 }
 
                 System.out.println();
+            } else if (eClassifier instanceof EEnum eEnum) {
+                System.out.println("EEnum Name: " + eEnum.getName());
+                for (EEnumLiteral eEnumLiteral : eEnum.getELiterals())
+                    System.out.println("  Literal Name: " + eEnumLiteral.getName());
             }
         }
     }
