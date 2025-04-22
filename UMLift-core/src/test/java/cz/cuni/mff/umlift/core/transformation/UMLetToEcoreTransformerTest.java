@@ -60,7 +60,8 @@ public class UMLetToEcoreTransformerTest {
         transformer.saveEcore(tmpOutputEcoreFile);
 
         // Validate Ecore package is successfully saved on disk
-        assertTrue(tmpOutputEcoreFile.toFile().exists(), "Result Ecore file should exist: " + tmpOutputEcoreFile.toFile().getAbsolutePath());
+        assertTrue(tmpOutputEcoreFile.toFile().exists(),
+                "Result Ecore file should exist: " + tmpOutputEcoreFile.toFile().getAbsolutePath());
 
         Files.deleteIfExists(tmpOutputEcoreFile);
     }
@@ -172,6 +173,39 @@ public class UMLetToEcoreTransformerTest {
         }
     }
 
+    @Nested
+    class UMLetDiagramAttributesValidation {
+        @Test
+        void givenMultipleClassWithAttributes_whenTransform_thenEcoreValid() throws Exception {
+            final File uxfFile = new File("src/test/resources/UMLetFiles/SimpleClinicSystemExample.uxf");
+
+            // Run the transformation and validate
+            EPackage ePackage = validateAndTransform(uxfFile);
+
+            validateClassExists(ePackage, "User");
+            EClass userClass = (EClass) ePackage.getEClassifier("User");
+
+            validateAttributeExists(userClass, "id");
+            validateAttributeExists(userClass, "name");
+            validateAttributeExists(userClass, "email");
+        }
+
+
+        void validateAttributeExists(EClass eClass, String attributeName) throws Exception {
+            assertTrue(hasEAttribute(eClass, attributeName));
+        }
+
+        boolean hasEAttribute(EClass eClass, String attributeName) throws Exception {
+            for (EStructuralFeature feature : eClass.getEStructuralFeatures()) {
+                if (feature instanceof EAttribute && feature.getName().equals(attributeName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
     /**
      * Tests UMLet Diagram Relationship Elements: inheritance, realisation, relation etc.
      *
@@ -199,11 +233,13 @@ public class UMLetToEcoreTransformerTest {
             assertTrue(SimpleClass_0.getEReferences().isEmpty(), "SimpleClass_0 should not have references");
 
             // Validate Reference Type
-            assertEquals(SimpleClass_1.getEReferences().getFirst().getEReferenceType(), SimpleClass_0, "SimpleClass_1 should have reference to SimpleClass_0");
+            assertEquals(SimpleClass_1.getEReferences().getFirst().getEReferenceType(), SimpleClass_0, "SimpleClass_1" +
+                    " should have reference to SimpleClass_0");
 
             // Validate Cardinality
             assertEquals(0, SimpleClass_1.getEReferences().getFirst().getLowerBound());
-            assertEquals(ETypedElement.UNBOUNDED_MULTIPLICITY, SimpleClass_1.getEReferences().getFirst().getUpperBound());
+            assertEquals(ETypedElement.UNBOUNDED_MULTIPLICITY,
+                    SimpleClass_1.getEReferences().getFirst().getUpperBound());
         }
 
         @Test
@@ -229,24 +265,33 @@ public class UMLetToEcoreTransformerTest {
             assertFalse(SimpleClass_0.getEReferences().isEmpty(), "SimpleClass_0 references should not be empty");
 
             // Validate Reference Type
-            assertEquals(SimpleClass_1.getEReferences().getFirst().getEReferenceType(), SimpleClass_0, "SimpleClass_1 should have reference to SimpleClass_0");
-            assertEquals(SimpleClass_0.getEReferences().getFirst().getEReferenceType(), SimpleClass_1, "SimpleClass_0 should have reference to SimpleClass_1");
+            assertEquals(SimpleClass_1.getEReferences().getFirst().getEReferenceType(), SimpleClass_0, "SimpleClass_1" +
+                    " should have reference to SimpleClass_0");
+            assertEquals(SimpleClass_0.getEReferences().getFirst().getEReferenceType(), SimpleClass_1, "SimpleClass_0" +
+                    " should have reference to SimpleClass_1");
 
             /* WIP
             // Validate eOpposite Type
-            assertTrue(SimpleClass_1.getEReferences().getFirst().getEOpposite().getEReferenceType().equals(SimpleClass_0),
+            assertTrue(SimpleClass_1.getEReferences().getFirst().getEOpposite().getEReferenceType().equals
+            (SimpleClass_0),
                     "SimpleClass_1 should have eOpposite to SimpleClass_0");
-            assertTrue(SimpleClass_0.getEReferences().getFirst().getEOpposite().getEReferenceType().equals(SimpleClass_1),
+            assertTrue(SimpleClass_0.getEReferences().getFirst().getEOpposite().getEReferenceType().equals
+            (SimpleClass_1),
                     "SimpleClass_0 should have eOpposite to SimpleClass_1");
              */
 
             // Validate Cardinality SimpleClass_0
-            assertEquals(0, SimpleClass_0.getEReferences().getFirst().getLowerBound(), "SimpleClass_0 should have lower bound == 0");
-            assertEquals(1, SimpleClass_0.getEReferences().getFirst().getUpperBound(), "SimpleClass_0 should have upper bound == 1");
+            assertEquals(0, SimpleClass_0.getEReferences().getFirst().getLowerBound(), "SimpleClass_0 should have " +
+                    "lower bound == 0");
+            assertEquals(1, SimpleClass_0.getEReferences().getFirst().getUpperBound(), "SimpleClass_0 should have " +
+                    "upper bound == 1");
 
             // Validate Cardinality SimpleClass_1
-            assertEquals(0, SimpleClass_1.getEReferences().getFirst().getLowerBound(), "SimpleClass_1 should have lower bound == 0");
-            assertEquals(ETypedElement.UNBOUNDED_MULTIPLICITY, SimpleClass_1.getEReferences().getFirst().getUpperBound(), "SimpleClass_1 should have upper bound == -1");
+            assertEquals(0, SimpleClass_1.getEReferences().getFirst().getLowerBound(), "SimpleClass_1 should have " +
+                    "lower bound == 0");
+            assertEquals(ETypedElement.UNBOUNDED_MULTIPLICITY,
+                    SimpleClass_1.getEReferences().getFirst().getUpperBound(), "SimpleClass_1 should have upper bound" +
+                            " == -1");
         }
 
         @Test
@@ -312,7 +357,8 @@ public class UMLetToEcoreTransformerTest {
             assertFalse(SimpleClass_0.getEReferences().isEmpty(), "SimpleClass_0 references should not be empty");
             assertTrue(SimpleClass_1.getEReferences().isEmpty(), "SimpleClass_1 should not have references");
 
-            assertTrue(SimpleClass_0.getEReferences().getFirst().isContainment(), "SimpleClass_0 should contain containment");
+            assertTrue(SimpleClass_0.getEReferences().getFirst().isContainment(), "SimpleClass_0 should contain " +
+                    "containment");
         }
 
         @Test
@@ -357,7 +403,8 @@ public class UMLetToEcoreTransformerTest {
             EClass abstractClass = (EClass) ePackage.getEClassifier("AbstractClass");
 
             // Validate SuperType (Inheritance) relation
-            assertEquals(simpleClass.getESuperTypes().getFirst(), abstractClass, "AbstractClass should be a SuperType of SimpleClass");
+            assertEquals(simpleClass.getESuperTypes().getFirst(), abstractClass, "AbstractClass should be a SuperType" +
+                    " of SimpleClass");
         }
 
         @Test
@@ -375,7 +422,8 @@ public class UMLetToEcoreTransformerTest {
             EClass interfaceClass = (EClass) ePackage.getEClassifier("InterfaceName");
 
             // Validate SuperType (Realisation) relation
-            assertEquals(simpleClass.getESuperTypes().getFirst(), interfaceClass, "InterfaceClass should be a SuperType of SimpleClass");
+            assertEquals(simpleClass.getESuperTypes().getFirst(), interfaceClass, "InterfaceClass should be a " +
+                    "SuperType of SimpleClass");
         }
     }
 
@@ -434,7 +482,8 @@ public class UMLetToEcoreTransformerTest {
 
         assertFalse(eClass_0.getEReferences().isEmpty(), "EClass_0 references should not be empty");
 
-        assertEquals(eClass_0.getEReferences().getFirst().getEReferenceType(), eClass_1, "EClass_0 should contain reference");
+        assertEquals(eClass_0.getEReferences().getFirst().getEReferenceType(), eClass_1, "EClass_0 should contain " +
+                "reference");
     }
 
     /**
