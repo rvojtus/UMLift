@@ -6,7 +6,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.pom.MavenPackaging;
 import cz.cuni.mff.umlift.core.pom.PomConfiguration;
 import cz.cuni.mff.umlift.core.pom.PomGenerator;
@@ -67,9 +67,9 @@ public class ContextUtils {
         try {
             File pomFile = new File(Objects.requireNonNull(project.getBasePath()) + File.separator + "pom.xml");
             PomConfiguration pomConfig = new PomConfiguration("4.0.0",
-                    CodeGenerationConfig.getInstance().getBasePackage(),
-                    CodeGenerationConfig.getInstance().getProjectName(),
-                    "1.0.0", MavenPackaging.POM, CodeGenerationConfig.getInstance().getGenJDKLevel());
+                    GenerationConfig.getInstance().getBasePackage(),
+                    GenerationConfig.getInstance().getProjectName(),
+                    "1.0.0", MavenPackaging.POM, GenerationConfig.getInstance().getGenJDKLevel());
             ContextUtils.generatePom(pomFile, pomConfig);
             LOG.info("Generated POM for Project " + project.getBasePath());
             notifySuccess(project, "Successfully created POM for Project " + project.getBasePath());
@@ -96,7 +96,7 @@ public class ContextUtils {
 
         final Path finalOutputDir = Path.of(outputDir);
         // Setup configuration for code generation
-        CodeGenerationConfig.getInstance()
+        GenerationConfig.getInstance()
                 .setInputUMLetFile(Path.of(inputUMLetFile))
                 .setGeneratedFilesDir(finalOutputDir)
                 .setEcoreGenModelDir(finalEcoreGenModelOutputDir)

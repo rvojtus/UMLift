@@ -11,7 +11,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.jetbrains.annotations.NotNull;
@@ -85,7 +85,7 @@ public class UMLet2CodeContextMenuAction extends AnAction {
                 // Run code generation
                 try {
                     Diagnostic diagnostic =
-                            generator.generateCodeFromUMLetFile(CodeGenerationConfig.getInstance().getInputUMLetFile());
+                            generator.generateCodeFromUMLetFile(GenerationConfig.getInstance().getInputUMLetFile());
                     if (diagnostic.getSeverity() == Diagnostic.OK) {
                         LOG.info("Generated code for UXF file: " + inputUMLetFile);
                         notifySuccess(project, "Successfully generated code for UXF file: " + inputUMLetFile);

@@ -11,7 +11,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.emf.GenModelGenerator;
 import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
 import cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static cz.cuni.mff.umlift.core.emf.HelperUtil.saveGenModel;
+import static cz.cuni.mff.umlift.core.util.HelperUtil.saveGenModel;
 import static cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings.UMLET_FILE_SUFFIX;
 import static cz.cuni.mff.umlift.plugin.intellij.contextmenu.ContextUtils.*;
 
@@ -118,7 +118,7 @@ public class UMLetToEMFContextMenuAction extends AnAction {
             }
 
             private void generateGenmodel(Path inputEcoreFile) {
-                CodeGenerationConfig.getInstance().setGenJDKLevel(state.genJDKLevel).setBasePackage(state.basePackage);
+                GenerationConfig.getInstance().setGenJDKLevel(state.genJDKLevel).setBasePackage(state.basePackage);
                 GenModelGenerator generator = new GenModelGenerator();
                 GenModel genModel = generator.generateGenModelFromEcore(inputEcoreFile);
 

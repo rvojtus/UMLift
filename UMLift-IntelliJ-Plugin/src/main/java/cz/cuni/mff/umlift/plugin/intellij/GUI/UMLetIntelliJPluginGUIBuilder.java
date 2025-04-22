@@ -4,6 +4,7 @@ import com.baselet.control.config.Config;
 import com.baselet.gui.BaseGUIBuilder;
 import com.baselet.gui.listener.GUIListener;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.openapi.diagnostic.Logger;
 import cz.cuni.mff.umlift.plugin.intellij.editor.UMLetFileEditor;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ import java.awt.*;
  * @since 1.0
  */
 public class UMLetIntelliJPluginGUIBuilder extends BaseGUIBuilder {
+    private static final Logger LOG = Logger.getInstance(UMLetIntelliJPluginGUIBuilder.class);
 
     private final JPanel contentPlaceHolder = new JPanel(new BorderLayout());
 
