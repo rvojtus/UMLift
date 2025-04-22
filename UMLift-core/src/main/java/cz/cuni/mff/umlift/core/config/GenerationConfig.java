@@ -1,5 +1,6 @@
-package cz.cuni.mff.umlift.core.emf;
+package cz.cuni.mff.umlift.core.config;
 
+import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 
 import java.nio.file.Path;
@@ -21,7 +22,7 @@ import java.nio.file.Path;
  * The code below shows example usage of this class:
  * <p>
  * {@snippet :
- * CodeGenerationConfig config = CodeGenerationConfig.getInstance()
+ * GenerationConfig config = GenerationConfig.getInstance()
  *     .setInputUMLetFile(Path.of("/path/to/UMLet/file/exampleUMLet.uxf"))
  *     .setGeneratedFilesDir(Path.of("/path/to/directory"))
  *     .setOutputEcoreFile(Path.of("ecore.ecore"))
@@ -37,8 +38,8 @@ import java.nio.file.Path;
  *
  * @since 1.0
  */
-public class CodeGenerationConfig {
-    private static final CodeGenerationConfig INSTANCE = new CodeGenerationConfig();
+public class GenerationConfig {
+    private static final GenerationConfig INSTANCE = new GenerationConfig();
 
     private Path inputUMLetFile;
     private Path outputEcoreFile;
@@ -57,14 +58,14 @@ public class CodeGenerationConfig {
     private String genModelFileName;
 
 
-    private CodeGenerationConfig() {
+    private GenerationConfig() {
     }
 
-    public static CodeGenerationConfig getInstance() {
+    public static GenerationConfig getInstance() {
         return INSTANCE;
     }
 
-    public CodeGenerationConfig setInputUMLetFile(Path inputUMLetFile) {
+    public GenerationConfig setInputUMLetFile(Path inputUMLetFile) {
         this.inputUMLetFile = inputUMLetFile;
         return this;
     }
@@ -73,7 +74,7 @@ public class CodeGenerationConfig {
         return inputUMLetFile;
     }
 
-    public CodeGenerationConfig setOutputEcoreFile(Path outputEcoreFile) {
+    public GenerationConfig setOutputEcoreFile(Path outputEcoreFile) {
         this.outputEcoreFile = outputEcoreFile;
         return this;
     }
@@ -82,7 +83,7 @@ public class CodeGenerationConfig {
         return outputEcoreFile;
     }
 
-    public CodeGenerationConfig setOutputGenModelFile(Path outputGenModelFile) {
+    public GenerationConfig setOutputGenModelFile(Path outputGenModelFile) {
         this.outputGenModelFile = outputGenModelFile;
         return this;
     }
@@ -91,7 +92,7 @@ public class CodeGenerationConfig {
         return outputGenModelFile;
     }
 
-    public CodeGenerationConfig setGeneratedFilesDir(Path generatedFilesDir) {
+    public GenerationConfig setGeneratedFilesDir(Path generatedFilesDir) {
         this.generatedFilesDir = generatedFilesDir;
         return this;
     }
@@ -100,7 +101,7 @@ public class CodeGenerationConfig {
         return generatedFilesDir;
     }
 
-    public CodeGenerationConfig setProjectName(String projectName) {
+    public GenerationConfig setProjectName(String projectName) {
         this.projectName = projectName;
         return this;
     }
@@ -109,7 +110,7 @@ public class CodeGenerationConfig {
         return projectName;
     }
 
-    public CodeGenerationConfig setProjectNsPrefix(String projectNsPrefix) {
+    public GenerationConfig setProjectNsPrefix(String projectNsPrefix) {
         this.projectNsPrefix = projectNsPrefix;
         return this;
     }
@@ -118,7 +119,7 @@ public class CodeGenerationConfig {
         return projectNsPrefix;
     }
 
-    public CodeGenerationConfig setProjectNsURI(String projectNsURI) {
+    public GenerationConfig setProjectNsURI(String projectNsURI) {
         this.projectNsURI = projectNsURI;
         return this;
     }
@@ -127,7 +128,7 @@ public class CodeGenerationConfig {
         return projectNsURI;
     }
 
-    public CodeGenerationConfig setEcoreFileName(String ecoreFileName) {
+    public GenerationConfig setEcoreFileName(String ecoreFileName) {
         this.ecoreFileName = ecoreFileName;
         return this;
     }
@@ -136,7 +137,7 @@ public class CodeGenerationConfig {
         return ecoreFileName;
     }
 
-    public CodeGenerationConfig setGenModelFileName(String genModelFileName) {
+    public GenerationConfig setGenModelFileName(String genModelFileName) {
         this.genModelFileName = genModelFileName;
         return this;
     }
@@ -149,7 +150,7 @@ public class CodeGenerationConfig {
         return ecoreGenModelDir;
     }
 
-    public CodeGenerationConfig setEcoreGenModelDir(Path ecoreGenModelDir) {
+    public GenerationConfig setEcoreGenModelDir(Path ecoreGenModelDir) {
         this.ecoreGenModelDir = ecoreGenModelDir;
         return this;
     }
@@ -158,7 +159,7 @@ public class CodeGenerationConfig {
         return basePackage;
     }
 
-    public CodeGenerationConfig setBasePackage(String basePackage) {
+    public GenerationConfig setBasePackage(String basePackage) {
         this.basePackage = basePackage;
         return this;
     }
@@ -167,7 +168,7 @@ public class CodeGenerationConfig {
         return genJDKLevel;
     }
 
-    public CodeGenerationConfig setGenJDKLevel(GenJDKLevel genJDKLevel) {
+    public GenerationConfig setGenJDKLevel(GenJDKLevel genJDKLevel) {
         this.genJDKLevel = genJDKLevel;
         return this;
     }
@@ -176,7 +177,7 @@ public class CodeGenerationConfig {
         return projectRootDir;
     }
 
-    public CodeGenerationConfig setProjectRootDir(Path projectRootDir) {
+    public GenerationConfig setProjectRootDir(Path projectRootDir) {
         this.projectRootDir = projectRootDir;
         return this;
     }

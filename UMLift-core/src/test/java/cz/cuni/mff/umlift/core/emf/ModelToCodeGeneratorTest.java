@@ -1,8 +1,8 @@
 package cz.cuni.mff.umlift.core.emf;
 
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,7 +30,7 @@ public class ModelToCodeGeneratorTest {
     @BeforeEach
     void setUp() throws IOException {
         tmpDir = Files.createTempDirectory("testing");
-        CodeGenerationConfig.getInstance()
+        GenerationConfig.getInstance()
                 .setGeneratedFilesDir(tmpDir)
                 .setOutputEcoreFile(Path.of(tmpDir.toString() + "/ecore.ecore"))
                 .setOutputGenModelFile(Path.of(tmpDir.toString() + "/genmodel.genmodel"))

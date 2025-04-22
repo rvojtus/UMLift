@@ -1,13 +1,9 @@
-package cz.cuni.mff.umlift.core.emf;
+package cz.cuni.mff.umlift.core.util;
 
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMIResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 import java.io.File;
@@ -30,23 +26,12 @@ public class HelperUtil {
      * @throws IOException when an error occurs while saving the Ecore model
      */
     public static void saveEcoreModel(EPackage ePackage, Path outputEcoreFile) throws IOException {
-        // Register the XMI resource factory for handling Ecore models
-        Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-                new XMIResourceFactoryImpl());
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION
-                , new XMIResourceFactoryImpl());
+        URI ecoreURI = URI.createFileURI(outputEcoreFile.toAbsolutePath().toString());
+        final XMIResourceImpl ecoreResource = new XMIResourceImpl(ecoreURI);
+        ecoreResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
+        ecoreResource.getContents().add(ePackage);
 
-        // Create a resource set for managing resources
-        ResourceSet resourceSet = new ResourceSetImpl();
-
-        // Create a new resource for the specified file
-        Resource resource = resourceSet.createResource(URI.createURI(outputEcoreFile.toAbsolutePath().toString()));
-
-        // Add the EPackage to the resource's contents
-        resource.getContents().add(ePackage);
-
-        // Save the resource, which writes the Ecore model to the file
-        resource.save(Collections.EMPTY_MAP);
+        ecoreResource.save(Collections.EMPTY_MAP);
 
         LOG.info("Saved Ecore to: " + outputEcoreFile);
     }

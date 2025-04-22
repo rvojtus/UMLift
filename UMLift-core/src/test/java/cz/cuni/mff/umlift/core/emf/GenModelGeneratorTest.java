@@ -1,5 +1,6 @@
 package cz.cuni.mff.umlift.core.emf;
 
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
@@ -19,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import static cz.cuni.mff.umlift.core.TestConstants.*;
-import static cz.cuni.mff.umlift.core.emf.HelperUtil.saveGenModel;
+import static cz.cuni.mff.umlift.core.util.HelperUtil.saveGenModel;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GenModelGeneratorTest {
     private GenModelGenerator genModelGenerator;
     private static Path tmpDir;
-    private static final CodeGenerationConfig config = CodeGenerationConfig.getInstance();
+    private static final GenerationConfig config = GenerationConfig.getInstance();
 
     @BeforeAll
     static void setUpBeforeAll() throws IOException {

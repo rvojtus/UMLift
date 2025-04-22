@@ -1,4 +1,4 @@
-package cz.cuni.mff.umlift.core.emf;
+package cz.cuni.mff.umlift.core.util;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;

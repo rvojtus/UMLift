@@ -1,6 +1,6 @@
 package cz.cuni.mff.umlift.core.pom;
 
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
 public class PomGenerator {
     private static final Logger LOG = Logger.getLogger(PomGenerator.class.getName());
     private final PomConfiguration pomConfig;
-    private final CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance();
+    private final GenerationConfig generationConfig = GenerationConfig.getInstance();
 
     private String mavenCompilerPluginVersion = "3.14.0";
 
@@ -119,31 +118,31 @@ public class PomGenerator {
         Xpp3Dom configuration = new Xpp3Dom("configuration");
 
         Xpp3Dom modelDir = new Xpp3Dom("modelDir");
-        modelDir.setValue(codeGenerationConfig.getEcoreGenModelDir().toString());
+        modelDir.setValue(generationConfig.getEcoreGenModelDir().toString());
 
         Xpp3Dom umletFile = new Xpp3Dom("umletFile");
-        umletFile.setValue(codeGenerationConfig.getInputUMLetFile().toString());
+        umletFile.setValue(generationConfig.getInputUMLetFile().toString());
 
         Xpp3Dom projectName = new Xpp3Dom("projectName");
-        projectName.setValue(codeGenerationConfig.getProjectName());
+        projectName.setValue(generationConfig.getProjectName());
 
         Xpp3Dom NsPrefix = new Xpp3Dom("NsPrefix");
-        NsPrefix.setValue(codeGenerationConfig.getProjectNsPrefix());
+        NsPrefix.setValue(generationConfig.getProjectNsPrefix());
 
         Xpp3Dom NsURI = new Xpp3Dom("NsURI");
-        NsURI.setValue(codeGenerationConfig.getProjectNsURI());
+        NsURI.setValue(generationConfig.getProjectNsURI());
 
         Xpp3Dom ecoreFileName = new Xpp3Dom("ecoreFileName");
-        ecoreFileName.setValue(codeGenerationConfig.getEcoreFileName());
+        ecoreFileName.setValue(generationConfig.getEcoreFileName());
 
         Xpp3Dom genModelFileName = new Xpp3Dom("genModelFileName");
-        genModelFileName.setValue(codeGenerationConfig.getGenModelFileName());
+        genModelFileName.setValue(generationConfig.getGenModelFileName());
 
         Xpp3Dom basePackage = new Xpp3Dom("basePackage");
-        basePackage.setValue(codeGenerationConfig.getBasePackage());
+        basePackage.setValue(generationConfig.getBasePackage());
 
         Xpp3Dom genJDKLevel = new Xpp3Dom("genJDKLevel");
-        genJDKLevel.setValue(codeGenerationConfig.getGenJDKLevel().toString());
+        genJDKLevel.setValue(generationConfig.getGenJDKLevel().toString());
 
         configuration.addChild(modelDir);
         configuration.addChild(umletFile);

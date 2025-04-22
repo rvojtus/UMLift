@@ -10,7 +10,7 @@ import com.baselet.element.elementnew.uml.Class;
 import com.baselet.element.interfaces.GridElement;
 import com.baselet.element.relation.Relation;
 import com.baselet.element.sticking.PointDoubleIndexed;
-import cz.cuni.mff.umlift.core.emf.HelperUtil;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.ecore.*;
 
 import java.io.IOException;

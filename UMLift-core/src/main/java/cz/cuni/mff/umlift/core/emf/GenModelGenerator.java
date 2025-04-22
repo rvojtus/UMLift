@@ -1,5 +1,7 @@
 package cz.cuni.mff.umlift.core.emf;
 
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
@@ -26,7 +28,7 @@ public class GenModelGenerator {
     private static final Logger LOG = Logger.getLogger(GenModelGenerator.class.getName());
 
     private ResourceSet resourceSet;
-    private final CodeGenerationConfig codeGenerationConfig = CodeGenerationConfig.getInstance();
+    private final GenerationConfig generationConfig = GenerationConfig.getInstance();
 
     /**
      * Initializes a new {@link GenModelGenerator} instance and sets up the resource set.
@@ -70,10 +72,10 @@ public class GenModelGenerator {
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
         genModel.setModelName(ecorePackage.getName());
         genModel.setModelDirectory("src"); // todo needs proper documentation
-        genModel.setComplianceLevel(codeGenerationConfig.getGenJDKLevel());
+        genModel.setComplianceLevel(generationConfig.getGenJDKLevel());
 
         GenPackage genPackage = GenModelFactory.eINSTANCE.createGenPackage();
-        genPackage.setBasePackage(codeGenerationConfig.getBasePackage());
+        genPackage.setBasePackage(generationConfig.getBasePackage());
         genPackage.setEcorePackage(ecorePackage);
         genPackage.setGenModel(genModel);
 
