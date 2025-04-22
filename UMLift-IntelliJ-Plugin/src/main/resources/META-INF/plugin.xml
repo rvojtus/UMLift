@@ -21,7 +21,7 @@
     </description>
 
     <depends>com.intellij.modules.platform</depends>
-    
+
     <extensions defaultExtensionNs="com.intellij">
         <fileEditorProvider
                 implementation="cz.cuni.mff.umlift.plugin.intellij.editor.UMLetFileEditorProvider"/>
@@ -43,6 +43,11 @@
                   fieldName="INSTANCE"
                   language="XML"
                   extensions="genmodel"/>
+        <fileType name="UMLet File"
+                  implementationClass="cz.cuni.mff.umlift.plugin.intellij.filetypes.UMLetFileType"
+                  fieldName="INSTANCE"
+                  language="TEXT"
+                  extensions="uxf"/>
         <fileTypeUsageSchemaDescriptor schema="ecore"
                                        implementationClass="cz.cuni.mff.umlift.plugin.intellij.schemaproviders.EcoreFileTypeUsageSchemaDescriptor"/>
         <xml.schemaProvider implementation="cz.cuni.mff.umlift.plugin.intellij.schemaproviders.EcoreSchemaProvider"/>
