@@ -1,8 +1,8 @@
 package cz.cuni.mff.umlift.plugin.maven;
 
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.emf.GenModelGenerator;
-import cz.cuni.mff.umlift.core.emf.HelperUtil;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
 import org.apache.maven.plugin.AbstractMojo;
@@ -95,7 +95,7 @@ public class UMLet2EMFMojo extends AbstractMojo {
             throw new MojoExecutionException("Could not save EcoreModel", e);
         }
 
-        CodeGenerationConfig.getInstance()
+        GenerationConfig.getInstance()
                 .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel + "_LITERAL"))
                 .setBasePackage(basePackageName);
         GenModelGenerator genModelGenerator = new GenModelGenerator();

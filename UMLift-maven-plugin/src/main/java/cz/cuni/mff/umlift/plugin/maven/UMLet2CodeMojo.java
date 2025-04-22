@@ -1,6 +1,6 @@
 package cz.cuni.mff.umlift.plugin.maven;
 
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -74,7 +74,7 @@ public class UMLet2CodeMojo extends AbstractMojo {
     }
 
     private void generateCode() throws MojoExecutionException, MojoFailureException {
-        CodeGenerationConfig.getInstance()
+        GenerationConfig.getInstance()
                 .setInputUMLetFile(Path.of(umletFile))
                 .setGeneratedFilesDir(Path.of(outputDir))
                 .setOutputEcoreFile(Path.of(modelDir + ecoreFileName))

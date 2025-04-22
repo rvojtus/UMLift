@@ -6,7 +6,7 @@ import cz.cuni.mff.umlift.core.pom.MavenPackaging;
 import cz.cuni.mff.umlift.core.pom.PomConfiguration;
 import cz.cuni.mff.umlift.core.pom.PomGenerator;
 import cz.cuni.mff.umlift.standalone.gui.ConfigDialog;
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 
 import javax.swing.*;
@@ -70,21 +70,21 @@ public class UMLiftMainStandalone {
         String currUMLetFile =
                 CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
         final Path inputUMLetFilePath = Path.of(currUMLetFile);
-        CodeGenerationConfig.getInstance().setInputUMLetFile(inputUMLetFilePath);
+        GenerationConfig.getInstance().setInputUMLetFile(inputUMLetFilePath);
 
         try {
             generator.generateCodeFromUMLetFile(inputUMLetFilePath);
             PomConfiguration pomConfig = new PomConfiguration("4.0.0",
-                    CodeGenerationConfig.getInstance().getBasePackage(),
-                    CodeGenerationConfig.getInstance().getProjectName(),
-                    "1.0.0", MavenPackaging.POM, CodeGenerationConfig.getInstance().getGenJDKLevel());
+                    GenerationConfig.getInstance().getBasePackage(),
+                    GenerationConfig.getInstance().getProjectName(),
+                    "1.0.0", MavenPackaging.POM, GenerationConfig.getInstance().getGenJDKLevel());
             PomGenerator pomGenerator = new PomGenerator(pomConfig);
             File pomFile =
-                    new File(CodeGenerationConfig.getInstance().getProjectRootDir().toString() + File.separator +
+                    new File(GenerationConfig.getInstance().getProjectRootDir().toString() + File.separator +
                             "pom.xml");
             pomGenerator.createAndSavePom(pomFile);
 
-            openDesktop(CodeGenerationConfig.getInstance().getGeneratedFilesDir().toFile());
+            openDesktop(GenerationConfig.getInstance().getGeneratedFilesDir().toFile());
         } catch (IOException e) {
             displayErrorDialog("Code Generation Error", "An error occurred while generating code from UMLet file.");
         }

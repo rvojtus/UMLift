@@ -2,7 +2,7 @@ package cz.cuni.mff.umlift.standalone.gui;
 
 
 import cz.cuni.mff.umlift.standalone.UMLiftMainStandalone;
-import cz.cuni.mff.umlift.core.emf.CodeGenerationConfig;
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 
 import javax.swing.*;
@@ -174,7 +174,7 @@ public class ConfigDialog extends JDialog {
                 "src/main/java");
         final Path resourcesDir = Path.of(projectRootDirectoryChooser.getSelectedDirectory() + File.separator + "src" +
                 "/main/java/resources/EMFModels");
-        CodeGenerationConfig.getInstance()
+        GenerationConfig.getInstance()
                 .setProjectName(projectNameTextField.getText())
                 .setProjectNsURI(nsURITextField.getText())
                 .setProjectNsPrefix(nsPrefixTextField.getText())
