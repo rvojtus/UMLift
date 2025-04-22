@@ -366,7 +366,7 @@ public class UMLetToEcoreTransformer {
                     UMLClassRelations.REALIZATION;
             case typePrefix + "<." -> // dependency
                     UMLClassRelations.DEPENDENCY;
-            case typePrefix + "<<<<-" -> // aggregation
+            case typePrefix + "<<<<-" -> // aggregation - EMF equivalent - Reference
                     UMLClassRelations.AGGREGATION;
             case typePrefix + "<<<<<-" -> // composition, EMF equivalent - Composition
                     UMLClassRelations.COMPOSITION;
@@ -513,6 +513,12 @@ public class UMLetToEcoreTransformer {
         return panelAttributes.getFirst().trim();
     }
 
+    /**
+     * Used to parse, extract and add attributes from a UMLet Class to Ecore EClass
+     *
+     * @param umletClazz UMLet Class to parse
+     * @param eClass     EClass to populate
+     */
     private void parseAttributes(Class umletClazz, EClass eClass) {
         // Retrieve the list of panel attributes for the UMLet class
         List<String> panelAttributes = umletClazz.getPanelAttributesAsList();
@@ -524,11 +530,17 @@ public class UMLetToEcoreTransformer {
             if (attr.equals("--")) // panel_attributes delimiter, we skip this
                 continue;
             if (attr.startsWith("-")) {
-                addAttributeEClass(eClass, attr);
+                addAttributeToEClass(eClass, attr);
             }
         }
     }
 
+    /**
+     * Used to parse, extract and add items from a UMLet Class Stereotype Enumeration to Ecore EEnum
+     *
+     * @param umletClazz UMLet Class to parse
+     * @param eNum       EEnum to populate
+     */
     private void populateEEnum(Class umletClazz, EEnum eNum) {
         // Retrieve the list of panel attributes for the UMLet class
         List<String> panelAttributes = umletClazz.getPanelAttributesAsList();
@@ -550,7 +562,13 @@ public class UMLetToEcoreTransformer {
         }
     }
 
-    private void addAttributeEClass(EClass eClass, String attr) {
+    /**
+     * Parses an attribute, decides its data type and adds it to the EClass attributes
+     *
+     * @param eClass EClass to receive the attribute
+     * @param attr   Attribute taken from UMLet Class panel attributes
+     */
+    private void addAttributeToEClass(EClass eClass, String attr) {
         attr = attr.trim().substring(1); // remove the "-" prefix for the attribute name
         EDataType dataType = EcorePackage.eINSTANCE.getEString();
         EAttribute eAttribute = EcoreFactory.eINSTANCE.createEAttribute();
