@@ -6,6 +6,8 @@ import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,6 +28,8 @@ public class ConfigDialog extends JDialog {
     private static final int DIALOG_WIDTH = 800;
     private static final Preferences prefs = Preferences.userNodeForPackage(ConfigDialog.class);
     private final Path systemDocumentsPath = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
+    private final Path projectPath =
+            Path.of(systemDocumentsPath + File.separator + "UMLiftProjects" + File.separator);
 
     // Ecore
     private final JTextField projectNameTextField;
@@ -88,6 +92,26 @@ public class ConfigDialog extends JDialog {
         projectRootDirectoryChooser = new DirectoryChooserPanel(null);
         add(projectRootDirectoryLabel);
         add(projectRootDirectoryChooser);
+
+        projectNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateProjectRootDirectory();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateProjectRootDirectory();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+
+            private void updateProjectRootDirectory() {
+                projectRootDirectoryChooser.setSelectedDirectory(projectPath + File.separator + projectNameTextField.getText());
+            }
+        });
 
         // Empty cell
         add(new JPanel());
@@ -153,9 +177,6 @@ public class ConfigDialog extends JDialog {
     }
 
     private void loadConfig() {
-        final Path projectPath =
-                Path.of(systemDocumentsPath + File.separator + "UMLiftProjects" + File.separator + projectNameTextField.getText());
-
         projectNameTextField.setText(prefs.get("projectName", "exampleProject"));
         nsURITextField.setText(prefs.get("nsURI", "exampleNSURI"));
         nsPrefixTextField.setText(prefs.get("nsPrefix", "exampleNSPrefix"));
@@ -165,7 +186,8 @@ public class ConfigDialog extends JDialog {
         genJDKLevelComboBox.setSelectedItem(GenJDKLevel.get(prefs.get("genJDKLevel",
                 GenJDKLevel.JDK210_LITERAL.toString())));
         genModelFileNameTextField.setText(prefs.get("genModelFileName", "genmodel"));
-        projectRootDirectoryChooser.setSelectedDirectory(prefs.get("projectRootDirectory", projectPath.toString()));
+        projectRootDirectoryChooser.setSelectedDirectory(prefs.get("projectRootDirectory",
+                projectPath.toString() + File.separator + projectNameTextField.getText()));
         populateCodeGenConfig();
     }
 
