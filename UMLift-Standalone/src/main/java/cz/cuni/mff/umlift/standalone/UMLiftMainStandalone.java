@@ -11,9 +11,10 @@ import cz.cuni.mff.umlift.core.emf.ModelToCodeGenerator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
@@ -56,7 +57,7 @@ public class UMLiftMainStandalone {
 
         JMenuItem generateCodeItem = new JMenuItem("Generate Code");
         generateCodeItem.setMnemonic('G');
-        generateCodeItem.addActionListener(UMLiftMainStandalone::startCodeGeneration);
+        generateCodeItem.addActionListener(e -> showProgressDialog());
         generateMenu.add(generateCodeItem);
 
         JMenuItem configOptionsMenuItem = new JMenuItem("Options...");
@@ -65,7 +66,50 @@ public class UMLiftMainStandalone {
         return generateMenu;
     }
 
-    private static void startCodeGeneration(ActionEvent event) {
+    private static void showProgressDialog() {
+        JDialog progressDialog = new JDialog(CurrentGui.getInstance().getGui().getMainFrame(),
+                "Generating Code", true);
+        JTextArea outputArea = new JTextArea(20, 50);
+        outputArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
+
+        progressDialog.add(scrollPane, BorderLayout.CENTER);
+        progressDialog.pack();
+        progressDialog.setLocationRelativeTo(CurrentGui.getInstance().getGui().getMainFrame());
+
+        // Redirect System.out to outputArea
+        PrintStream printStream = new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {
+                SwingUtilities.invokeLater(() -> {
+                    outputArea.append(String.valueOf((char) b));
+                    outputArea.setCaretPosition(outputArea.getDocument().getLength());
+                });
+            }
+        });
+
+        PrintStream originalOut = System.out;
+        System.setOut(printStream);
+
+        SwingWorker<Void, String> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                startCodeGeneration();
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                System.setOut(originalOut);
+                progressDialog.dispose();
+            }
+        };
+
+        worker.execute();
+        progressDialog.setVisible(true);
+    }
+
+    private static void startCodeGeneration() {
         ModelToCodeGenerator generator = new ModelToCodeGenerator();
         String currUMLetFile =
                 CurrentGui.getInstance().getGui().getCurrentDiagram().getHandler().getFileHandler().getFullPathName();
@@ -84,7 +128,7 @@ public class UMLiftMainStandalone {
                             "pom.xml");
             pomGenerator.createAndSavePom(pomFile);
 
-            openDesktop(GenerationConfig.getInstance().getGeneratedFilesDir().toFile());
+            openDesktop(GenerationConfig.getInstance().getProjectRootDir().toFile());
         } catch (IOException e) {
             displayErrorDialog("Code Generation Error", "An error occurred while generating code from UMLet file.");
         }
