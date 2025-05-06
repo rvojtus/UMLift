@@ -66,6 +66,21 @@ public class UMLet2CodeMojo extends AbstractMojo {
     @Parameter(property = "genJDKLevel", defaultValue = "JDK210") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
+    /**
+     * Executes the Maven Mojo to generate code from an UMLet file.
+     * <p>
+     * This method initializes and invokes the code generation process, taking
+     * the input UMLet file to generate corresponding output files. It logs
+     * informational messages during the execution and ensures any issues,
+     * such as errors in the input UMLet model or configuration, are reported
+     * as exceptions to halt the process.
+     *
+     * @throws MojoExecutionException if an unexpected error occurs during
+     *                                initialization or file processing.
+     * @throws MojoFailureException   if the generation process fails due to
+     *                                errors in the UMLet model or invalid
+     *                                configuration.
+     */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         LOG.info("Generating code from UMLet {}", umletFile);

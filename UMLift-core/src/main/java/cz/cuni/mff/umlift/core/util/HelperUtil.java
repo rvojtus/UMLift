@@ -63,7 +63,7 @@ public class HelperUtil {
      *
      * @param filePath path to check
      * @param suffix   to add
-     * @return original path if suffix is already present, modified path otherwise
+     * @return the original path if suffix is already present, modified path otherwise
      */
     public static Path addFileTypeSuffix(Path filePath, final String suffix) {
         if (filePath.getFileName().toString().endsWith(suffix)) {

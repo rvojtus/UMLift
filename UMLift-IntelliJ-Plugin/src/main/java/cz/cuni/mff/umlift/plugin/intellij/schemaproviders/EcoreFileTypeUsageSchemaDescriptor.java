@@ -9,6 +9,11 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Provides a descriptor for Ecore file type usage within schema-related processes.
+ * This class implements behaviors to determine if a file or virtual file corresponds
+ * to the Ecore file type and assists integration with schema-related functionality.
+ */
 public class EcoreFileTypeUsageSchemaDescriptor implements FileTypeUsageSchemaDescriptor {
     public static final @NonNls String ECORE_EXTENSION = "ecore";
 

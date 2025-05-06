@@ -28,6 +28,15 @@ public class PomGenerator {
         this.pomConfig = pomConfig;
     }
 
+    /**
+     * Creates a Maven POM (Project Object Model) represented by an instance of the {@code Model} class.
+     * The generated POM includes basic project metadata, properties, dependencies, and build plugins.
+     * <p>
+     * The method initializes the model with values from the configuration, sets project properties,
+     * adds required dependencies, and configures the Maven compiler plugin for compilation.
+     *
+     * @return a fully configured {@code Model} instance representing a Maven POM.
+     */
     public Model createPom() {
         Model model = new Model();
         setUpModel(model);
@@ -44,10 +53,33 @@ public class PomGenerator {
         return model;
     }
 
+    /**
+     * Saves the provided Maven {@code Model} to the specified output file.
+     * <p>
+     * This method writes the structure of the Maven Project Object Model (POM) into the given file
+     * using the {@link MavenXpp3Writer}. It ensures that the POM
+     * is correctly serialized and outputs the file in the appropriate format.
+     *
+     * @param model      the Maven {@code Model} instance representing the POM structure to be saved
+     * @param outputFile the output {@code File} where the POM model will be saved
+     * @throws IOException if an I/O error occurs during writing to the file
+     */
     public void savePom(Model model, File outputFile) throws IOException {
         saveModel(model, outputFile);
     }
 
+    /**
+     * Generates a Maven POM (Project Object Model) using the current configuration
+     * and saves it as a file at the specified location.
+     * <p>
+     * This method combines the functionality of creating a fully configured Maven
+     * {@code Model} with {@link #createPom()} and saving it to the file system using
+     * {@link #savePom(Model, File)}. The resulting POM includes project metadata,
+     * dependencies, properties, and build plugin configurations as specified by the configuration.
+     *
+     * @param outputFile the {@code File} location where the generated POM will be saved
+     * @throws IOException if an error occurs during POM creation or saving to the specified file
+     */
     public void createAndSavePom(File outputFile) throws IOException {
         savePom(createPom(), outputFile);
     }
@@ -60,6 +92,18 @@ public class PomGenerator {
         this.mavenCompilerPluginVersion = mavenCompilerPluginVersion;
     }
 
+    /**
+     * Adds a dependency to the provided Maven {@code Model} instance.
+     * This method creates a new {@code Dependency} with the specified
+     * group ID, artifact ID, and version, and adds it to the model's
+     * list of dependencies.
+     *
+     * @param model      the Maven {@code Model} to which the dependency will be added
+     * @param groupId    the group ID of the dependency
+     * @param artifactId the artifact ID of the dependency
+     * @param version    the version of the dependency
+     * @return the updated Maven {@code Model} instance with the new dependency added
+     */
     public Model addDependency(Model model, String groupId, String artifactId, String version) {
         Dependency dependency = new Dependency();
         dependency.setGroupId(groupId);
@@ -69,11 +113,32 @@ public class PomGenerator {
         return model;
     }
 
+    /**
+     * Adds a dependency to the provided Maven {@code Model} instance.
+     * <p>
+     * This method appends the specified {@code Dependency} object
+     * to the model's list of dependencies and returns the updated model.
+     *
+     * @param model      the Maven {@code Model} to which the dependency will be added
+     * @param dependency the {@code Dependency} instance to be added to the model
+     * @return the updated Maven {@code Model} instance with the new dependency added
+     */
     public Model addDependency(Model model, Dependency dependency) {
         model.addDependency(dependency);
         return model;
     }
 
+    /**
+     * Adds a plugin to the build section of the provided Maven {@code Model} instance.
+     * This method creates a new {@code Plugin} with the specified group ID, artifact ID,
+     * and version, and appends it to the model's plugin list.
+     *
+     * @param model      the Maven {@code Model} to which the plugin will be added
+     * @param groupId    the group ID of the plugin
+     * @param artifactId the artifact ID of the plugin
+     * @param version    the version of the plugin
+     * @return the updated Maven {@code Model} instance with the new plugin added
+     */
     public Model addPlugin(Model model, String groupId, String artifactId, String version) {
         Plugin plugin = new Plugin();
         plugin.setGroupId(groupId);
@@ -85,16 +150,42 @@ public class PomGenerator {
         return model;
     }
 
+    /**
+     * Adds a plugin to the build section of the provided Maven {@code Model} instance.
+     * This method appends the specified {@code Plugin} object to the model's plugin list
+     * and returns the updated model.
+     *
+     * @param model  the Maven {@code Model} to which the plugin will be added
+     * @param plugin the {@code Plugin} instance to be added to the model
+     * @return the updated Maven {@code Model} instance with the new plugin added
+     */
     public Model addPlugin(Model model, Plugin plugin) {
         model.getBuild().addPlugin(plugin);
         return model;
     }
 
+    /**
+     * Adds a property to the properties section of the provided Maven {@code Model} instance.
+     * The key and value are added as a key-value pair to the model's properties map.
+     *
+     * @param model the Maven {@code Model} to which the property will be added
+     * @param key   the property key to be added to the model
+     * @param value the property value to be associated with the specified key
+     * @return the updated Maven {@code Model} instance with the new property added
+     */
     public Model addProperty(Model model, String key, String value) {
         model.getProperties().put(key, value);
         return model;
     }
 
+    /**
+     * Creates and configures the UMLift Maven plugin instance.
+     * This method sets the group ID, artifact ID, version of the plugin,
+     * and associates a plugin execution configuration for generating EMF
+     * models from UMLet files.
+     *
+     * @return a {@code Plugin} instance representing the configured UMLift Maven plugin
+     */
     private Plugin getUMLiftMavenPlugin() {
         Plugin plugin = new Plugin();
 
@@ -109,6 +200,16 @@ public class PomGenerator {
         return plugin;
     }
 
+    /**
+     * Creates and configures a {@code PluginExecution} instance for generating EMF (Eclipse Modeling Framework)
+     * models based on UMLet diagrams. The method defines the unique execution ID, the goal to be executed,
+     * and the necessary configuration parameters required for the execution.
+     * <p>
+     * The configuration includes details such as the source UMLet file, output directory for the generated
+     * models, project metadata, and other settings to ensure proper generation of the EMF models.
+     *
+     * @return a fully configured {@code PluginExecution} instance for EMF model generation from UMLet.
+     */
     private PluginExecution getEmfFromUMLetExecution() {
         PluginExecution execution = new PluginExecution();
         execution.setId("emf-from-umlet");
@@ -158,6 +259,13 @@ public class PomGenerator {
         return execution;
     }
 
+    /**
+     * Configures the provided Maven {@code Model} instance with essential project metadata.
+     * This method initializes the model's version, group ID, artifact ID, version, and packaging type
+     * based on the values obtained from the {@code PomConfiguration}.
+     *
+     * @param model the Maven {@code Model} instance to be configured
+     */
     private void setUpModel(Model model) {
         model.setModelVersion(pomConfig.modelVersion());
         model.setGroupId(pomConfig.groupId());
@@ -167,6 +275,13 @@ public class PomGenerator {
 
     }
 
+    /**
+     * Configures the properties of the provided Maven {@code Model} instance.
+     * This method initializes the model's properties section with key-value pairs
+     * that specify project parameters such as source encoding and JDK level.
+     *
+     * @param model the Maven {@code Model} instance whose properties will be configured
+     */
     private void setUpModelProperties(Model model) {
         Properties properties = new Properties();
         properties.setProperty("project.build.sourceEncoding", "UTF-8");
@@ -174,6 +289,13 @@ public class PomGenerator {
         model.setProperties(properties);
     }
 
+    /**
+     * Creates and configures a {@code Plugin} instance representing the Maven Compiler Plugin.
+     * This method initializes the plugin with its group ID, artifact ID, and version, and sets up
+     * a plugin execution for the "compile" phase with the "compile" goal.
+     *
+     * @return a fully configured {@code Plugin} instance representing the Maven Compiler Plugin.
+     */
     private Plugin getCompilerPlugin() {
         Plugin plugin = new Plugin();
         plugin.setGroupId("org.apache.maven.plugins");
@@ -188,6 +310,17 @@ public class PomGenerator {
         return plugin;
     }
 
+    /**
+     * Saves the provided Maven {@code Model} instance to the specified file.
+     * <p>
+     * This method serializes the Maven Project Object Model (POM) represented by the
+     * {@code Model} instance and writes it to the given output file. It uses the
+     * {@code MavenXpp3Writer} to ensure that the POM is formatted and saved correctly.
+     *
+     * @param model      the Maven {@code Model} instance representing the POM structure to be saved
+     * @param outputFile the output {@code File} where the POM model will be saved
+     * @throws IOException if an I/O error occurs while writing the file
+     */
     private void saveModel(Model model, File outputFile) throws IOException {
         try (FileWriter writer = new FileWriter(outputFile)) {
             new MavenXpp3Writer().write(writer, model);

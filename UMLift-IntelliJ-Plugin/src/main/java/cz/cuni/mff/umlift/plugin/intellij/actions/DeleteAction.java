@@ -14,6 +14,28 @@ import java.util.Objects;
 
 import static cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings.UMLET_FILE_SUFFIX;
 
+/**
+ * The DeleteAction class provides functionality for deleting content within the context of
+ * UMLet diagrams in an IntelliJ-based IDE plugin. It extends the AnAction class to
+ * integrate custom behavior when the action is invoked or updated.
+ * <p>
+ * This class ensures that the delete action is only enabled and visible in the IDE
+ * if the currently selected file is an UMLet-compatible file, identified by its
+ * specific file extension.
+ * <p>
+ * Overrides the following methods:
+ * <p>
+ * actionPerformed - Executes the delete action triggered by the user. If the current
+ * project or file is invalid, the action is not performed. Deletes the selected uml file
+ * using the related MenuFactory implementation.
+ * <p>
+ * update - Updates the presentation layer of the action (e.g., enabling
+ * or disabling the action) based on the selected file's properties.
+ * <p>
+ * getActionUpdateThread - Specifies the thread context in which the update and
+ * corresponding action logic should execute. This is set
+ * to run in the background thread.
+ */
 public class DeleteAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {

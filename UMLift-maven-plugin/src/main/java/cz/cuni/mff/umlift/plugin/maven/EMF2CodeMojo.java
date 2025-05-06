@@ -48,6 +48,19 @@ public class EMF2CodeMojo extends AbstractMojo {
     @Parameter(property = "genJDKLevel", defaultValue = "JDK210") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
+    /**
+     * Executes the Maven Mojo to generate Java code from an Ecore model file.
+     * <p>
+     * This method serves as the entry point for the Maven plugin when invoked.
+     * It sets up the necessary configuration, invokes the code generation process,
+     * and logs the appropriate informational messages. Any issues encountered
+     * during execution will result in a thrown exception.
+     *
+     * @throws MojoExecutionException if an unexpected error occurs during
+     *                                initialization or file processing.
+     * @throws MojoFailureException   if the code generation process fails due
+     *                                to issues in the Ecore model or configuration.
+     */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         LOG.info("Generating code from Ecore {}", ecoreFile);

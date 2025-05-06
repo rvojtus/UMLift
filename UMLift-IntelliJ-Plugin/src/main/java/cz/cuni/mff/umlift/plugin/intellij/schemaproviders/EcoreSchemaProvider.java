@@ -15,6 +15,25 @@ import org.jetbrains.annotations.Nullable;
 import java.net.URL;
 import java.util.Objects;
 
+/**
+ * Provides schema support for Ecore-related files in the context of XML handling.
+ * The class extends {@link XmlSchemaProvider} to offer custom schema functionality
+ * for files recognized as Ecore within an IntelliJ Platform module.
+ * <p>
+ * The implementation primarily determines whether the schema provider is applicable
+ * to a given XML file and retrieves the corresponding schema if applicable.
+ * <p>
+ * Responsibilities:
+ * - Checks if a given XML file is associated with the Ecore file type using
+ * descriptors from {@link EcoreFileTypeUsageSchemaDescriptor}.
+ * - Supplies the appropriate schema referencing the provided module and context.
+ * <p>
+ * Usage Notes:
+ * - The provider relies on the static utility methods from
+ * {@link EcoreFileTypeUsageSchemaDescriptor} to validate Ecore file type usage.
+ * - Schema retrieval makes use of the resource file "Ecore.xsd" within the same
+ * package, resolving it based on the environment's context.
+ */
 public class EcoreSchemaProvider extends XmlSchemaProvider {
     private static final Logger LOG = Logger.getInstance(EcoreSchemaProvider.class);
 

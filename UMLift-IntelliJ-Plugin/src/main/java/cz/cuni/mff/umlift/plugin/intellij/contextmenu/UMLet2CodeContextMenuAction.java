@@ -37,7 +37,6 @@ public class UMLet2CodeContextMenuAction extends AnAction {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
         Project project = event.getData(CommonDataKeys.PROJECT);
 
-
         if (file != null && project != null) {
             generateCode(project, file.getPath());
         } else {
@@ -45,6 +44,13 @@ public class UMLet2CodeContextMenuAction extends AnAction {
         }
     }
 
+    /**
+     * Updates the visibility and enabled state of the action presentation based on the current context.
+     * Determines whether the action should be visible and enabled by checking if the current file
+     * is a UMLet-compatible file (with the correct file extension).
+     *
+     * @param event the action event containing context information such as the selected file
+     */
     @Override
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
@@ -58,6 +64,16 @@ public class UMLet2CodeContextMenuAction extends AnAction {
         return ActionUpdateThread.BGT;
     }
 
+    /**
+     * Initiates the code generation process for a UMLet file in a background task. The method sets up
+     * the progress indicator, configures code generation settings, and delegates code generation logic
+     * to a generator instance. After the generation, it handles diagnostics, logs results, and refreshes project files.
+     *
+     * @param project        the IntelliJ IDEA project where code generation is initiated. This is used
+     *                       to configure paths and manage project-specific tasks during the code generation process.
+     * @param inputUMLetFile the path to the UMLet file to be used as the input for code generation.
+     *                       This file provides the basis for generating code artifacts.
+     */
     private void generateCode(@NotNull Project project, String inputUMLetFile) {
 
 

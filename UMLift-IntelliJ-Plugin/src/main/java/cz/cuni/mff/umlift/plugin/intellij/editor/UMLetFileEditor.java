@@ -369,7 +369,6 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
 
     @Override
     public void setState(@NotNull FileEditorState fileEditorState) {
-
     }
 
     @Override
@@ -384,12 +383,10 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
 
     @Override
     public void addPropertyChangeListener(@NotNull PropertyChangeListener propertyChangeListener) {
-
     }
 
     @Override
     public void removePropertyChangeListener(@NotNull PropertyChangeListener propertyChangeListener) {
-
     }
 
     @Override
@@ -492,6 +489,12 @@ public class UMLetFileEditor extends UserDataHolderBase implements FileEditor {
         return (UMLetIntelliJGUI) CurrentGui.getInstance().getGui();
     }
 
+    /**
+     * Initializes an empty UXF file with default content and writes it to the specified file path.
+     * The method creates a basic XML structure representing a UMLet diagram with a defined zoom level.
+     *
+     * @throws IOException if an I/O error occurs while writing the file
+     */
     private void initEmptyUXF() throws IOException {
         final String content =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +

@@ -6,13 +6,20 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 /**
- * JPanel providing Directory Selecting functionality. Used in {@link ConfigDialog}.
- *
- * @since 1.0
+ * A JPanel implementation that provides a GUI component for directory selection.
+ * This panel includes a non-editable text field displaying the selected directory
+ * and a button for opening a directory chooser dialog.
  */
 public class DirectoryChooserPanel extends JPanel {
     private final JTextField directoryTextField;
 
+    /**
+     * Constructs a DirectoryChooserPanel with the specified initial directory text.
+     * This panel contains a non-editable text field to display the directory path
+     * and a button to open a directory chooser dialog for directory selection.
+     *
+     * @param directoryText the initial text to display in the directory text field
+     */
     public DirectoryChooserPanel(String directoryText) {
         setLayout(new BorderLayout(5, 5));
         setBorder(BorderFactory.createEmptyBorder());
@@ -29,6 +36,12 @@ public class DirectoryChooserPanel extends JPanel {
         add(browseButton, BorderLayout.EAST);
     }
 
+    /**
+     * Opens a directory chooser dialog that allows the user to select a directory.
+     * The selected directory's path is displayed in the directory text field.
+     *
+     * @param event the ActionEvent triggered by the user clicking the directory selection button
+     */
     private void chooseDirectory(ActionEvent event) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

@@ -45,6 +45,13 @@ public class ConfigDialog extends JDialog {
     // Generation
     private final DirectoryChooserPanel projectRootDirectoryChooser;
 
+    /**
+     * Constructs a configuration dialog for setting up project details and code generation options.
+     * This dialog provides fields for entering project metadata, selecting a project root directory,
+     * and specifying configuration options such as NS URI, NS Prefix, and JDK level.
+     *
+     * @param owner the parent frame for this dialog.
+     */
     public ConfigDialog(Frame owner) {
         super(owner, "Config", true);
         this.setVisible(false);

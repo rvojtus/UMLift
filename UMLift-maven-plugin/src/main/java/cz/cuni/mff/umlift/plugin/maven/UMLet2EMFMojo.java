@@ -65,6 +65,24 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(property = "genJDKLevel", defaultValue = "JDK210") // GenJDKLevel.JDK210
     private String genJDKLevel;
 
+    /**
+     * Executes the Maven Mojo to transform a UMLet project file into an Ecore model
+     * and subsequently generate a GenModel.
+     * <p>
+     * This method is the main entry point for the UMLet2EMF Maven plugin. It leverages
+     * the internal transformation logic to process a UMLet file, transforming it into
+     * an Ecore model and generating the associated GenModel. Informational messages are
+     * logged throughout the process. Any issues encountered during execution will
+     * result in a thrown exception.
+     * <p>
+     * Logs the transformation process, including the target UMLet file, model directory,
+     * project details, and output filenames for the Ecore model and GenModel.
+     *
+     * @throws MojoExecutionException if an unexpected error occurs during file transformation
+     *                                or output generation, such as IO failures or invalid paths.
+     * @throws MojoFailureException   if the transformation process fails due to issues
+     *                                such as invalid UMLet input or configuration errors.
+     */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         LOG.info("""

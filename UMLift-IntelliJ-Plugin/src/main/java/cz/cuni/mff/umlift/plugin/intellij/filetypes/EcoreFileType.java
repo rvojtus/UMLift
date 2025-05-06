@@ -10,9 +10,28 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
+/**
+ * Represents the file type for EMF Ecore files in IntelliJ IDEA.
+ * Ecore files are used as part of the Eclipse Modeling Framework (EMF)
+ * to define models and their components.
+ * This class provides properties such as name, description, default file extension,
+ * and icon to identify and describe Ecore files in the IDE.
+ * <p>
+ * Extends the {@link LanguageFileType} class and uses the XML language as its basis.
+ */
 public class EcoreFileType extends LanguageFileType {
     public static final EcoreFileType INSTANCE = new EcoreFileType();
 
+    /**
+     * Constructs an instance of the EcoreFileType class.
+     * <p>
+     * This private constructor ensures that the EcoreFileType class follows a singleton
+     * design pattern, preventing external instantiation and restricting its instance
+     * to the predefined {@code INSTANCE}.
+     * <p>
+     * The constructor initializes the Ecore file type as being based on the XML language
+     * by passing {@link XMLLanguage#INSTANCE} to the superclass constructor.
+     */
     private EcoreFileType() {
         super(XMLLanguage.INSTANCE);
     }

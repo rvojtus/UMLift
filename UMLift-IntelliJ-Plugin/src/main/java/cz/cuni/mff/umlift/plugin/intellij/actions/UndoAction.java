@@ -14,6 +14,25 @@ import java.util.Objects;
 
 import static cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings.UMLET_FILE_SUFFIX;
 
+/**
+ * The UndoAction class represents an action for performing the undo operation
+ * in the context of UMLet diagrams within an IntelliJ-based IDE plugin. It extends
+ * the AnAction class to integrate custom behavior when the action is triggered or updated.
+ * <p>
+ * This class ensures that the undo action is only enabled and visible when the current
+ * selection in the IDE is an UMLet-compatible file identified by its specific file extension.
+ * <p>
+ * Overrides the following methods:
+ * <p>
+ * actionPerformed - Executes the undo operation when the action is triggered by the user.
+ * If the current project or selected file is invalid, the action is not performed.
+ * <p>
+ * update - Updates the visibility and enablement state of the action
+ * based on the properties of the currently selected file.
+ * <p>
+ * getActionUpdateThread - Specifies the thread context in which the action
+ * logic and updates should execute. This is set to run in the background thread.
+ */
 public class UndoAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {

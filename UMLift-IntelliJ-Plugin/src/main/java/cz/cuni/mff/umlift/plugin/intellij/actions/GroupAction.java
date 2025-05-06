@@ -14,6 +14,28 @@ import java.util.Objects;
 
 import static cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings.UMLET_FILE_SUFFIX;
 
+/**
+ * The GroupAction class provides functionality for grouping elements within
+ * UMLet diagrams in an IntelliJ-based IDE plugin. This class extends the
+ * AnAction class to integrate custom behavior when the action is invoked or
+ * updated.
+ * <p>
+ * This class ensures that the grouping action is enabled and visible in the IDE
+ * only if the currently selected file is an UMLet-compatible file, identified by
+ * its specific file extension.
+ * <p>
+ * Overrides the following methods:
+ * <p>
+ * actionPerformed - Executes the grouping action triggered by the user. If the
+ * current project or file is invalid, the action is not performed. It invokes
+ * the "group" action of MenuFactoryIntelliJ when conditions are satisfied.
+ * <p>
+ * update - Updates the presentation layer of the action (e.g., enabling or disabling
+ * the action) based on the selected file's properties.
+ * <p>
+ * getActionUpdateThread - Specifies the thread context in which the update and
+ * corresponding action logic should execute. This is set to run in the background thread.
+ */
 public class GroupAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {

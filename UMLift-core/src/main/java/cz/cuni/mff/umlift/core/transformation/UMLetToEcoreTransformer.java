@@ -134,6 +134,12 @@ public class UMLetToEcoreTransformer {
         return ePackage;
     }
 
+    /**
+     * Configures the specified EPackage with the predefined name, namespace prefix,
+     * and namespace URI.
+     *
+     * @param ePackage the EPackage to be set up
+     */
     private void setUpEPackage(EPackage ePackage) {
         ePackage.setName(ePackageName);
         ePackage.setNsPrefix(ePackageNsPrefix);
@@ -514,7 +520,7 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * Used to parse, extract and add attributes from a UMLet Class to Ecore EClass
+     * Used to parse, extract, and add attributes from a UMLet Class to Ecore EClass
      *
      * @param umletClazz UMLet Class to parse
      * @param eClass     EClass to populate
@@ -536,7 +542,7 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * Used to parse, extract and add items from a UMLet Class Stereotype Enumeration to Ecore EEnum
+     * Used to parse, extract, and add items from a UMLet Class Stereotype Enumeration to Ecore EEnum
      *
      * @param umletClazz UMLet Class to parse
      * @param eNum       EEnum to populate
@@ -563,7 +569,7 @@ public class UMLetToEcoreTransformer {
     }
 
     /**
-     * Parses an attribute, decides its data type and adds it to the EClass attributes
+     * Parses an attribute, decides its data type, and adds it to the EClass attributes
      *
      * @param eClass EClass to receive the attribute
      * @param attr   Attribute taken from UMLet Class panel attributes
@@ -768,7 +774,7 @@ public class UMLetToEcoreTransformer {
 
     /**
      * Establishes an aggregation relationship between a parent EClass and a child EClass
-     * by utilizing the helper method for aggregation relations.
+     * by using the helper method for aggregation relations.
      *
      * @param parentClass the EClass that represents the parent in the aggregation relationship
      * @param childClass  the EClass that represents the child in the aggregation relationship
@@ -780,7 +786,7 @@ public class UMLetToEcoreTransformer {
 
     /**
      * Establishes a composite relationship between a parent EClass and a child EClass
-     * by utilizing the helper method for aggregation relations, with containment set to true.
+     * by using the helper method for aggregation relations, with containment set to true.
      *
      * @param parentClass the EClass that represents the parent in the composite relationship
      * @param childClass  the EClass that represents the child in the composite relationship

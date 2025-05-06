@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 /**
- * A dynamic action group that provides code generation related actions in the context menu.
+ * A dynamic action group that provides code and artifact generation actions in a context menu.
  *
  * <p>
  * This action group appears in the right-click menu of the Project View when a file is selected.
@@ -22,6 +22,14 @@ import java.util.Arrays;
 public class UMLiftActionGroup extends DefaultActionGroup {
     private final static String[] supportedExtensions = {"uxf", "ecore", "genmodel"};
 
+    /**
+     * Updates the state of the action's presentation based on the currently selected file
+     * in the IntelliJ editor or project view. The action is enabled and visible only if
+     * the selected file is not null and has a supported file extension.
+     *
+     * @param event the action event triggered in the IntelliJ environment, containing the
+     *              context of the invocation including information about the selected file.
+     */
     @Override
     public void update(@NotNull AnActionEvent event) {
         VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);

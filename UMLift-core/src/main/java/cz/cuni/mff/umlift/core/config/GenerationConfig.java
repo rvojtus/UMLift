@@ -12,14 +12,14 @@ import java.nio.file.Path;
  * <ul>
  *     <li>UMLet file to be processed</li>
  *     <li>Directory to output generated files to</li>
- *     <li>Path for generated Ecore file</li>
- *     <li>Path for generated GenModel file</li>
+ *     <li>Path for a generated Ecore file</li>
+ *     <li>Path for a generated GenModel file</li>
  *     <li>Project Name</li>
  *     <li>Project Namespace prefix</li>
  *     <li>Project Namespace URI</li>
  * </ul>
  * <p>
- * The code below shows example usage of this class:
+ * The code below shows an example usage of this class:
  * <p>
  * {@snippet :
  * GenerationConfig config = GenerationConfig.getInstance()
