@@ -37,7 +37,6 @@ import static cz.cuni.mff.umlift.core.util.HelperUtil.saveGenModel;
  *   <li>Generating GenModels from Ecore models.</li>
  *   <li>Generating Java code from GenModels and handling diagnostics.</li>
  * </ul>
- * </p>
  *
  * @see EPackage
  * @see GenModel
@@ -88,12 +87,10 @@ public class ModelToCodeGenerator {
      *
      * <p>This method performs the following steps:
      * <ul>
-     *   <li>Registers the necessary resource factories, packages, and adapter factories for working with GenModels
-     *   .</li>
+     *   <li>Registers the necessary resource factories, packages, and adapter factories for working with GenModels</li>
      *   <li>Generates a GenModel from the provided Ecore model file.</li>
      *   <li>Generates Java code from the GenModel and handles any diagnostic issues.</li>
      * </ul>
-     * </p>
      *
      * @param inputEcorePath    the file path to the Ecore model
      * @param generatedFilesDir the directory where generated files will be saved
@@ -130,7 +127,7 @@ public class ModelToCodeGenerator {
      *   <li>Registering the GenModel package to the EPackage registry.</li>
      *   <li>Adding the descriptor for the GenModel adapter factory.</li>
      * </ul>
-     * </p>
+     *
      *
      * <p>It then generates Java code from the provided GenModel and saves it to the specified root path.
      * Any errors or issues during code generation are logged to the console.</p>

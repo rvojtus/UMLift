@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  *   <li>Initializing the Ecore model's package metadata (name, namespace prefix, and URI).</li>
  *   <li>Processing UML elements to generate Ecore models.</li>
  * </ul>
- * </p>
+ *
  * <p>
  * Example usage:
  * {@snippet :
