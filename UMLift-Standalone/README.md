@@ -2,7 +2,7 @@
 
 UMLift - Standalone is a self-contained application that integrates UMLet's GUI with the core functionality of
 UMLift-core to support Informal Model-Driven Development (IMDD). It runs independently of any IDE and can be executed
-directly via the command line (CLI).
+directly via the command line (CLI) or by "double-clicking" the provided JAR file.
 
 ## Table of Contents
 
@@ -29,6 +29,12 @@ Informal Model-Driven Development (IMDD).
 - Automatic File Explorer Opening
     - After a successful transformation & generation, the folder containing the generated artifacts automatically opens
       in the OS-specific file explorer
+
+## Requirements
+
+- Maven
+- Java 21+
+- macOS, Linux, Windows
 
 ## Installation & Setup
 
@@ -59,6 +65,18 @@ mvn exec:java
 ```
 
 ## Usage
+
+1. Launch **UMLift Standalone**.
+2. **Open or create a `.uxf` file** using the menu bar: **File -> Open**.
+3. **Design an informal metamodel** using UML-style elements.
+4. **Configure the generation** using the menu bar item **UMLift** -> **Options...**
+5. Click **UMLift** -> **Generate Code** to generate:
+    - Ecore and GenModel
+    - Java project
+    - Maven POM for the generated project
+
+For more information on how to use the diagram editor,
+see [the official site of the UMLet project.](https://github.com/umlet/umlet)
 
 ## License
 

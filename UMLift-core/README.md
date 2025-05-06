@@ -22,20 +22,22 @@ Two main packages:
 
 Transforms UML elements from UMLet diagrams into Ecore elements for use with EMF.
 
-Supports various UML Elements:
+Supports the following UML Elements:
 
 - Class
 - Abstract Class
 - Interface
 - Enumeration
 
-Supports various UML Class relations:
+Supports the following UML Class relations:
 
 - Association
 - Inheritance
 - Realization
 - Aggregation
 - Composition
+
+Class attributes are also supported in the following format:
 
 ## License
 

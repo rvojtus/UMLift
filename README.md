@@ -20,7 +20,7 @@ A project providing support for Informal Model-Driven Development.
 ## About The Project
 
 This project was born out of the need for a lightweight and informal approach to Model-Driven Development (MDD) and
-meta-model creation. The current standard, the Eclipse Modeling Framework (EMF), does not support such an informal
+metamodel creation. The current standard, the Eclipse Modeling Framework (EMF), does not support such an informal
 design process. Additionally, EMF is tightly integrated with the Eclipse IDE, which can be restrictive.
 
 ## Overview
@@ -46,7 +46,7 @@ UMLift Project is structured according to Maven conventions. It is composed of a
 having groupID of `cz.cuni.mff`. <br>
 There are several submodules:
 
-- `umlet-15.1` - contains UMLet project files
+- `dependencies` - contains UMLet project JARs
 - `UMLift-core` - provides transformation and generation functionality
 - `UMLift-maven-plugin` - provides Maven plugin
 - `UMLift-Standalone` - a standalone version, runnable from CLI
@@ -59,7 +59,7 @@ There is also an IntelliJ Plugin that uses Gradle instead of Maven.
 
 - Maven
 - Java 21+
-- macOS/Linux, should work on Windows - not tested
+- macOS, Linux, Windows
 
 ### Standalone
 
@@ -104,8 +104,9 @@ respective organizations; **this project does not own them**, it simply uses the
 - [UMLet](https://github.com/umlet/umlet) - A lightweight UML tool for creating UML diagrams.
 - [Eclipse Modeling Framework (EMF)](https://projects.eclipse.org/projects/modeling.emf.emf) - A modeling framework and
   code generation facility for building tools and other applications based on a structured data model.
-- [Maven](https://maven.apache.org/) - Used for project & dependency management, and for the Mojo Plugin
-- [IntelliJ Platform SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html) - Used to develop the IntelliJ IDEA
+- [Apache Maven](https://maven.apache.org/) - Used for project & dependency management, and for the Mojo Plugin
+- [Jetbrains IntelliJ Platform SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html) - Used to develop the
+  IntelliJ IDEA
   plugin.
 
 ## License

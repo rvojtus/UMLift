@@ -29,7 +29,7 @@ Configuration through IntelliJ's Settings Dialog.
 
 ### Get the Plugin from JetBrains Marketplace
 
-WIP
+- Install via JetBrains Marketplace: **Settings → Plugins → Browse Repositories → Search "UMLift" → Install**.
 
 ### Install it manually
 
@@ -47,13 +47,26 @@ Steps to install the plugin manually:
 8. Select the plugin archive file and click **OK**.
 9. Click **OK** to apply the changes and restart the IDE if prompted.
 
-[Useful link](https://www.jetbrains.com/help/idea/managing-plugins.html?) to official plugin installing guide.
+[Useful link](https://www.jetbrains.com/help/idea/managing-plugins.html?) to the official plugin installing guide.
 
 ## Usage
 
+#### Opening UMLet Diagram Files
+
+Simply double-click on any UMLet Diagram file - `.uxf`, or create a new `.uxf` file and a custom File Editor opens:
+![IntelliJ UMLet FileEditor](../docs/images/intellij/intellijExampleUMLiftNewProject.png)
+
+#### Generating code & artifacts from UMLet diagrams
+
+1. Open your project in IntelliJ IDEA.
+2. Right-click on a `.uxf` file in the Project view.
+3. Choose **UMLift → Generate Code from Diagram**. ![IntelliJ submenus](../docs/images/intellij/intelliJSubMenus.png)
+4. Created Artifacts are placed in `src/main/java` or a configured output folder.
+5. Ecore and GenModel files are created in `src/main/resources/EMFModels` or a configured output folder.
+
 ### Opening UMLet Diagram File - `.uxf`
 
-Simply double-click on any UMLet Diagram file - `.uxf`, and a custom File Editor open:<br>
+Simply double-click on any UMLet Diagram file - `.uxf`, and a custom File Editor open:
 ![FileEditor](src/main/resources/pictures/fileEditorPicWholeIDE.png)
 
 ### Using Context Menu Actions
