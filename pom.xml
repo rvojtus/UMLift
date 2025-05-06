@@ -158,7 +158,17 @@
                         <author>true</author>
                         <version>true</version>
                         <failOnError>false</failOnError>
+                        <doclint>all,-missing</doclint>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>aggregate</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
