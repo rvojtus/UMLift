@@ -34,7 +34,7 @@ supporting model-driven development workflows.
 
 - UMLet GUI - a way to create UML diagrams
 - UMLet to EMF model transformation - creates Ecore and GenModel resources from UMLet diagrams
-- Adds custom palette - `EMF Palette`, provides all necessary elements for IMDD
+- Adds custom palette - `UMLift Palette`, provides all necessary elements for IMDD
 - Java Code Generation - produces corresponding Java classes using EMF
 - IntelliJ IDEA support - a plugin that provides all the functionality inside the IDE
 - Maven support - a plugin for Maven that provides transformation and artifact generation functionality for Maven
@@ -43,7 +43,8 @@ supporting model-driven development workflows.
 ## Project Structure
 
 UMLift Project is structured according to Maven conventions. It is composed of a top-level parent module - `UMLift`,
-having groupID of `cz.cuni.mff`. <br>
+having groupID of `cz.cuni.mff`.
+
 There are several submodules:
 
 - `dependencies` - contains UMLet project JARs
@@ -92,9 +93,17 @@ Here's a list of all available README files:
 
 Generating Javadoc:
 
-```bash
-mvn javadoc:javadoc
+```shell
+mvn javadoc:aggregate
 ```
+
+or it is generated during the `verify` phase:
+
+```shell
+mvn clean verify
+```
+
+The generated documents, in the form of a website, can be located in the `target/reports/apidocs` directory.
 
 ## External Tools & Libraries
 
