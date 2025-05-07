@@ -86,6 +86,8 @@ menu bar items to configure and execute code and artifact generation.
 The class `UMLiftMainStandalone` contains the entry point - the `main` method, though which the application can be
 launched. A configuration dialog component is provided by the `ConfigDialog` class.
 
+We can launch the Standalone application using the following command: `mvn exec:java -pl UMLift-Standalone`.
+
 ### UMLift Maven Plugin
 
 The maven plugin provides three Maven Goals, which are specified by the three classes: `EMF2CodeMojo`, `UMLet2CodeMojo`,
@@ -113,6 +115,15 @@ The plugin is composed of multiple packages:
 - **SchemaProviders** : Provides schemas for the Ecore and GenModel file types.
 - **Settings** : Defines configuration options exposed to the user via the IDE’s Settings dialog, including plugin
   preferences, paths, and feature toggles.
+
+To build the plugin, run the following command: `gradle buildPlugin`. The plugin is located in the `build/distributions`
+directory.
+
+To run the plugin for development purposes, run the following command: `gradle runIde`.
+
+There is a known issue with this module when it is opened in IntelliJ IDEA, some dependencies are not recognized
+properly. To resolve this issue, run the following command: `mvn idea:idea`. This issue is only "cosmetic" and does not
+affect the plugin's functionality and compilation.
 
 ![c4 model UMLift intellij plugin](/docs/images/c4/structurizr-1-Component-intellij.png)
 
