@@ -40,11 +40,6 @@ UMLift includes:
 
 ### Installation
 
-- Download the latest release from [...]
-- Unzip and run the executable (`umlift-standalone.jar`)
-
-### Installation - using maven
-
 Follow these steps to install and run the program from the command line:
 
 #### 1. **Build the project**
@@ -58,6 +53,9 @@ mvn clean install
 #### 2. Run the program
 
 After building, you can run the program using one of the following methods:
+
+- Using the generated runnable JAR file: After installation, the runnable JAR file can be found in
+  `UMLift-Standalone/target/UMLift-Standalone-VERSION-runnable.jar`. Simply double-click it.
 
 - From the root directory:
 
@@ -127,6 +125,24 @@ Configuration through IntelliJ's Settings Dialog.
 ### Installation
 
 - Install via JetBrains Marketplace: **Settings → Plugins → Browse Repositories → Search "UMLift" → Install**.
+
+### Install it manually
+
+Steps to install the plugin manually:
+
+1. Run `mvn clean install` in the root of the project.
+2. Go to the plugin's directory - `cd UMLift-IntelliJ-Plugin/`.
+3. Run `./gradlew buildPlugin`.
+4. Find the generated file at `build/distributions/UMLift-IntelliJ-Plugin-VERSION.zip`.
+5. Open **Settings** and then select **Plugins**.
+6. On the **Plugins** page,
+   click ![](https://resources.jetbrains.com/help/img/idea/2024.3/app.expui.general.settings_dark.svg)
+7. Click **Install Plugin from Disk...** <br>
+   ![](https://resources.jetbrains.com/help/img/idea/2024.3/install_plugin_from_disk_dark.png)
+8. Select the plugin archive file and click **OK**.
+9. Click **OK** to apply the changes and restart the IDE if prompted.
+
+[Useful link](https://www.jetbrains.com/help/idea/managing-plugins.html?) to the official plugin installing guide.
 
 ### Usage
 

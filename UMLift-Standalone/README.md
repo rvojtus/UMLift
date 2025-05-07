@@ -52,6 +52,9 @@ mvn clean install
 
 After building, you can run the program using one of the following methods:
 
+- Using the generated runnable JAR file. After installation, the runnable JAR file can be found in
+  `UMLift-Standalone/target/UMLift-Standalone-VERSION-runnable.jar`. Simply double-click it.
+
 - From the root directory:
 
 ```shell
