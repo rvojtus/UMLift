@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="exampleProject" nsURI="https://example.org/exampleProject" nsPrefix="exampleProjectPrefix">
+  <eClassifiers xsi:type="ecore:EClass" name="Patient" eSuperTypes="//User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="age">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Appointment" upperBound="-1" eType="//Appointment" eOpposite="//Appointment/Patient"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="User" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Doctor" eSuperTypes="//User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Appointment" upperBound="-1" eType="//Appointment" eOpposite="//Appointment/Doctor"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Clinic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Doctor" upperBound="-1" eType="//Doctor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Patient" upperBound="-1" eType="//Patient" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Appointment" upperBound="-1" eType="//Appointment" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Appointment" eSuperTypes="//Schedulable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Doctor" lowerBound="1" eType="//Doctor" eOpposite="//Doctor/Appointment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Patient" lowerBound="1" eType="//Patient" eOpposite="//Patient/Appointment"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="AppointmentStatus" eType="//AppointmentStatus"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Schedulable" abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="AppointmentStatus">
+    <eLiterals name="Scheduled" literal="Scheduled"/>
+    <eLiterals name="Completed" value="1" literal="Completed"/>
+    <eLiterals name="Cancelled" value="2" literal="Cancelled"/>
+  </eClassifiers>
+</ecore:EPackage>

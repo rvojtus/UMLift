@@ -1,3 +1,9 @@
+---
+author: Rastislav Vojtuš
+title: UMLift Developer Documentation
+date: 2025-05-06
+---
+
 # UMLift - User Documentation
 
 ## Description
@@ -274,6 +280,13 @@ We can specify the `phase` to have the plugin executed in one of maven's build l
 specified the `generate-sources` phase. It is then implicitly executed during this lifecycle, or we can execute it
 ourselves by typing the command `mvn generate-sources`. After the execution, we will see the generated files in their
 respective folders.
+
+## Examples
+
+We can find prepared examples of UMLet diagrams, in the `examples/UMLetExamples` directory.
+
+Examples of the EMF models can be found in the `examples/EMF` directory. These models were created from the
+aforementioned UMLet diagrams.
 
 ## External Tools & Libraries
 

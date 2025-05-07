@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="src" modelName="exampleProject" complianceLevel="21.0" copyrightFields="false">
+  <genPackages prefix="ExampleProject" basePackage="org.example">
+    <ecorePackage href="ecore.ecore#/"/>
+    <genEnums typeSafeEnumCompatible="false">
+      <ecoreEnum href="ecore.ecore#//Allergy"/>
+    </genEnums>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Hospital"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Hospital/Department"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Hospital/Building"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Hospital/AdminDepartment"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Department"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Department/Staff"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Building"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Building/Floor"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Building/Hospital"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Floor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Floor/PatientRoom"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="ecore.ecore#//Staff"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Staff/TimeSlot"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Nurse"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Nurse/Patient"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Receptionist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Technician"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Janitor"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Security"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//IT"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Patient"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/Doctor"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/Nurse"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/EmergencyContact"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/MedicalRecord"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/Prescription"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/Appointment"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/Billing"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/Insurance"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Patient/PatientRoom"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//EmergencyContact"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//MedicalRecord"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//MedicalRecord/LabReport"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//MedicalRecord/Doctor"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//MedicalRecord/Diagnosis"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="ecore.ecore#//MedicalRecord/Allergy"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//MedicalRecord/Treatment"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Prescription"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Prescription/Medication"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//LabReport"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Diagnosis"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Treatment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Appointment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Schedule"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Schedule/TimeSlot"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//TimeSlot"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//TimeSlot/Staff"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Billing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Billing/Payment"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Billing/Patient"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Insurance"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Insurance/Patient"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Payment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//PatientRoom"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//PatientRoom/Equipment"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//PatientRoom/Patient"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//PatientRoom/Floor"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Equipment"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Inventory"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Inventory/Medication"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Inventory/Equipment"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Inventory/Supplies"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Medication"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Supplies"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Doctor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Doctor/Patient"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//Doctor/TreatmentRoom"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Surgeon"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Anesthesiologist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Radiologist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Pharmacist"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//OperatingRoom"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//ICU"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//GeneralRoom"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Laboratory"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//HR"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Finance"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Legal"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Records"/>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="ecore.ecore#//AdminDepartment"/>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="ecore.ecore#//TreatmentRoom"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="ecore.ecore#//TreatmentRoom/Doctor"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="ecore.ecore#//Radiology"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

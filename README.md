@@ -82,6 +82,13 @@ various "maven goals", to transform UMLet Diagram files - `.uxf`, to EMF Models 
 consequently generate Java source code & artifacts from those models.<br>
 For more information about the installation, setup & usage: [Maven Mojo](UMLift-maven-plugin/README.md)
 
+## Examples
+
+We can find prepared examples of UMLet diagrams, in the `examples/UMLetExamples` directory.
+
+Examples of the EMF models can be found in the `examples/EMF` directory. These models were created from the
+aforementioned UMLet diagrams.
+
 ## Documentation
 
 Here's a list of all available README files:

@@ -19,6 +19,7 @@ This document contains the system's architecture, components, and their interact
     - [UMLift IntelliJ Plugin](#umlift-intellij-plugin)
 - [Java Documentation](#java-documentation)
 - [READMEs](#readmes)
+- [Examples](#examples)
 - [External Tools & Libraries](#external-tools--libraries)
 - [License](#license)
 - [Contact](#contact)
@@ -156,6 +157,13 @@ Here's a list of all available README files:
 - [UMLift Standalone](/UMLift-Standalone/README.md)
 - [UMLift Maven Plugin](/UMLift-maven-plugin/README.md)
 - [UMLift IntelliJ Plugin](/UMLift-IntelliJ-Plugin/README.md)
+
+## Examples
+
+We can find prepared examples of UMLet diagrams, in the `examples/UMLetExamples` directory.
+
+Examples of the EMF models can be found in the `examples/EMF` directory. These models were created from the
+aforementioned UMLet diagrams.
 
 ## External Tools & Libraries
 
