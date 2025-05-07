@@ -34,7 +34,7 @@ supporting model-driven development workflows.
 
 - UMLet GUI - a way to create UML diagrams
 - UMLet to EMF model transformation - creates Ecore and GenModel resources from UMLet diagrams
-- Custom palette - `UMLift Palette`, provides all necessary elements for metamodeling
+- Custom palette - `UMLift Elements`, provides all necessary elements for metamodeling
 - Java Code Generation - produces corresponding Java classes using EMF
 - Jetbrains IntelliJ IDEA support - a plugin that provides all the functionality inside the IDE
 - Apache Maven support - a plugin for Maven that provides transformation and artifact generation functionality for Maven
