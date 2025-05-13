@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "cz.cuni.mff"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenLocal()
@@ -19,7 +19,7 @@ dependencies {
     implementation("cz.cuni.mff:UMLift-core:1.0-SNAPSHOT") {
     }
     intellijPlatform {
-        intellijIdeaCommunity("2024.2.4")
+        intellijIdeaCommunity("2025.1.1")
         bundledPlugin("com.intellij.java")
 
         pluginVerifier()
@@ -40,7 +40,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("242.23726.103")
-        untilBuild.set("243.*")
+        untilBuild.set("251.*")
     }
 
     signPlugin {

@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>cz.cuni.mff.umlift.plugin.intellij</id>
+    <id>cz.cuni.mff.umlift.plugin</id>
     <name>UMLift</name>
     <vendor email="rastislav.vojtus@gmail.com">Rastislav Vojtuš</vendor>
     <description>
@@ -48,9 +48,6 @@
                   fieldName="INSTANCE"
                   language="TEXT"
                   extensions="uxf"/>
-        <fileTypeUsageSchemaDescriptor schema="ecore"
-                                       implementationClass="cz.cuni.mff.umlift.plugin.intellij.schemaproviders.EcoreFileTypeUsageSchemaDescriptor"/>
-        <xml.schemaProvider implementation="cz.cuni.mff.umlift.plugin.intellij.schemaproviders.EcoreSchemaProvider"/>
     </extensions>
 
     <applicationListeners>
