@@ -1,10 +1,10 @@
 plugins {
     id("java")
-    id("org.jetbrains.intellij.platform") version "2.5.0"
+    id("org.jetbrains.intellij.platform") version "2.7.1"
 }
 
 group = "cz.cuni.mff"
-version = "1.0"
+version = "1.1"
 
 repositories {
     mavenLocal()
@@ -19,7 +19,7 @@ dependencies {
     implementation("cz.cuni.mff:UMLift-core:1.0-SNAPSHOT") {
     }
     intellijPlatform {
-        intellijIdeaCommunity("2025.1.1")
+        intellijIdeaCommunity("2025.2")
         bundledPlugin("com.intellij.java")
 
         pluginVerifier()
@@ -27,12 +27,7 @@ dependencies {
     }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-
-
 tasks {
-    // Set the JVM compatibility versions
     withType<JavaCompile> {
         sourceCompatibility = "21"
         targetCompatibility = "21"
@@ -40,7 +35,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("242.23726.103")
-        untilBuild.set("251.*")
+        untilBuild.set("252.*")
     }
 
     signPlugin {
