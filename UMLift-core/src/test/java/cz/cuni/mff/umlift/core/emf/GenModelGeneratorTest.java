@@ -2,13 +2,11 @@ package cz.cuni.mff.umlift.core.emf;
 
 import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.ecore.EPackage;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -28,23 +26,29 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class GenModelGeneratorTest {
     private GenModelGenerator genModelGenerator;
+    private static UMLetToEcoreTransformer transformer;
     private static Path tmpDir;
     private static final GenerationConfig config = GenerationConfig.getInstance();
 
     @BeforeAll
-    static void setUpBeforeAll() throws IOException {
-        tmpDir = Files.createTempDirectory("testing");
-        config.setGenJDKLevel(GenJDKLevel.JDK210_LITERAL);
+    static void setup(){
+        transformer = new UMLetToEcoreTransformer();
+        config.setGenJDKLevel(GenJDKLevel.JDK210_LITERAL)
+                .setProjectName(projectName)
+                .setProjectNsPrefix(projectNsPrefix)
+                .setProjectNsURI(projectNsUri);
     }
 
     @BeforeEach
-    void setUpBeforeEach() {
+    void setUpBeforeEach() throws IOException{
         genModelGenerator = new GenModelGenerator();
+        tmpDir = Files.createTempDirectory("genModelGeneratorTestDirectory");
+        config.setGeneratedFilesDir(tmpDir)
+                .setEcoreGenModelDir(Path.of(tmpDir.toString() + "/models"));
     }
 
-
-    @AfterAll
-    static void tearDownAfterAll() throws IOException {
+    @AfterEach
+    void tearDownAfterEach() throws IOException {
         if (Files.exists(tmpDir)) {
             Files.walk(tmpDir)
                     .sorted((p1, p2) -> -p1.compareTo(p2))
@@ -66,36 +70,20 @@ public class GenModelGeneratorTest {
                 .filter(path -> !path.getFileName().toString().equals("empty.uxf")); // skip empty Diagram
     }
 
-    static Stream<Path> provideEcoreFiles() throws Exception {
-        Stream<Path> uxfFiles = provideUxfFiles();
+    @ParameterizedTest(name = "{index} - Generating GenModel for UXF: {0}")
+    @MethodSource("provideUxfFiles")
+    void givenUMLetFile_whenGenerateGenModel_thenGenModelValid(Path uxfFile) throws Exception {
+        final File file = uxfFile.toFile();
 
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder().build();
+        // Validate existence of UXF file
+        assertTrue(file.exists(), "UXF: " + file.getAbsolutePath() + " does not exist");
 
-        uxfFiles.forEach(path -> {
-            EPackage ePackage = transformer.transform(path);
-            if (ePackage != null) {
-                try {
-                    Path tmpEcore = Files.createTempFile(tmpDir, path.getFileName().toString(), ".ecore");
-                    transformer.saveEcore(tmpEcore);
-                } catch (IOException ignored) {
-                }
-            }
-        });
+        config.setProjectName(uxfFile.getFileName().toString().replace(".uxf", ""));
 
-        return Files.walk(tmpDir)
-                .filter(Files::isRegularFile)
-                .filter(path -> path.getFileName().toString().endsWith(".ecore"));
-    }
+        transformer.transform(file.toPath());
+        HelperUtil.saveRegisteredEcoreModels(config.getEcoreGenModelDir());
 
-    @ParameterizedTest(name = "{index} - Generating GenModel for Ecore: {0}")
-    @MethodSource("provideEcoreFiles")
-    void givenEcoreFile_whenGenerateGenModel_thenGenModelValid(Path ecoreFile) throws Exception {
-        final File file = ecoreFile.toFile();
-
-        // Validate existence of Ecore file
-        assertTrue(file.exists(), "Ecore: " + file.getAbsolutePath() + " does not exist");
-
-        GenModel genModel = genModelGenerator.generateGenModelFromEcore(file.toPath());
+        GenModel genModel = genModelGenerator.generateGenModelFromEcore(config.getEcoreGenModelDir());
 
         assertNotNull(genModel, "GenModel should not be null");
 
@@ -117,10 +105,9 @@ public class GenModelGeneratorTest {
      */
     boolean validateSaveGenModel(GenModel genModel) {
         try {
-            Path genModelPathToSaveTo = Files.createTempFile(tmpDir, "testGenModel", ".genmodel");
-            assertNotNull(genModelPathToSaveTo, "GenModelPathToSaveTo should not be null");
+            assertNotNull(config.getEcoreGenModelDir(), "GenModelPathToSaveTo should not be null");
 
-            File genModelFile = saveGenModel(genModel, genModelPathToSaveTo);
+            File genModelFile = saveGenModel(genModel, config.getEcoreGenModelDir());
 
             assertNotNull(genModelFile, "GenModelFile should not be null");
             assertTrue(genModelFile.exists(), "GenModel file does not exist: " + genModelFile.getAbsolutePath());
