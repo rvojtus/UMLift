@@ -5,7 +5,7 @@ import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
 import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.codegen.ecore.generator.Generator;
 import org.eclipse.emf.codegen.ecore.generator.GeneratorAdapterFactory;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
+import org.eclipse.emf.codegen.ecore.genmodel.*;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenBaseGeneratorAdapter;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Diagnostic;
@@ -13,7 +13,6 @@ import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.generator.GenModelGeneratorAdapterFactory;
 
@@ -60,23 +59,20 @@ public class ModelToCodeGenerator {
      */
     public Diagnostic generateCodeFromUMLetFile(Path inputUMLetFilePath) throws IOException {
         // Transform the UML diagram into an Ecore model using UMLetTransformer
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
-                .setEPackageName(generationConfig.getProjectName())
-                .setEPackageNsPrefix(generationConfig.getProjectNsPrefix())
-                .setEPackageNsURI(generationConfig.getProjectNsURI())
-                .build();
+        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer();
         transformer.transform(inputUMLetFilePath);
-        final Path ecoreOutPath = HelperUtil.addFileTypeSuffix(generationConfig.getOutputEcoreFile(), ".ecore");
-        transformer.saveEcore(ecoreOutPath);
 
-        Files.createDirectories(generationConfig.getOutputEcoreFile().getParent());
+        HelperUtil.saveRegisteredEcoreModels(generationConfig.getEcoreGenModelDir());
+
+        Files.createDirectories(generationConfig.getGeneratedFilesDir());
 
         // Generate the GenModel based on the Ecore model
         GenModelGenerator genModelGenerator = new GenModelGenerator();
-        GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreOutPath);
+        GenModel genModel = genModelGenerator.generateGenModelFromEcore(
+                generationConfig.getEcoreGenModelDir());
 
         // Save the generated GenModel to the specified Path
-        saveGenModel(genModel, generationConfig.getOutputGenModelFile());
+        saveGenModel(genModel, generationConfig.getEcoreGenModelDir());
 
         // Generate Java code from the GenModel
         return generateCodeFromGenModel(genModel, generationConfig.getGeneratedFilesDir());
