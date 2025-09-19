@@ -233,12 +233,6 @@ public class PomGenerator {
         Xpp3Dom NsURI = new Xpp3Dom("NsURI");
         NsURI.setValue(generationConfig.getProjectNsURI());
 
-        Xpp3Dom ecoreFileName = new Xpp3Dom("ecoreFileName");
-        ecoreFileName.setValue(generationConfig.getEcoreFileName());
-
-        Xpp3Dom genModelFileName = new Xpp3Dom("genModelFileName");
-        genModelFileName.setValue(generationConfig.getGenModelFileName());
-
         Xpp3Dom basePackage = new Xpp3Dom("basePackage");
         basePackage.setValue(generationConfig.getBasePackage());
 
@@ -250,8 +244,6 @@ public class PomGenerator {
         configuration.addChild(projectName);
         configuration.addChild(NsPrefix);
         configuration.addChild(NsURI);
-        configuration.addChild(ecoreFileName);
-        configuration.addChild(genModelFileName);
         configuration.addChild(basePackage);
         configuration.addChild(genJDKLevel);
 
