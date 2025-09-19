@@ -54,12 +54,6 @@ public class UMLet2CodeMojo extends AbstractMojo {
     @Parameter(property = "NsURI", defaultValue = "exampleProjectURI")
     private String NsURI;
 
-    @Parameter(property = "ecoreFileName", defaultValue = "ecore")
-    private String ecoreFileName;
-
-    @Parameter(property = "genmodelFileName", defaultValue = "genmodel")
-    private String genmodelFileName;
-
     @Parameter(property = "basePackageName", defaultValue = "org.example")
     private String basePackageName;
 
@@ -92,8 +86,6 @@ public class UMLet2CodeMojo extends AbstractMojo {
         GenerationConfig.getInstance()
                 .setInputUMLetFile(Path.of(umletFile))
                 .setGeneratedFilesDir(Path.of(outputDir))
-                .setOutputEcoreFile(Path.of(modelDir + ecoreFileName))
-                .setOutputGenModelFile(Path.of(modelDir + genmodelFileName))
                 .setProjectName(projectName)
                 .setProjectNsPrefix(NsPrefix)
                 .setProjectNsURI(NsURI)

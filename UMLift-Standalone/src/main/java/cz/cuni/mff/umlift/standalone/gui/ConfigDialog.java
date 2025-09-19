@@ -35,12 +35,10 @@ public class ConfigDialog extends JDialog {
     private final JTextField projectNameTextField;
     private final JTextField nsURITextField;
     private final JTextField nsPrefixTextField;
-    private final JTextField ecoreFileNameTextField;
 
     // GenModel
     private final JTextField packageNameTextField;
     private final JComboBox<GenJDKLevel> genJDKLevelComboBox;
-    private final JTextField genModelFileNameTextField;
 
     // Generation
     private final DirectoryChooserPanel projectRootDirectoryChooser;
@@ -75,11 +73,6 @@ public class ConfigDialog extends JDialog {
         add(nsPrefixLabel);
         add(nsPrefixTextField);
 
-        JLabel ecoreFileNameLabel = new JLabel("Ecore file name:");
-        ecoreFileNameTextField = new JTextField();
-        add(ecoreFileNameLabel);
-        add(ecoreFileNameTextField);
-
         JLabel packageNameLabel = new JLabel("Package name:");
         packageNameTextField = new JTextField();
         add(packageNameLabel);
@@ -89,11 +82,6 @@ public class ConfigDialog extends JDialog {
         genJDKLevelComboBox = new JComboBox<>(GenJDKLevel.values());
         add(genJDKLevelLabel);
         add(genJDKLevelComboBox);
-
-        JLabel genModelFileNameLabel = new JLabel("GenModel file name:");
-        genModelFileNameTextField = new JTextField();
-        add(genModelFileNameLabel);
-        add(genModelFileNameTextField);
 
         JLabel projectRootDirectoryLabel = new JLabel("Project root directory:");
         projectRootDirectoryChooser = new DirectoryChooserPanel(null);
@@ -170,11 +158,9 @@ public class ConfigDialog extends JDialog {
         prefs.put("projectName", projectNameTextField.getText());
         prefs.put("nsURI", nsURITextField.getText());
         prefs.put("nsPrefix", nsPrefixTextField.getText());
-        prefs.put("ecoreFileName", ecoreFileNameTextField.getText());
 
         prefs.put("packageName", packageNameTextField.getText());
         prefs.put("genJDKLevel", Objects.requireNonNull(genJDKLevelComboBox.getSelectedItem()).toString());
-        prefs.put("genModelFileName", genModelFileNameTextField.getText());
 
         prefs.put("projectRootDirectory", projectRootDirectoryChooser.getSelectedDirectory());
 
@@ -187,12 +173,10 @@ public class ConfigDialog extends JDialog {
         projectNameTextField.setText(prefs.get("projectName", "exampleProject"));
         nsURITextField.setText(prefs.get("nsURI", "exampleNSURI"));
         nsPrefixTextField.setText(prefs.get("nsPrefix", "exampleNSPrefix"));
-        ecoreFileNameTextField.setText(prefs.get("ecoreFileName", "ecore"));
 
         packageNameTextField.setText(prefs.get("packageName", "org.example"));
         genJDKLevelComboBox.setSelectedItem(GenJDKLevel.get(prefs.get("genJDKLevel",
                 GenJDKLevel.JDK210_LITERAL.toString())));
-        genModelFileNameTextField.setText(prefs.get("genModelFileName", "genmodel"));
         projectRootDirectoryChooser.setSelectedDirectory(prefs.get("projectRootDirectory",
                 projectPath.toString() + File.separator + projectNameTextField.getText()));
         populateCodeGenConfig();
@@ -207,14 +191,10 @@ public class ConfigDialog extends JDialog {
                 .setProjectName(projectNameTextField.getText())
                 .setProjectNsURI(nsURITextField.getText())
                 .setProjectNsPrefix(nsPrefixTextField.getText())
-                .setEcoreFileName(ecoreFileNameTextField.getText())
-                .setGenModelFileName(genModelFileNameTextField.getText())
                 .setBasePackage(packageNameTextField.getText())
                 .setGenJDKLevel((GenJDKLevel) genJDKLevelComboBox.getSelectedItem())
                 .setEcoreGenModelDir(resourcesDir)
                 .setGeneratedFilesDir(generatedFilesDir)
-                .setOutputEcoreFile(Path.of(resourcesDir + File.separator + ecoreFileNameTextField.getText()))
-                .setOutputGenModelFile(Path.of(resourcesDir + File.separator + genModelFileNameTextField.getText()))
                 .setProjectRootDir(Path.of(projectRootDirectoryChooser.getSelectedDirectory()));
     }
 
