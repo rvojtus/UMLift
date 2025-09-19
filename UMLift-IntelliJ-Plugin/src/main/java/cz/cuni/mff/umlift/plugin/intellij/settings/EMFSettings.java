@@ -41,10 +41,8 @@ public final class EMFSettings implements PersistentStateComponent<EMFSettings.S
         // Ecore
         public String projectName = "exampleProject";
         public String NsURI = "https://example.org/" + projectName;
-        public String NsPrefix = projectName + "Prefix";
-        public String ecoreFileName = "ecore";
+        public String NsPrefix = projectName;
         // GenModel
-        public String genModelFileName = "genmodel";
         public String basePackage = "org.example";
         public GenJDKLevel genJDKLevel = GenJDKLevel.JDK210_LITERAL;
         // Generation
