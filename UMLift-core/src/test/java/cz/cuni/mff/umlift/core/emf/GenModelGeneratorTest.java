@@ -60,6 +60,8 @@ public class GenModelGeneratorTest {
                     });
             Files.deleteIfExists(tmpDir);
         }
+
+        HelperUtil.removeRegisteredProjectPackages();
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {

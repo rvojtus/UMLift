@@ -3,9 +3,7 @@ package cz.cuni.mff.umlift.core.transformation;
 import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.ecore.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -31,6 +29,11 @@ public class UMLetToEcoreTransformerTest {
                 .setProjectNsPrefix(projectNsPrefix)
                 .setProjectNsURI(projectNsUri);
         transformer = new UMLetToEcoreTransformer();
+    }
+
+    @AfterEach
+    void tearDown() {
+        HelperUtil.removeRegisteredProjectPackages();
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {
@@ -67,7 +70,7 @@ public class UMLetToEcoreTransformerTest {
         assertTrue(tmpOutputEcoreFile.toFile().exists(),
                 "Result Ecore file should exist: " + tmpOutputEcoreFile.toFile().getAbsolutePath());
 
-        Files.deleteIfExists(tmpOutputEcoreFile);
+        assertTrue(Files.deleteIfExists(tmpOutputEcoreFile));
     }
 
     /**

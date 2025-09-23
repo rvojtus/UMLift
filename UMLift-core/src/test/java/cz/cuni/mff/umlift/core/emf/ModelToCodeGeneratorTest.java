@@ -1,8 +1,10 @@
 package cz.cuni.mff.umlift.core.emf;
 
 import cz.cuni.mff.umlift.core.config.GenerationConfig;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +61,7 @@ public class ModelToCodeGeneratorTest {
                     });
             Files.deleteIfExists(tmpDir);
         }
+        HelperUtil.removeRegisteredProjectPackages();
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {
