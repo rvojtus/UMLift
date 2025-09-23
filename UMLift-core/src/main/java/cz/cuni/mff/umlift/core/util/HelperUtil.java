@@ -84,6 +84,12 @@ public class HelperUtil {
         return new File(genmodelURI.path());
     }
 
+    public static boolean removeRegisteredProjectPackages() {
+        return EPackage.Registry.INSTANCE.entrySet()
+                .removeIf(entry -> entry.getValue() instanceof EPackage pkg
+                        && pkg.getNsURI().startsWith(GenerationConfig.getInstance().getProjectNsURI()));
+    }
+
     /**
      * Prints content of an Ecore Package - For debugging purposes
      *
