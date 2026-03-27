@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "cz.cuni.mff"
-version = "1.2"
+version = "1.3"
 
 repositories {
     mavenLocal()
@@ -35,7 +35,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("242.23726.103")
-        untilBuild.set("253.*")
+        untilBuild.set("261.*")
     }
 
     signPlugin {
