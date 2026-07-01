@@ -1,8 +1,11 @@
 package cz.cuni.mff.umlift.core.util;
 
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
@@ -10,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -17,6 +21,30 @@ import java.util.logging.Logger;
  */
 public class HelperUtil {
     private static final Logger LOG = Logger.getLogger(HelperUtil.class.getName());
+
+    public static void saveRegisteredEcoreModels(Path ecoreOutPath) throws IOException {
+        for (Object obj : EPackage.Registry.INSTANCE.values().toArray()) {
+            if (obj instanceof EPackage pkg && pkg.getNsURI().startsWith(GenerationConfig.getInstance().getProjectNsURI())) {
+                LOG.log(Level.INFO, "Saving Ecore models for {0}", obj);
+                saveEcoreModel(pkg, Path.of(ecoreOutPath + "/" + pkg.getName() + ".ecore"));
+            }
+        }
+    }
+
+    public static void loadEcoreModelsFromDir(Path modelsDir, ResourceSet resourceSet) throws IOException {
+        File[] files = modelsDir.toFile().listFiles((dir, name) -> name.endsWith(".ecore"));
+        if (files == null) {
+            throw new IOException("Cannot find any ecore models in " + modelsDir);
+        }
+        for (File file : files) {
+            LOG.info("Loading ecore model from " + file.getAbsolutePath());
+            URI uri = URI.createFileURI(file.getAbsolutePath());
+            Resource resource = resourceSet.getResource(uri, true);
+            EPackage ePackage = (EPackage) resource.getContents().getFirst();
+            EPackage.Registry.INSTANCE.put(ePackage.getNsURI(), ePackage);
+            LOG.info("Loaded Ecore model from " + file.getAbsolutePath());
+        }
+    }
 
     /**
      * Saves an Ecore model to a specified file using the XMI format.
@@ -27,7 +55,7 @@ public class HelperUtil {
      */
     public static void saveEcoreModel(EPackage ePackage, Path outputEcoreFile) throws IOException {
         URI ecoreURI = URI.createFileURI(outputEcoreFile.toAbsolutePath().toString());
-        final XMIResourceImpl ecoreResource = new XMIResourceImpl(ecoreURI);
+        XMIResourceImpl ecoreResource = new XMIResourceImpl(ecoreURI);
         ecoreResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
         ecoreResource.getContents().add(ePackage);
 
@@ -40,16 +68,14 @@ public class HelperUtil {
      * Saves the provided GenModel to a file in the given directory.
      *
      * @param genModel  the {@link GenModel} instance to save
-     * @param outputDir directory where to save the generated GenModel to
+     * @param modelDir directory where to save the generated GenModel to
      * @return An instance of {@link File} representing the saved GenModel
      * @throws IOException if an error occurs while saving the GenModel model
      */
-    public static File saveGenModel(GenModel genModel, Path outputDir) throws IOException {
-        return saveGenModel(genModel, HelperUtil.addFileTypeSuffix(outputDir, ".genmodel"), "");
-    }
 
-    public static File saveGenModel(GenModel genModel, Path outputDir, String fileName) throws IOException {
-        URI genmodelURI = URI.createFileURI(outputDir + fileName);
+    public static File saveGenModel(GenModel genModel, Path modelDir) throws IOException {
+        URI genmodelURI = URI.createFileURI(modelDir + "/" + GenerationConfig.getInstance().getProjectName() +
+                ".genmodel");
         final XMIResourceImpl genModelResource = new XMIResourceImpl(genmodelURI);
         genModelResource.getDefaultSaveOptions().put(XMIResource.OPTION_ENCODING, "UTF-8");
         genModelResource.getContents().add(genModel);
@@ -58,18 +84,10 @@ public class HelperUtil {
         return new File(genmodelURI.path());
     }
 
-    /**
-     * Checks if the provided {@code filePath} contains the required {@code suffix} and if not, appends it
-     *
-     * @param filePath path to check
-     * @param suffix   to add
-     * @return the original path if suffix is already present, modified path otherwise
-     */
-    public static Path addFileTypeSuffix(Path filePath, final String suffix) {
-        if (filePath.getFileName().toString().endsWith(suffix)) {
-            return filePath;
-        }
-        return filePath.resolveSibling(filePath.getFileName() + suffix);
+    public static boolean removeRegisteredProjectPackages() {
+        return EPackage.Registry.INSTANCE.entrySet()
+                .removeIf(entry -> entry.getValue() instanceof EPackage pkg
+                        && pkg.getNsURI().startsWith(GenerationConfig.getInstance().getProjectNsURI()));
     }
 
     /**

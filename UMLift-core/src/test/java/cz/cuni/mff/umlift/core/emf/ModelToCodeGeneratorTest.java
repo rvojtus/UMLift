@@ -1,8 +1,12 @@
 package cz.cuni.mff.umlift.core.emf;
 
 import cz.cuni.mff.umlift.core.config.GenerationConfig;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,21 +27,25 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests functionality of {@link ModelToCodeGenerator}.
  */
 public class ModelToCodeGeneratorTest {
-    private ModelToCodeGenerator generator;
-
     private static Path tmpDir;
+    private static ModelToCodeGenerator generator;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        tmpDir = Files.createTempDirectory("testing");
+    @BeforeAll
+    static void setup() {
+        generator = new ModelToCodeGenerator();
         GenerationConfig.getInstance()
-                .setGeneratedFilesDir(tmpDir)
-                .setOutputEcoreFile(Path.of(tmpDir.toString() + "/ecore.ecore"))
-                .setOutputGenModelFile(Path.of(tmpDir.toString() + "/genmodel.genmodel"))
                 .setProjectName(projectName)
                 .setProjectNsPrefix(projectNsPrefix)
-                .setProjectNsURI(projectNsUri);
-        generator = new ModelToCodeGenerator();
+                .setProjectNsURI(projectNsUri)
+                .setGenJDKLevel(GenJDKLevel.JDK210_LITERAL);
+    }
+
+    @BeforeEach
+    void setUpBeforeEach() throws IOException {
+        tmpDir = Files.createTempDirectory("modelToCodeGeneratorTestDirectory");
+        GenerationConfig.getInstance()
+                .setGeneratedFilesDir(tmpDir)
+                .setEcoreGenModelDir(Path.of(tmpDir.toString() + "/models"));
     }
 
     @AfterEach
@@ -53,6 +61,7 @@ public class ModelToCodeGeneratorTest {
                     });
             Files.deleteIfExists(tmpDir);
         }
+        HelperUtil.removeRegisteredProjectPackages();
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {
@@ -70,6 +79,8 @@ public class ModelToCodeGeneratorTest {
 
         // Validate UMLet file exists
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());
+
+        GenerationConfig.getInstance().setProjectName(uxfFile.getName().replace(".uxf", ""));
 
         PrintStream originalStream = System.out;
         // Silence STDOUT, to not see output of Code Generation's EMF Generator

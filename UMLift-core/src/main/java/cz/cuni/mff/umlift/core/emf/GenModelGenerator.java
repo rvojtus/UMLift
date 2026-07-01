@@ -3,17 +3,17 @@ package cz.cuni.mff.umlift.core.emf;
 import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelFactory;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +28,6 @@ public class GenModelGenerator {
     private static final Logger LOG = Logger.getLogger(GenModelGenerator.class.getName());
 
     private ResourceSet resourceSet;
-    private final GenerationConfig generationConfig = GenerationConfig.getInstance();
 
     /**
      * Initializes a new {@link GenModelGenerator} instance and sets up the resource set.
@@ -58,33 +57,47 @@ public class GenModelGenerator {
      * based on the Ecore model, and initializes it with the Ecore package. The method also sets
      * the model's name, directory for generated Java code, and compliance level.</p>
      *
-     * @param inputEcorePath the file path to the Ecore file
+     * @param modelDirPath the file path to the Ecore file
      * @return the generated {@link GenModel} instance
      */
-    public GenModel generateGenModelFromEcore(Path inputEcorePath) {
-        // Load the Ecore model
-        inputEcorePath = HelperUtil.addFileTypeSuffix(inputEcorePath, ".ecore");
-        URI ecoreURI = URI.createFileURI(inputEcorePath.toAbsolutePath().toString());
-        Resource ecoreResource = resourceSet.getResource(ecoreURI, true);
-        EPackage ecorePackage = (EPackage) ecoreResource.getContents().getFirst();
+    public GenModel generateGenModelFromEcore(Path modelDirPath) throws IOException {
+        // Load the Ecore models
+        try {
+            HelperUtil.loadEcoreModelsFromDir(modelDirPath, resourceSet);
+        } catch (IOException e) {
+            LOG.severe("Could not load Ecore models from directory " + modelDirPath);
+            throw e;
+        }
 
         // Create a GenModel instance
         GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
-        genModel.setModelName(ecorePackage.getName());
+        genModel.setModelName(GenerationConfig.getInstance().getProjectName());
         genModel.setModelDirectory("src"); // todo needs proper documentation
-        genModel.setComplianceLevel(generationConfig.getGenJDKLevel());
+        genModel.setComplianceLevel(GenerationConfig.getInstance().getGenJDKLevel());
 
-        GenPackage genPackage = GenModelFactory.eINSTANCE.createGenPackage();
-        genPackage.setBasePackage(generationConfig.getBasePackage());
-        genPackage.setEcorePackage(ecorePackage);
-        genPackage.setGenModel(genModel);
+        // Create GenPackages from Ecore models
+        Collection<EPackage> ePackages = new ArrayList<>();
+        for (Object obj : EPackage.Registry.INSTANCE.values()) {
+            if (obj instanceof EPackage pkg && pkg.getNsURI().startsWith(GenerationConfig.getInstance().getProjectNsURI())) {
+                LOG.info("Found EPackage " + pkg.getName());
+                GenPackage genPackage = createGenPackageFromEcore(pkg, genModel);
+                genModel.getGenPackages().add(genPackage);
+                ePackages.add(pkg);
+            }
+        }
 
-        genModel.getGenPackages().add(genPackage);
-        genModel.initialize(Collections.singleton(ecorePackage));
+        genModel.initialize(ePackages);
 
-
-        LOG.info("GenModel created successfully for Ecore: " + inputEcorePath.toAbsolutePath());
+        LOG.info("GenModel created successfully for Model Directory: " + modelDirPath.toAbsolutePath());
         return genModel;
+    }
+
+    private GenPackage createGenPackageFromEcore(EPackage ePackage, GenModel genModel) {
+        GenPackage genPackage = GenModelFactory.eINSTANCE.createGenPackage();
+        genPackage.setBasePackage(GenerationConfig.getInstance().getBasePackage());
+        genPackage.setEcorePackage(ePackage);
+        genPackage.setGenModel(genModel);
+        return genPackage;
     }
 
 }

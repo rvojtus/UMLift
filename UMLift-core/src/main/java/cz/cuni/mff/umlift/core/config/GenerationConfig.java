@@ -25,11 +25,9 @@ import java.nio.file.Path;
  * GenerationConfig config = GenerationConfig.getInstance()
  *     .setInputUMLetFile(Path.of("/path/to/UMLet/file/exampleUMLet.uxf"))
  *     .setGeneratedFilesDir(Path.of("/path/to/directory"))
- *     .setOutputEcoreFile(Path.of("ecore.ecore"))
- *     .setOutputGenModelFile(Path.of("genmodel.genmodel"))
- *     .setProjectName("exampleProjectName")
- *     .setProjectNsPrefix("exampleProjectNsPrefix")
- *     .setProjectNsURI("exampleProjectNsURI")
+ *     .setProjectName("exampleProject")
+ *     .setProjectNsPrefix("exampleProject")
+ *     .setProjectNsURI("www.exampleProject.org")
  *     .setBasePackage("com.example")
  *     .setGenJDKLevel(GenJDKLevel.JDK210_LITERAL)
  *     .build();
@@ -42,8 +40,6 @@ public class GenerationConfig {
     private static final GenerationConfig INSTANCE = new GenerationConfig();
 
     private Path inputUMLetFile;
-    private Path outputEcoreFile;
-    private Path outputGenModelFile;
     private Path generatedFilesDir;
     private Path ecoreGenModelDir;
     private Path projectRootDir;
@@ -53,10 +49,6 @@ public class GenerationConfig {
     private String projectNsURI;
     private String basePackage;
     private GenJDKLevel genJDKLevel;
-
-    private String ecoreFileName;
-    private String genModelFileName;
-
 
     private GenerationConfig() {
     }
@@ -72,24 +64,6 @@ public class GenerationConfig {
 
     public Path getInputUMLetFile() {
         return inputUMLetFile;
-    }
-
-    public GenerationConfig setOutputEcoreFile(Path outputEcoreFile) {
-        this.outputEcoreFile = outputEcoreFile;
-        return this;
-    }
-
-    public Path getOutputEcoreFile() {
-        return outputEcoreFile;
-    }
-
-    public GenerationConfig setOutputGenModelFile(Path outputGenModelFile) {
-        this.outputGenModelFile = outputGenModelFile;
-        return this;
-    }
-
-    public Path getOutputGenModelFile() {
-        return outputGenModelFile;
     }
 
     public GenerationConfig setGeneratedFilesDir(Path generatedFilesDir) {
@@ -128,24 +102,6 @@ public class GenerationConfig {
         return projectNsURI;
     }
 
-    public GenerationConfig setEcoreFileName(String ecoreFileName) {
-        this.ecoreFileName = ecoreFileName;
-        return this;
-    }
-
-    public String getEcoreFileName() {
-        return ecoreFileName;
-    }
-
-    public GenerationConfig setGenModelFileName(String genModelFileName) {
-        this.genModelFileName = genModelFileName;
-        return this;
-    }
-
-    public String getGenModelFileName() {
-        return genModelFileName;
-    }
-
     public Path getEcoreGenModelDir() {
         return ecoreGenModelDir;
     }
@@ -180,5 +136,9 @@ public class GenerationConfig {
     public GenerationConfig setProjectRootDir(Path projectRootDir) {
         this.projectRootDir = projectRootDir;
         return this;
+    }
+
+    public String getBaseEPackageURI() {
+        return projectNsURI + "/" + projectName;
     }
 }

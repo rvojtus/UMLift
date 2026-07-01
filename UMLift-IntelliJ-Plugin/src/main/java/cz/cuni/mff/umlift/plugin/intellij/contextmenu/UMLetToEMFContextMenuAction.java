@@ -14,6 +14,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import cz.cuni.mff.umlift.core.config.GenerationConfig;
 import cz.cuni.mff.umlift.core.emf.GenModelGenerator;
 import cz.cuni.mff.umlift.core.transformation.UMLetToEcoreTransformer;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import cz.cuni.mff.umlift.plugin.intellij.settings.EMFSettings;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.jetbrains.annotations.NotNull;
@@ -88,11 +89,14 @@ public class UMLetToEMFContextMenuAction extends AnAction {
     private void transformUXF(@NotNull Project project, String uxfPath, String projectDir) {
         EMFSettings.State state = Objects.requireNonNull(EMFSettings.getInstance().getState());
 
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
-                .setEPackageName(state.projectName)
-                .setEPackageNsPrefix(state.NsPrefix)
-                .setEPackageNsURI(state.NsURI)
-                .build();
+        GenerationConfig.getInstance()
+                .setProjectName(state.projectName)
+                .setProjectNsPrefix(state.NsPrefix)
+                .setProjectNsURI(state.NsURI)
+                .setGenJDKLevel(state.genJDKLevel)
+                .setBasePackage(state.basePackage);
+
+        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer();
 
         Path ecoreGenModelOutputDir = state.ecoreGenModelOutputDir;
         if (!ecoreGenModelOutputDir.startsWith("/")) {
@@ -109,40 +113,34 @@ public class UMLetToEMFContextMenuAction extends AnAction {
                 transformer.transform(Path.of(uxfPath));
                 notifySuccess(project, "UMLet transformation finished successfully");
 
-                Path inputEcoreFile = saveEcoreFile();
+                saveEcoreModels();
 
-                generateGenmodel(inputEcoreFile);
+                generateGenmodel();
 
                 progressIndicator.setIndeterminate(false);
                 refreshFiles();
             }
 
-            private void generateGenmodel(Path inputEcoreFile) {
-                GenerationConfig.getInstance().setGenJDKLevel(state.genJDKLevel).setBasePackage(state.basePackage);
+            private void generateGenmodel() {
                 GenModelGenerator generator = new GenModelGenerator();
-                GenModel genModel = generator.generateGenModelFromEcore(inputEcoreFile);
 
-                final Path genmodelPath =
-                        Path.of(finalEcoreGenModelOutputDir + File.separator + state.genModelFileName);
                 try {
-                    saveGenModel(genModel, genmodelPath);
-                    LOG.info("Successfully saved GenModel: " + state.genModelFileName);
+                    GenModel genModel = generator.generateGenModelFromEcore(finalEcoreGenModelOutputDir);
+                    HelperUtil.saveGenModel(genModel, finalEcoreGenModelOutputDir);
                 } catch (IOException e) {
-                    LOG.error("Error saving GenModel: ", e);
-                    notifyFailure(project, "Error saving GenModel " + state.genModelFileName);
+                    LOG.error("Error while generating genmodel", e);
+                    notifyFailure(project, "Error while generating genmodel");
                 }
             }
 
-            private @NotNull Path saveEcoreFile() {
-                final Path ecorePath = Path.of(finalEcoreGenModelOutputDir + File.separator + state.ecoreFileName);
+            private void saveEcoreModels() {
                 try {
-                    transformer.saveEcore(ecorePath);
-                    LOG.info("Successfully saved Ecore: " + state.ecoreFileName);
+                    HelperUtil.saveRegisteredEcoreModels(finalEcoreGenModelOutputDir);
+                    LOG.info("Successfully saved Ecore Models to: " + finalEcoreGenModelOutputDir);
                 } catch (IOException e) {
                     LOG.error("Error saving Ecore: ", e);
-                    notifyFailure(project, "Error saving Ecore " + state.ecoreFileName);
+                    notifyFailure(project, "Error saving Ecore models " + e.getMessage());
                 }
-                return ecorePath;
             }
         });
     }

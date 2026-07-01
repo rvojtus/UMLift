@@ -13,11 +13,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
-import org.eclipse.emf.ecore.EPackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -38,7 +36,7 @@ public class UMLet2EMFMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
-    @Parameter(property = "modelDir", defaultValue = "resources/")
+    @Parameter(property = "modelDir", defaultValue = "resources/models/")
     private String modelDir;
 
     @Parameter(property = "umletFile", required = true)
@@ -52,12 +50,6 @@ public class UMLet2EMFMojo extends AbstractMojo {
 
     @Parameter(property = "NsURI", defaultValue = "exampleProjectURI")
     private String NsURI;
-
-    @Parameter(property = "ecoreFileName", defaultValue = "ecore")
-    private String ecoreFileName;
-
-    @Parameter(property = "genModelFileName", defaultValue = "genmodel")
-    private String genModelFileName;
 
     @Parameter(property = "basePackageName", defaultValue = "org.example")
     private String basePackageName;
@@ -89,44 +81,41 @@ public class UMLet2EMFMojo extends AbstractMojo {
                         Transforming {}...
                         Model Directory: {}
                         Project Name: {}, NsPrefix: {}, NsURI: {}
-                        Ecore File Name: {}, GenModel File Name: {}""",
-                umletFile, modelDir, projectName, NsPrefix, NsURI, ecoreFileName, genModelFileName);
+                        """,
+                umletFile, modelDir, projectName, NsPrefix, NsURI);
         transformUMLetFile();
         LOG.info("Transformation complete.");
     }
 
     private void transformUMLetFile() throws MojoExecutionException, MojoFailureException {
-        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
-                .setEPackageName(projectName)
-                .setEPackageNsPrefix(NsPrefix)
-                .setEPackageNsURI(NsURI)
-                .build();
-
-        EPackage ePackage = transformer.transform(Path.of(umletFile));
-        if (ePackage == null) {
-            throw new MojoExecutionException("Could not transform UMLet file: " + umletFile);
-        }
-        final Path ecoreFilePath = Path.of(modelDir + File.separator + ecoreFileName);
-        try {
-            HelperUtil.saveEcoreModel(ePackage, ecoreFilePath);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Could not save EcoreModel", e);
-        }
-
         GenerationConfig.getInstance()
+                .setProjectName(projectName)
+                .setProjectNsPrefix(NsPrefix)
+                .setProjectNsURI(NsURI)
+                .setEcoreGenModelDir(Path.of(modelDir))
                 .setGenJDKLevel(GenJDKLevel.valueOf(genJDKLevel + "_LITERAL"))
                 .setBasePackage(basePackageName);
-        GenModelGenerator genModelGenerator = new GenModelGenerator();
-        GenModel genModel = genModelGenerator.generateGenModelFromEcore(ecoreFilePath);
 
-        if (genModel == null) {
+        UMLetToEcoreTransformer transformer = new UMLetToEcoreTransformer();
+
+        transformer.transform(Path.of(umletFile));
+
+        try {
+            HelperUtil.saveRegisteredEcoreModels(GenerationConfig.getInstance().getEcoreGenModelDir());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not save generated Ecore models to " + GenerationConfig.getInstance().getEcoreGenModelDir(), e);
+        }
+
+        GenModelGenerator genModelGenerator = new GenModelGenerator();
+        GenModel genModel;
+        try {
+            genModel = genModelGenerator.generateGenModelFromEcore(GenerationConfig.getInstance().getEcoreGenModelDir());
+        } catch (IOException e) {
             throw new MojoExecutionException("Could not generate GenModel");
         }
 
-        final Path genmodelFilePath = Path.of(modelDir + File.separator + genModelFileName);
-
         try {
-            HelperUtil.saveGenModel(genModel, genmodelFilePath);
+            HelperUtil.saveGenModel(genModel, GenerationConfig.getInstance().getEcoreGenModelDir());
         } catch (IOException e) {
             throw new MojoExecutionException("Could not save GenModel", e);
         }

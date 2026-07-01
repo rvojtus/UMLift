@@ -35,10 +35,8 @@ public class EMFSettingsComponent {
     private final JBTextField projectNameText = new JBTextField();
     private final JBTextField NsURIText = new JBTextField();
     private final JBTextField NsPrefixText = new JBTextField();
-    private final JBTextField ecoreFileNameTextField = new JBTextField();
 
     // GenModel settings
-    private final JBTextField genModelFileNameTextField = new JBTextField();
     private final JBTextField basePackageTextField = new JBTextField();
     private final ComboBox<GenJDKLevel> genJDKLevelComboBox = new ComboBox<>(GenJDKLevel.values());
 
@@ -62,13 +60,11 @@ public class EMFSettingsComponent {
                 .addLabeledComponent(new JBLabel("Project name:"), projectNameText, 1, false)
                 .addLabeledComponent("NsURI:", NsURIText, 1, false)
                 .addLabeledComponent("NsPrefix:", NsPrefixText, 1, false)
-                .addLabeledComponent("Ecore file name:", ecoreFileNameTextField, 1, false)
                 .addComponent(new JBLabel())
                 .addComponent(new JBLabel("GenModel settings"))
                 .addSeparator()
                 .addLabeledComponent(new JBLabel("Package name:"), basePackageTextField, 1, false)
                 .addLabeledComponent(new JBLabel("GenJDK level:"), genJDKLevelComboBox, 1, false)
-                .addLabeledComponent("GenModel file name:", genModelFileNameTextField, 1, false)
                 .addComponent(new JBLabel())
                 .addComponent(new JBLabel("Generation settings"))
                 .addSeparator()
@@ -126,24 +122,6 @@ public class EMFSettingsComponent {
 
     public void setNsPrefix(@NotNull String nsPrefix) {
         NsPrefixText.setText(nsPrefix);
-    }
-
-    @NotNull
-    public String getEcoreFileName() {
-        return ecoreFileNameTextField.getText();
-    }
-
-    public void setEcoreFileName(@NotNull String ecoreFileName) {
-        ecoreFileNameTextField.setText(ecoreFileName);
-    }
-
-    @NotNull
-    public String getGenModelFileName() {
-        return genModelFileNameTextField.getText();
-    }
-
-    public void setGenModelFileName(@NotNull String genModelFileName) {
-        genModelFileNameTextField.setText(genModelFileName);
     }
 
     @NotNull

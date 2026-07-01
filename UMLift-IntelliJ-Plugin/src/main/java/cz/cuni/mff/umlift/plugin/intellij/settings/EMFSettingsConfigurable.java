@@ -59,10 +59,8 @@ final class EMFSettingsConfigurable implements Configurable {
         return Stream.of(!emfSettingsComponent.getProjectName().equals(state.projectName),
                 !emfSettingsComponent.getNsURI().equals(state.NsURI),
                 !emfSettingsComponent.getNsPrefix().equals(state.NsPrefix),
-                !emfSettingsComponent.getEcoreFileName().equals(state.ecoreFileName),
                 !emfSettingsComponent.getBasePackage().equals(state.basePackage),
                 !emfSettingsComponent.getGenJDKLevel().equals(state.genJDKLevel),
-                !emfSettingsComponent.getGenModelFileName().equals(state.genModelFileName),
                 !emfSettingsComponent.getEcoreGenModelDestination().equals(state.ecoreGenModelOutputDir.toString()),
                 !(emfSettingsComponent.getGeneratePom() == state.generatePom),
                 !emfSettingsComponent.getGeneratedFilesOutputDir().equals(state.generatedFilesOutputDir)).anyMatch(Boolean::booleanValue);
@@ -82,13 +80,11 @@ final class EMFSettingsConfigurable implements Configurable {
         state.projectName = emfSettingsComponent.getProjectName();
         state.NsURI = emfSettingsComponent.getNsURI();
         state.NsPrefix = emfSettingsComponent.getNsPrefix();
-        state.ecoreFileName = emfSettingsComponent.getEcoreFileName();
         state.ecoreGenModelOutputDir = Path.of(emfSettingsComponent.getEcoreGenModelDestination());
 
         // GenModel
         state.basePackage = emfSettingsComponent.getBasePackage();
         state.genJDKLevel = emfSettingsComponent.getGenJDKLevel();
-        state.genModelFileName = emfSettingsComponent.getGenModelFileName();
 
         // Generation
         state.ecoreGenModelOutputDir = Path.of(emfSettingsComponent.getEcoreGenModelDestination());
@@ -108,12 +104,10 @@ final class EMFSettingsConfigurable implements Configurable {
         emfSettingsComponent.setProjectName(state.projectName);
         emfSettingsComponent.setNsURI(state.NsURI);
         emfSettingsComponent.setNsPrefix(state.NsPrefix);
-        emfSettingsComponent.setEcoreFileName(state.ecoreFileName);
 
         // GenModel
         emfSettingsComponent.setBasePackage(state.basePackage);
         emfSettingsComponent.setGenJDKLevel(state.genJDKLevel);
-        emfSettingsComponent.setGenModelFileName(state.genModelFileName);
 
         // Generation
         emfSettingsComponent.setEcoreGenModelDestination(String.valueOf(state.ecoreGenModelOutputDir));

@@ -1,9 +1,9 @@
 package cz.cuni.mff.umlift.core.transformation;
 
+import cz.cuni.mff.umlift.core.config.GenerationConfig;
+import cz.cuni.mff.umlift.core.util.HelperUtil;
 import org.eclipse.emf.ecore.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -24,11 +24,16 @@ public class UMLetToEcoreTransformerTest {
 
     @BeforeEach
     public void setUp() {
-        transformer = new UMLetToEcoreTransformer.EcoreConfigBuilder()
-                .setEPackageName(projectName)
-                .setEPackageNsPrefix(projectNsPrefix)
-                .setEPackageNsURI(projectNsUri)
-                .build();
+        GenerationConfig.getInstance()
+                .setProjectName(projectName)
+                .setProjectNsPrefix(projectNsPrefix)
+                .setProjectNsURI(projectNsUri);
+        transformer = new UMLetToEcoreTransformer();
+    }
+
+    @AfterEach
+    void tearDown() {
+        HelperUtil.removeRegisteredProjectPackages();
     }
 
     static Stream<Path> provideUxfFiles() throws Exception {
@@ -47,7 +52,9 @@ public class UMLetToEcoreTransformerTest {
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());
 
         // Run the transformation
-        EPackage ePackage = transformer.transform(uxfFile.toPath());
+        transformer.transform(uxfFile.toPath());
+
+        EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(GenerationConfig.getInstance().getBaseEPackageURI());
 
         // Validate Ecore package is not null
         validateEPackageExists(ePackage);
@@ -57,13 +64,13 @@ public class UMLetToEcoreTransformerTest {
 
         // Resulting Ecore file
         Path tmpOutputEcoreFile = Files.createTempFile("test-uxf-", ".ecore");
-        transformer.saveEcore(tmpOutputEcoreFile);
+        HelperUtil.saveEcoreModel(ePackage, tmpOutputEcoreFile);
 
         // Validate Ecore package is successfully saved on disk
         assertTrue(tmpOutputEcoreFile.toFile().exists(),
                 "Result Ecore file should exist: " + tmpOutputEcoreFile.toFile().getAbsolutePath());
 
-        Files.deleteIfExists(tmpOutputEcoreFile);
+        assertTrue(Files.deleteIfExists(tmpOutputEcoreFile));
     }
 
     /**
@@ -498,7 +505,9 @@ public class UMLetToEcoreTransformerTest {
         assertTrue(uxfFile.exists(), "Tested file should exist: " + uxfFile.getAbsolutePath());
 
         // Run the transformation
-        EPackage ePackage = transformer.transform(uxfFile.toPath());
+        transformer.transform(uxfFile.toPath());
+
+        EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(GenerationConfig.getInstance().getBaseEPackageURI());
 
         // Validate Ecore package is not null
         validateEPackageExists(ePackage);
